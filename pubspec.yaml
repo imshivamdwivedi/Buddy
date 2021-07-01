@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  liquid_swipe: ^2.1.0
+  supabase: ^0.0.1-dev.24
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -74,3 +76,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+  - family: Product Sans
+    fonts:
+      - asset: assets/fonts/Product_Sans_Bold.ttf
+      - asset: assets/fonts/Product_Sans_Regular.ttf
+  assets:
+  - assets/images/
