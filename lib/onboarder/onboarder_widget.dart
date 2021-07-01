@@ -4,6 +4,7 @@ import 'package:liquid_swipe/liquid_swipe.dart';
 import '../onboarder/onboarder_pages.dart';
 
 class OnboarderWidget extends StatelessWidget {
+  static const routeName = '/onboarder-screen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
