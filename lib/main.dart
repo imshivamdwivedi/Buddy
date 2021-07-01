@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../onboarder/onboarder_widget.dart';
+// import '../onboarder/onboarder_widget.dart';
+import './auth/sign_in.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,9 +16,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: OnboarderWidget(),
+      // home: OnboarderWidget(),
+      initialRoute: '/',
       routes: {
-        OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
+        '/': (ctx) => SignIn(),
       },
     );
   }
