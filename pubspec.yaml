@@ -26,6 +26,7 @@ dependencies:
   liquid_swipe: ^2.1.0
   supabase: ^0.0.1-dev.24
   flutter_svg: ^0.22.0
+  injector: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
