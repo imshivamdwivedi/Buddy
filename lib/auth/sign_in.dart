@@ -32,7 +32,8 @@ class _SignInState extends State<SignIn> {
               text: "Phone no.",
               val: false,
             ),
-            RoundedButton(size, "Next"),
+            RoundedButton(size, 0.4,
+                Text('Next ', style: TextStyle(color: Colors.black87))),
             SizedBox(
               height: 5,
             ),
