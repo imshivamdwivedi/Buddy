@@ -21,7 +21,7 @@ class SocalIcon extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withOpacity(0.3),
               spreadRadius: 5,
               blurRadius: 3,
               offset: Offset(0, 2), // changes position of shadow
