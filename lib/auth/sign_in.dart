@@ -34,7 +34,7 @@ class _SignInState extends State<SignIn> {
               val: false,
             ),
             RoundedInputField(
-              icon: Icons.phone,
+              icon: Icons.lock,
               text: "Password",
               val: true,
             ),

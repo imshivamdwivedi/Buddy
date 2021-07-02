@@ -45,8 +45,8 @@ class _SignUpState extends State<SignUp> {
               height: 5,
             ),
             RoundedInputField(
-              icon: Icons.phone,
-              text: "Phone no.",
+              icon: Icons.lock,
+              text: "Password",
               val: true,
             ),
             RoundedButton(size, 0.4,

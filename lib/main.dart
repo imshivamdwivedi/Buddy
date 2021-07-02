@@ -16,14 +16,14 @@ void main() {
 
   Injector.appInstance.registerSingleton<SupabaseClient>(() => supabaseClient);
 
-  final supabaseClientnew = Injector.appInstance.get<SupabaseClient>();
-  final user = supabaseClientnew.auth.user();
+  // final supabaseClientnew = Injector.appInstance.get<SupabaseClient>();
+  // final user = supabaseClientnew.auth.user();
 
-  if (user == null) {
-    //User Doesn't Exist
-  } else {
-    //User Is Logged In
-  }
+  // if (user == null) {
+  //   //User Doesn't Exist
+  // } else {
+  //   //User Is Logged In
+  // }
 
   runApp(MyApp());
 }
