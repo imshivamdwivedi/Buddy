@@ -29,12 +29,19 @@ class _SignUpState extends State<SignUp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              "Sign Up ",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             RoundedInputField(
               icon: Icons.phone,
               text: "Phone no.",
               val: false,
             ),
-            RoundedButton(size, "Sign Up"),
+            RoundedButton(size, "Next"),
             SizedBox(
               height: 5,
             ),
