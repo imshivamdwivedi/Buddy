@@ -1,8 +1,9 @@
+import 'package:buddy/auth/forget-password.dart';
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 
-import '../onboarder/onboarder_widget.dart';
+// import '../onboarder/onboarder_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (ctx) => SignIn(),
         SignUp.routeName: (ctx) => SignUp(),
+        ForgetPassword.routeName: (ctx) => ForgetPassword()
       },
     );
   }
