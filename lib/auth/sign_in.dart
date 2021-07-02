@@ -1,4 +1,4 @@
-import 'package:buddy/auth/forget-password.dart';
+// import 'package:buddy/auth/forget-password.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 
@@ -33,15 +33,18 @@ class _SignInState extends State<SignIn> {
               text: "Email ",
               val: false,
             ),
-            SizedBox(
-              height: 5,
-            ),
             RoundedInputField(
               icon: Icons.phone,
               text: "Password",
               val: true,
             ),
-            RoundedButton(size, "Next"),
+            RoundedButton(
+                size,
+                0.4,
+                Text(
+                  "Next",
+                  style: TextStyle(color: Colors.black87),
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

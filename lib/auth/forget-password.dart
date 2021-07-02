@@ -30,7 +30,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               text: "Email ",
               val: false,
             ),
-            RoundedButton(size, "Next"),
+            RoundedButton(
+                size,
+                0.4,
+                Text(
+                  "Next",
+                  style: TextStyle(color: Colors.black87),
+                )),
           ],
         ),
       ),
