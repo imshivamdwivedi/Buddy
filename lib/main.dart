@@ -1,10 +1,11 @@
+// import 'package:buddy/auth/forget-password.dart';
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 import 'package:supabase/supabase.dart';
 
-import '../onboarder/onboarder_widget.dart';
+// import '../onboarder/onboarder_widget.dart';
 import '../user/user_genre.dart';
 
 void main() {
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         canvasColor: Color(0XFFF1F0E8),
       ),
       // home: OnboarderWidget(),
-      initialRoute: UserGenre.routeName,
+      initialRoute: '/',
       routes: {
         '/': (ctx) => SignIn(),
         SignUp.routeName: (ctx) => SignUp(),

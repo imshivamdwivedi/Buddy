@@ -1,4 +1,3 @@
-import '../components/rounded_button.dart';
 import '../components/social_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,6 @@ class UserGenre extends StatelessWidget {
   static const routeName = '/user-genre';
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Column(
         children: <Widget>[

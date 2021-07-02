@@ -16,9 +16,9 @@ class RoundedButton extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: Offset(0, 5), // changes position of shadow
+            spreadRadius: 4,
+            blurRadius: 6,
+            offset: Offset(0, 4), // changes position of shadow
           ),
         ],
       ),

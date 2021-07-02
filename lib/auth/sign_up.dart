@@ -37,9 +37,17 @@ class _SignUpState extends State<SignUp> {
               height: 10,
             ),
             RoundedInputField(
+              icon: Icons.person,
+              text: "Email ",
+              val: false,
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            RoundedInputField(
               icon: Icons.phone,
               text: "Phone no.",
-              val: false,
+              val: true,
             ),
             RoundedButton(size, 0.4,
                 Text('Next ', style: TextStyle(color: Colors.black87))),
