@@ -1,4 +1,8 @@
+import 'package:buddy/user/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../auth/sign_in.dart';
 import '../components/rounded_button.dart';
@@ -12,6 +16,11 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final _firebaseDatabase = FirebaseDatabase.instance;
+  final _auth = FirebaseAuth.instance;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   Expanded buildDivider() {
     return Expanded(
       child: Divider(
@@ -19,6 +28,57 @@ class _SignUpState extends State<SignUp> {
         height: 1.5,
       ),
     );
+  }
+
+  void _createUser() async {
+    final _email = _emailController.text.trim();
+    final _pass = _passwordController.text.trim();
+
+    print(_email);
+    print(_pass);
+
+    if (_email.isEmpty && _pass.isEmpty) {
+      //return 'signin#empty';
+      print('empty-fields');
+      return;
+    }
+    //---( Password and email Pattern )---//
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: _email, password: _pass);
+      print('Signed User Up !');
+      _saveUserData(_email);
+      Navigator.of(context).pushReplacementNamed(SignIn.routeName);
+      //return 'signin#done';
+    } on PlatformException catch (error) {
+      var msg = 'An error Occured, Please check your Connection!';
+      if (error.message != null) {
+        msg = error.message.toString();
+      }
+      print(msg);
+      //return msg;
+      return;
+    } catch (e) {
+      print(e);
+      //return 'signin#error';
+      return;
+    }
+  }
+
+  void _saveUserData(String email) {
+    final _uid = _auth.currentUser!.uid;
+    final _refUser = _firebaseDatabase.reference().child('Users').child(_uid);
+
+    UserModel userModel = new UserModel(
+      name: 'Parneet',
+      email: email,
+      phoneNumber: '8586825947',
+    );
+
+    _refUser.set(userModel.toJson());
+
+    /*_refUser.child('userEmail').set(email);
+    _refUser.child('userId').set(_uid);*/
   }
 
   @override
@@ -40,6 +100,7 @@ class _SignUpState extends State<SignUp> {
               icon: Icons.person,
               text: "Email ",
               val: false,
+              controller: _emailController,
             ),
             SizedBox(
               height: 5,
@@ -48,9 +109,17 @@ class _SignUpState extends State<SignUp> {
               icon: Icons.lock,
               text: "Password",
               val: true,
+              controller: _passwordController,
             ),
-            RoundedButton(size, 0.4,
-                Text('Next ', style: TextStyle(color: Colors.black87))),
+            RoundedButton(
+              size,
+              0.4,
+              Text(
+                'Next ',
+                style: TextStyle(color: Colors.black87),
+              ),
+              () => _createUser(),
+            ),
             SizedBox(
               height: 5,
             ),
@@ -63,7 +132,8 @@ class _SignUpState extends State<SignUp> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(SignIn.routeName);
+                      Navigator.of(context)
+                          .pushReplacementNamed(SignIn.routeName);
                     },
                     child: Text("Sign in !")),
               ],
@@ -75,14 +145,19 @@ class _SignUpState extends State<SignUp> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SocalIcon(
+                  onPressed: () {},
                   iconSrc: "assets/icons/facebook.svg",
                 ),
-                SocalIcon(iconSrc: "assets/icons/twitter.svg"),
                 SocalIcon(
+                  onPressed: () {},
+                  iconSrc: "assets/icons/twitter.svg",
+                ),
+                SocalIcon(
+                  onPressed: () {},
                   iconSrc: "assets/icons/google-plus.svg",
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

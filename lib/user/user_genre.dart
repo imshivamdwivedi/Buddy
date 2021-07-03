@@ -22,7 +22,7 @@ class UserGenre extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Johny s Family",
+                      "Parneet Raghuvanshi",
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 20,
@@ -42,14 +42,17 @@ class UserGenre extends StatelessWidget {
                     ),
                   ],
                 ),
-                SocalIcon(iconSrc: 'assets/icons/next.svg'),
+                SocalIcon(
+                  onPressed: () {},
+                  iconSrc: 'assets/icons/next.svg',
+                ),
               ],
             ),
           ),
           SizedBox(
             height: 40,
           ),
-          GridDashboard()
+          GridDashboard(),
         ],
       ),
     );

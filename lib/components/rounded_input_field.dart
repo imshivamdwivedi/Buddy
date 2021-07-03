@@ -6,14 +6,20 @@ class RoundedInputField extends StatelessWidget {
   final IconData icon;
   final String text;
   final bool val;
+  final TextEditingController controller;
 
-  RoundedInputField(
-      {this.icon = Icons.person, required this.text, this.val = false});
+  RoundedInputField({
+    this.icon = Icons.person,
+    required this.text,
+    this.val = false,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextField(
+        controller: controller,
         obscureText: val,
         cursorColor: Colors.black,
         decoration: InputDecoration(

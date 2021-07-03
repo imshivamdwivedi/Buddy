@@ -3,13 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SocalIcon extends StatelessWidget {
   final String iconSrc;
+  final Function onPressed;
 
-  SocalIcon({required this.iconSrc});
+  SocalIcon({required this.iconSrc, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => onPressed(),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         padding: EdgeInsets.all(20),

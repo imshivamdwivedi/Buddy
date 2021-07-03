@@ -10,6 +10,8 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  final _emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,14 +31,17 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               icon: Icons.person,
               text: "Email ",
               val: false,
+              controller: _emailController,
             ),
             RoundedButton(
-                size,
-                0.4,
-                Text(
-                  "Next",
-                  style: TextStyle(color: Colors.black87),
-                )),
+              size,
+              0.4,
+              Text(
+                "Next",
+                style: TextStyle(color: Colors.black87),
+              ),
+              () => {},
+            ),
           ],
         ),
       ),

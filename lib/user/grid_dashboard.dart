@@ -1,136 +1,96 @@
+import 'package:buddy/user/item_model.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class GridDashboard extends StatelessWidget {
-  Items item1 = new Items(
-      title: "Calendar",
-      subtitle: "March, Wednesday",
-      event: "3 Events",
-      img: "assets/images/firstImage.png");
+final List<ItemModel> myList = [
+  ItemModel(
+    text: 'Item 1',
+  ),
+  ItemModel(
+    text: 'Item 2',
+  ),
+  ItemModel(
+    text: 'Item 3',
+  ),
+  ItemModel(
+    text: 'Item 4',
+  ),
+  ItemModel(
+    text: 'Item 5',
+  ),
+  ItemModel(
+    text: 'Item 6',
+  ),
+  ItemModel(
+    text: 'Item 7',
+  ),
+  ItemModel(
+    text: 'Item 8',
+  )
+];
 
-  Items item2 = new Items(
-    title: "Groceries",
-    subtitle: "Bocali, Apple",
-    event: "4 Items",
-    img: "assets/images/firstImage.png",
-  );
-  Items item3 = new Items(
-    title: "Locations",
-    subtitle: "Lucy Mao going to Office",
-    event: "3 Events",
-    img: "assets/images/firstImage.png",
-  );
-  Items item4 = new Items(
-    title: "Activity",
-    subtitle: "Rose favirited your Post",
-    event: "3 Events",
-    img: "assets/images/firstImage.png",
-  );
-  Items item5 = new Items(
-    title: "To do",
-    subtitle: "Homework, Design",
-    event: "4 Items",
-    img: "assets/images/firstImage.png",
-  );
-  Items item6 = new Items(
-    title: "Settings",
-    subtitle: "Homework, Design",
-    event: "2 Items",
-    img: "assets/images/firstImage.png",
-  );
-  Items item7 = new Items(
-    title: "Settings",
-    subtitle: "Homework, Design",
-    event: "2 Items",
-    img: "assets/images/firstImage.png",
-  );
-  Items item8 = new Items(
-    title: "Settings",
-    subtitle: "Homework, Design",
-    event: "2 Items",
-    img: "assets/images/firstImage.png",
-  );
+final _databaseReference = FirebaseDatabase.instance.reference().child('Items');
+//final List<ItemModel> myList = [];
 
+void initList() {
+  _databaseReference.once().then((value) {
+    /*Map<String, dynamic> map = value.value;
+    map.forEach((key, value) {
+      print(value);
+      //myList.add(ItemModel.fromJson(value));
+    });*/
+    print(value);
+  });
+}
+
+class GridDashboard extends StatefulWidget {
+  @override
+  _GridDashboardState createState() => _GridDashboardState();
+}
+
+class _GridDashboardState extends State<GridDashboard> {
   @override
   Widget build(BuildContext context) {
-    List<Items> myList = [
-      item1,
-      item2,
-      item3,
-      item4,
-      item5,
-      item6,
-      item7,
-      item8,
-    ];
-    var color = 0xff453658;
+    initList();
+
+    void _togglePress(String title) {
+      setState(() {
+        print('tapped');
+        final _toggle =
+            myList.firstWhere((element) => element.text == title).isSelected;
+        myList.firstWhere((element) => element.text == title).isSelected =
+            !_toggle;
+      });
+    }
+
     return Flexible(
       child: GridView.count(
-          childAspectRatio: 1.0,
+          childAspectRatio: 5 / 2,
           padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
           crossAxisCount: 2,
-          crossAxisSpacing: 18,
-          mainAxisSpacing: 18,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
           children: myList.map((data) {
-            return Container(
-              decoration: BoxDecoration(
-                  color: Color(color), borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    data.img,
-                    width: 42,
-                  ),
-                  SizedBox(
-                    height: 14,
-                  ),
-                  Text(
-                    data.title,
+            return InkWell(
+              onTap: () => _togglePress(data.text),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: data.isSelected ? Colors.black87 : Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    data.text,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: data.isSelected ? Colors.white : Colors.black87,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  /*SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    data.subtitle,
-                    style: TextStyle(
-                      color: Colors.white38,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),*/
-                  /*SizedBox(
-                    height: 14,
-                  ),
-                  Text(
-                    data.event,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),*/
-                ],
+                ),
               ),
             );
           }).toList()),
     );
   }
-}
-
-class Items {
-  String title;
-  String subtitle;
-  String event;
-  String img;
-  Items({
-    required this.title,
-    required this.subtitle,
-    required this.event,
-    required this.img,
-  });
 }
