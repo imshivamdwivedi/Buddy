@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RoundedButton extends StatelessWidget {
   final Size size;
   final double sizeRatio;
   final Widget text;
   final Function _onPressed;
+  final String icon;
 
-  RoundedButton(this.size, this.sizeRatio, this.text, this._onPressed);
+  RoundedButton(
+      this.size, this.sizeRatio, this.text, this._onPressed, this.icon);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,22 @@ class RoundedButton extends StatelessWidget {
             print('button-pressed');
             _onPressed();
           },
-          child: text,
+          child: (icon.isEmpty)
+              ? text
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      icon,
+                      height: 20,
+                      width: 20,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    text,
+                  ],
+                ),
         ),
       ),
     );
