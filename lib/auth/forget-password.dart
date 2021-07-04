@@ -41,6 +41,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 style: TextStyle(color: Colors.black87),
               ),
               () => {},
+              '',
             ),
           ],
         ),

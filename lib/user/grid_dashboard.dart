@@ -40,7 +40,7 @@ void initList() {
       print(value);
       //myList.add(ItemModel.fromJson(value));
     });*/
-    print(value);
+    print(value.value);
   });
 }
 

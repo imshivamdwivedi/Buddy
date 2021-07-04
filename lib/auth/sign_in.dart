@@ -86,6 +86,7 @@ class _SignInState extends State<SignIn> {
                 style: TextStyle(color: Colors.black87),
               ),
               () => _signInUser(),
+              '',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

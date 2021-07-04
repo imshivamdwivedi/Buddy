@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//import 'package:flutter_login_facebook/flutter_login_facebook.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../auth/sign_in.dart';
 import '../components/rounded_button.dart';
@@ -81,6 +83,75 @@ class _SignUpState extends State<SignUp> {
     _refUser.child('userId').set(_uid);*/
   }
 
+  void _signinUserByGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        await _auth.signInWithCredential(credential);
+        print('Signed User Up Using Google !');
+        _saveUserData(_auth.currentUser!.email.toString());
+        Navigator.of(context).pushReplacementNamed(SignIn.routeName);
+        //return 'signin#done';
+      } on FirebaseAuthException catch (error) {
+        var msg = 'An error Occured, Please check your Connection!';
+        if (error.message != null) {
+          msg = error.message.toString();
+        }
+        print('ERROR ------------- ');
+        print(msg);
+        //return msg;
+        return;
+      } catch (e) {
+        print(e);
+        //return 'signin#error';
+        return;
+      }
+    }
+  }
+
+  /*void _signinUserByFacebook() async {
+    print('facebook login reached');
+    final FacebookLogin facebookLogin = FacebookLogin();
+    final FacebookLoginResult result = await facebookLogin.logIn();
+
+    // Create a credential from the access token
+    final facebookAuthCredential =
+        FacebookAuthProvider.credential(result.accessToken!.token);
+
+    try {
+      await _auth.signInWithCredential(facebookAuthCredential);
+      print('Signed User Up Using Facebook !');
+      _saveUserData(_auth.currentUser!.email.toString());
+      Navigator.of(context).pushReplacementNamed(SignIn.routeName);
+      //return 'signin#done';
+    } on FirebaseAuthException catch (error) {
+      var msg = 'An error Occured, Please check your Connection!';
+      if (error.message != null) {
+        msg = error.message.toString();
+      }
+      print('ERROR ------------- ');
+      print(msg);
+      //return msg;
+      return;
+    } catch (e) {
+      print(e);
+      //return 'signin#error';
+      return;
+    }
+  }*/
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -111,6 +182,33 @@ class _SignUpState extends State<SignUp> {
               val: true,
               controller: _passwordController,
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Or",
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RoundedButton(
+                  size,
+                  0.7,
+                  Text(
+                    'Signin with Google',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  () {
+                    _signinUserByGoogle();
+                  },
+                  'assets/icons/googlesignin.svg',
+                ),
+              ],
+            ),
             RoundedButton(
               size,
               0.4,
@@ -119,6 +217,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.black87),
               ),
               () => _createUser(),
+              '',
             ),
             SizedBox(
               height: 5,
@@ -136,26 +235,6 @@ class _SignUpState extends State<SignUp> {
                           .pushReplacementNamed(SignIn.routeName);
                     },
                     child: Text("Sign in !")),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SocalIcon(
-                  onPressed: () {},
-                  iconSrc: "assets/icons/facebook.svg",
-                ),
-                SocalIcon(
-                  onPressed: () {},
-                  iconSrc: "assets/icons/twitter.svg",
-                ),
-                SocalIcon(
-                  onPressed: () {},
-                  iconSrc: "assets/icons/google.svg",
-                ),
               ],
             ),
           ],

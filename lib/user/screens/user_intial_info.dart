@@ -107,14 +107,14 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
                 controller: _passwordController,
               ),
               RoundedButton(
-                size,
-                0.4,
-                Text(
-                  "Next",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                () => () {},
-              ),
+                  size,
+                  0.4,
+                  Text(
+                    "Next",
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  () => () {},
+                  ''),
             ],
           ),
         ),
