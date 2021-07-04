@@ -1,7 +1,7 @@
+import 'package:buddy/user/grid_dashboard.dart';
+
 import '../components/social_icons.dart';
 import 'package:flutter/material.dart';
-
-import '../user/grid_dashboard.dart';
 
 class UserGenre extends StatelessWidget {
   static const routeName = '/user-genre';

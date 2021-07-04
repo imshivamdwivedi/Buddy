@@ -1,12 +1,10 @@
-// import 'package:buddy/auth/forget-password.dart';
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/user/user_genre.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import '../onboarder/onboarder_widget.dart';
-import '../user/user_genre.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +30,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //'/': (ctx) => AuthWrapper(),
-        '/': (ctx) => UserGenre(),
+        '/': (ctx) => SignIn(),
         SignUp.routeName: (ctx) => SignUp(),
         UserGenre.routeName: (ctx) => UserGenre(),
       },

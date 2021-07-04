@@ -154,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 SocalIcon(
                   onPressed: () {},
-                  iconSrc: "assets/icons/google-plus.svg",
+                  iconSrc: "assets/icons/google.svg",
                 ),
               ],
             ),
