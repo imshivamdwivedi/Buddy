@@ -1,5 +1,6 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/user/grid_dashboard.dart';
+import 'package:buddy/user/screens/user_dashboard.dart';
 
 import '../components/social_icons.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,8 @@ class UserGenre extends StatelessWidget {
                 ),
                 SocalIcon(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, SignIn.routeName);
+                    Navigator.pushReplacementNamed(
+                        context, UserDashBoard.routeName);
                   },
                   iconSrc: 'assets/icons/next.svg',
                 ),
