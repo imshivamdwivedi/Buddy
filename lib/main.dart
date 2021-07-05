@@ -1,7 +1,6 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
-import 'package:buddy/user/screens/user_profile_section.dart';
 import 'package:buddy/user/user_genre.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/': (ctx) => UserIntialInfo(),
         SignUp.routeName: (ctx) => SignUp(),
         UserGenre.routeName: (ctx) => UserGenre(),
+        UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
       },
     );
   }
