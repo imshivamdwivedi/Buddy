@@ -15,7 +15,9 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   late DateTime _selectedDate = DateTime.now();
-  final _passwordController = TextEditingController();
+  final _collegeNameController = TextEditingController();
+  String _gender = 'Other';
+  List list = ['Male', 'Female', 'Other'];
 
   void _birthDatePicker() {
     showDatePicker(
@@ -62,13 +64,10 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: 100,
-              ),
               RoundedInputField(
                 icon: Icons.person,
                 text: "First Name ",
@@ -94,17 +93,35 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
                       onPressed: _birthDatePicker),
                 ],
               ),
-              RoundedInputField(
-                icon: Icons.lock,
-                text: "Gender",
-                val: true,
-                controller: _passwordController,
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: size.width * 0.8,
+                decoration: BoxDecoration(
+                  color: Color(0xFFD6D5C5),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: new DropdownButton(
+                  hint: Text("Gender"),
+                  isExpanded: true,
+                  value: _gender,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _gender = newValue.toString();
+                    });
+                  },
+                  items: list.map((valueItem) {
+                    // print(valueItem);
+                    return new DropdownMenuItem(
+                        child: Text(valueItem), value: valueItem);
+                  }).toList(),
+                ),
               ),
               RoundedInputField(
-                icon: Icons.lock,
+                icon: Icons.home,
                 text: "College Name",
                 val: true,
-                controller: _passwordController,
+                controller: _collegeNameController,
               ),
               RoundedButton(
                   size,
