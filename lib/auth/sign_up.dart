@@ -1,3 +1,4 @@
+import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:buddy/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -50,7 +51,7 @@ class _SignUpState extends State<SignUp> {
           email: _email, password: _pass);
       print('Signed User Up !');
       _saveUserData(_email);
-      Navigator.of(context).pushReplacementNamed(SignIn.routeName);
+      Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
       //return 'signin#done';
     } on PlatformException catch (error) {
       var msg = 'An error Occured, Please check your Connection!';
@@ -67,20 +68,17 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  void _saveUserData(String email) {
+  void _saveUserData(String email) async {
     final _uid = _auth.currentUser!.uid;
     final _refUser = _firebaseDatabase.reference().child('Users').child(_uid);
 
     UserModel userModel = new UserModel(
-      name: 'Parneet',
       email: email,
-      phoneNumber: '8586825947',
+      profile: false,
+      genre: [],
     );
 
-    _refUser.set(userModel.toJson());
-
-    /*_refUser.child('userEmail').set(email);
-    _refUser.child('userId').set(_uid);*/
+    await _refUser.set(userModel.toJson());
   }
 
   void _signinUserByGoogle() async {
@@ -102,7 +100,7 @@ class _SignUpState extends State<SignUp> {
         await _auth.signInWithCredential(credential);
         print('Signed User Up Using Google !');
         _saveUserData(_auth.currentUser!.email.toString());
-        Navigator.of(context).pushReplacementNamed(SignIn.routeName);
+        Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
         //return 'signin#done';
       } on FirebaseAuthException catch (error) {
         var msg = 'An error Occured, Please check your Connection!';

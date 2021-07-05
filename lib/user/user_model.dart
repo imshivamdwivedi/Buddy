@@ -1,25 +1,45 @@
 class UserModel {
-  String name;
+  String firstName;
+  String lastName;
+  String dob;
+  String gender;
   String email;
-  String phoneNumber;
+  String collegeName;
+  bool profile;
+  List<String> genre;
 
   UserModel({
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
+    this.firstName = '',
+    this.lastName = '',
+    this.dob = '',
+    this.gender = '',
+    this.email = '',
+    this.collegeName = '',
+    required this.profile,
+    required this.genre,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
-      name: map['name'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      dob: map['dob'],
+      gender: map['gender'],
       email: map['email'],
-      phoneNumber: map['phoneNumber'],
+      collegeName: map['collegeName'],
+      profile: map['profile'],
+      genre: map['genre'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
+        'firstName': firstName,
+        'lastName': lastName,
+        'dob': dob,
+        'gender': gender,
         'email': email,
-        'phoneNumber': phoneNumber,
+        'collegeName': collegeName,
+        'profile': profile,
+        'genre': genre,
       };
 }

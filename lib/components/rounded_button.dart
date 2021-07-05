@@ -36,7 +36,6 @@ class RoundedButton extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
           ),
           onPressed: () {
-            print('button-pressed');
             _onPressed();
           },
           child: (icon.isEmpty)
