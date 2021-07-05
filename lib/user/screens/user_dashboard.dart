@@ -6,7 +6,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/profile.dart';
 import 'package:flutter/material.dart';
 
 class UserDashBoard extends StatefulWidget {
-  const UserDashBoard({Key? key}) : super(key: key);
+  static const routeName = 'user-dashboard';
 
   @override
   _UserDashBoardState createState() => _UserDashBoardState();

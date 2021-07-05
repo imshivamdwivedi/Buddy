@@ -33,10 +33,11 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //'/': (ctx) => AuthWrapper(),
-        '/': (ctx) => UserDashBoard(),
+        '/': (ctx) => AuthWrapper(),
         SignUp.routeName: (ctx) => SignUp(),
         UserGenre.routeName: (ctx) => UserGenre(),
         UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
+        UserDashBoard.routeName: (ctx) => UserDashBoard(),
       },
     );
   }
@@ -49,7 +50,7 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.idTokenChanges(),
       builder: (context, userSnapshot) {
         if (userSnapshot.hasData) {
-          return UserGenre();
+          return UserDashBoard();
         } else {
           return SignIn();
         }
