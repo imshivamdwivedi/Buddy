@@ -11,9 +11,6 @@ class _UserCalenderState extends State<UserCalender> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Calender"),
-      ),
       body: Center(
         child: Text(
           "Calnder",

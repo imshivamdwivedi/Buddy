@@ -1,5 +1,6 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:buddy/user/user_genre.dart';
