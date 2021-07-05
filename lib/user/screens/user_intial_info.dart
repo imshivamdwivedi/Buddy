@@ -2,6 +2,7 @@ import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/social_icons.dart';
+import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -81,6 +82,7 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
       return;
     }
 
+    //---( Saving to firebase )-----//
     final _user = _auth.currentUser;
     final _refUser =
         _firebaseDatabase.reference().child('Users').child(_user!.uid);
@@ -96,7 +98,7 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
     );
     await _refUser.set(userModel.toJson());
 
-    Navigator.pushReplacementNamed(context, SignIn.routeName);
+    Navigator.pushReplacementNamed(context, OnboarderWidget.routeName);
   }
 
   @override

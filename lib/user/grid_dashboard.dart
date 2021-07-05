@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'item_model.dart';
 
-final List<ItemModel> myList = [
+/*final List<ItemModel> myList = [
   ItemModel(
     text: 'Item 1',
   ),
@@ -28,19 +28,22 @@ final List<ItemModel> myList = [
   ItemModel(
     text: 'Item 8',
   )
-];
+];*/
 
 final _databaseReference = FirebaseDatabase.instance.reference().child('Items');
-//final List<ItemModel> myList = [];
+final List<ItemModel> myList = [];
 
 void initList() {
-  _databaseReference.once().then((value) {
+  _databaseReference.once().then((DataSnapshot snapshot) {
     /*Map<String, dynamic> map = value.value;
     map.forEach((key, value) {
       print(value);
       //myList.add(ItemModel.fromJson(value));
     });*/
-    print(value.value);
+    List res = snapshot.value;
+    for (var item in res) {
+      myList.add(ItemModel(text: item['text']));
+    }
   });
 }
 
@@ -51,9 +54,13 @@ class GridDashboard extends StatefulWidget {
 
 class _GridDashboardState extends State<GridDashboard> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     initList();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     void _togglePress(String title) {
       setState(() {
         print('tapped');
