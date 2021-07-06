@@ -1,5 +1,6 @@
 // import 'package:buddy/auth/forget-password.dart';
 import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,12 +30,22 @@ class _SignInState extends State<SignIn> {
     if (_email.isEmpty && _pass.isEmpty) {
       //return 'signin#empty';
       print('empty-fields');
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Please provide Proper Credentials!',
+        color: Colors.black87,
+      );
       return;
     }
     //---( Password and email Pattern )---//
     try {
       await _auth.signInWithEmailAndPassword(email: _email, password: _pass);
       print('Signed User In !');
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Signed User In!',
+        color: Colors.black87,
+      );
       //return 'signin#done';
     } on PlatformException catch (error) {
       var msg = 'An error Occured, Please check your Credentials!';
@@ -42,10 +53,20 @@ class _SignInState extends State<SignIn> {
         msg = error.message.toString();
       }
       print(msg);
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: msg,
+        color: Colors.black87,
+      );
       //return msg;
       return;
     } catch (e) {
       print(e);
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: e.toString(),
+        color: Colors.black87,
+      );
       //return 'signin#error';
       return;
     }
@@ -85,6 +106,7 @@ class _SignInState extends State<SignIn> {
                 "Next",
                 style: TextStyle(color: Colors.black87),
               ),
+              //() => _signInUser(),
               () => _signInUser(),
               '',
             ),

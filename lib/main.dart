@@ -30,11 +30,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         canvasColor: Color(0XFFF1F0E8),
       ),
-      // home: OnboarderWidget(),
       initialRoute: '/',
       routes: {
-        //'/': (ctx) => AuthWrapper(),
-        '/': (ctx) => UserDashBoard(),
+        '/': (ctx) => AuthWrapper(),
         SignUp.routeName: (ctx) => SignUp(),
         UserGenre.routeName: (ctx) => UserGenre(),
         UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
