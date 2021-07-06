@@ -164,9 +164,9 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
               ),
             ),
             RoundedInputField(
-              icon: Icons.lock,
+              icon: Icons.school,
               text: "College Name",
-              val: true,
+              val: false,
               controller: _collegeController,
             ),
             RoundedButton(

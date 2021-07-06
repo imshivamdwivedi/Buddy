@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //'/': (ctx) => AuthWrapper(),
-        '/': (ctx) => AuthWrapper(),
+        '/': (ctx) =>  AuthWrapper(),
         SignUp.routeName: (ctx) => SignUp(),
         UserGenre.routeName: (ctx) => UserGenre(),
         UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
