@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         UserGenre.routeName: (ctx) => UserGenre(),
         UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
         UserDashBoard.routeName: (ctx) => UserDashBoard(),
+        OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
       },
     );
   }
