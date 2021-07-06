@@ -2,7 +2,7 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/notification.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/profile.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserDashBoard extends StatefulWidget {
@@ -18,7 +18,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
     UserHome(),
     UserCalender(),
     UserNotification(),
-    UserProfile()
+    UserProfileScreen()
   ];
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = UserHome();
@@ -138,7 +138,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = UserProfile();
+                        currentScreen = UserProfileScreen();
                         currentTab = 3;
                       });
                     },

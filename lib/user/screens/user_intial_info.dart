@@ -106,79 +106,81 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 100,
-            ),
-            RoundedInputField(
-              icon: Icons.person,
-              text: "First Name ",
-              val: false,
-              controller: _firstNameController,
-            ),
-            RoundedInputField(
-              icon: Icons.person,
-              text: "Second Name",
-              val: false,
-              controller: _lastNameController,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                dateButton(
-                    size,
-                    (_selectedDate == DateTime.now()
-                        ? "Enter D.O.B - dd/mm/yyyy"
-                        : "${DateFormat.yMd().format(_selectedDate)}")),
-                SocalIcon(
-                    iconSrc: "assets/icons/calender.svg",
-                    onPressed: _birthDatePicker),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              width: size.width * 0.8,
-              decoration: BoxDecoration(
-                color: Color(0xFFD6D5C5),
-                borderRadius: BorderRadius.circular(15),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 100,
               ),
-              child: new DropdownButton(
-                hint: Text("Gender"),
-                isExpanded: true,
-                value: _genderName,
-                onChanged: (newValue) {
-                  setState(() {
-                    _genderName = newValue.toString();
-                  });
-                },
-                items: list.map((valueItem) {
-                  // print(valueItem);
-                  return new DropdownMenuItem(
-                      child: Text(valueItem), value: valueItem);
-                }).toList(),
+              RoundedInputField(
+                icon: Icons.person,
+                text: "First Name ",
+                val: false,
+                controller: _firstNameController,
               ),
-            ),
-            RoundedInputField(
-              icon: Icons.school,
-              text: "College Name",
-              val: false,
-              controller: _collegeController,
-            ),
-            RoundedButton(
-                size,
-                0.4,
-                Text(
-                  "Next",
-                  style: TextStyle(color: Colors.black87),
+              RoundedInputField(
+                icon: Icons.person,
+                text: "Second Name",
+                val: false,
+                controller: _lastNameController,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  dateButton(
+                      size,
+                      (_selectedDate == DateTime.now()
+                          ? "Enter D.O.B - dd/mm/yyyy"
+                          : "${DateFormat.yMd().format(_selectedDate)}")),
+                  SocalIcon(
+                      iconSrc: "assets/icons/calender.svg",
+                      onPressed: _birthDatePicker),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: size.width * 0.8,
+                decoration: BoxDecoration(
+                  color: Color(0xFFD6D5C5),
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                () => _saveUserData(context),
-                ''),
-          ],
+                child: new DropdownButton(
+                  hint: Text("Gender"),
+                  isExpanded: true,
+                  value: _genderName,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _genderName = newValue.toString();
+                    });
+                  },
+                  items: list.map((valueItem) {
+                    // print(valueItem);
+                    return new DropdownMenuItem(
+                        child: Text(valueItem), value: valueItem);
+                  }).toList(),
+                ),
+              ),
+              RoundedInputField(
+                icon: Icons.school,
+                text: "College Name",
+                val: false,
+                controller: _collegeController,
+              ),
+              RoundedButton(
+                  size,
+                  0.4,
+                  Text(
+                    "Next",
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  () => _saveUserData(context),
+                  ''),
+            ],
+          ),
         ),
       ),
     );
