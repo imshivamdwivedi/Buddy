@@ -33,14 +33,15 @@ import 'item_model.dart';
 final _databaseReference = FirebaseDatabase.instance.reference().child('Items');
 final List<ItemModel> myList = [];
 
-void initList() {
-  _databaseReference.once().then((DataSnapshot snapshot) {
+void initList() async {
+  await _databaseReference.once().then((DataSnapshot snapshot) {
     /*Map<String, dynamic> map = value.value;
     map.forEach((key, value) {
       print(value);
       //myList.add(ItemModel.fromJson(value));
     });*/
     List res = snapshot.value;
+    print(snapshot.value);
     for (var item in res) {
       myList.add(ItemModel(text: item['text']));
     }

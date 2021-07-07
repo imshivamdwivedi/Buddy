@@ -1,3 +1,4 @@
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:buddy/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,6 +44,22 @@ class _SignUpState extends State<SignUp> {
     if (_email.isEmpty && _pass.isEmpty) {
       //return 'signin#empty';
       print('empty-fields');
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Please provide Proper Credentials!',
+        color: Colors.black87,
+      );
+      return;
+    }
+    if (!validateStructure(_pass)) {
+      print('invalid-password-format');
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        title: 'Invalid Password, it should contain:',
+        message:
+            '\u2022 Minimum 1 Upper case\n\u2022 Minimum 1 lowercase\n\u2022 Minimum 1 Numeric Number\n\u2022 Minimum 1 Special Character\n\u2022 Common Allow Character ( ! @ # \$ & * ~ )',
+        color: Colors.black87,
+      );
       return;
     }
     //---( Password and email Pattern )---//
@@ -54,11 +71,23 @@ class _SignUpState extends State<SignUp> {
       Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
       //return 'signin#done';
     } on PlatformException catch (error) {
-      var msg = 'An error Occured, Please check your Connection!';
-      if (error.message != null) {
-        msg = error.message.toString();
-      }
+      var msg = 'An error Occured, Please try again!';
+
       print(msg);
+      print(error.code);
+      //----( Error Code Output )-----//
+      switch (error.code) {
+        case 'invalid-email':
+          msg = 'Please provide a valid email!';
+          break;
+        default:
+          msg = 'An error Occured, Please try again!';
+      }
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: msg,
+        color: Colors.red,
+      );
       //return msg;
       return;
     } catch (e) {
@@ -66,6 +95,14 @@ class _SignUpState extends State<SignUp> {
       //return 'signin#error';
       return;
     }
+  }
+
+  //----( Password Pattern Matcher )-----//
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 
   void _saveUserData(String email) async {
@@ -103,12 +140,13 @@ class _SignUpState extends State<SignUp> {
         Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
         //return 'signin#done';
       } on FirebaseAuthException catch (error) {
-        var msg = 'An error Occured, Please check your Connection!';
-        if (error.message != null) {
-          msg = error.message.toString();
-        }
-        print('ERROR ------------- ');
+        var msg = 'An error Occured, Please try again!';
         print(msg);
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: msg,
+          color: Colors.red,
+        );
         //return msg;
         return;
       } catch (e) {
