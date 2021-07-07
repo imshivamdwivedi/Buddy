@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+
 class UserModel {
   String firstName;
   String lastName;
@@ -6,7 +8,7 @@ class UserModel {
   String email;
   String collegeName;
   bool profile;
-  List<String> genre;
+  Map<dynamic, dynamic> genre;
 
   UserModel({
     this.firstName = '',
@@ -19,16 +21,16 @@ class UserModel {
     required this.genre,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> map) {
+  factory UserModel.fromJson(DataSnapshot snapshot) {
     return UserModel(
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      dob: map['dob'],
-      gender: map['gender'],
-      email: map['email'],
-      collegeName: map['collegeName'],
-      profile: map['profile'],
-      genre: map['genre'],
+      firstName: snapshot.value['firstName'],
+      lastName: snapshot.value['lastName'],
+      dob: snapshot.value['dob'],
+      gender: snapshot.value['gender'],
+      email: snapshot.value['email'],
+      collegeName: snapshot.value['collegeName'],
+      profile: snapshot.value['profile'],
+      genre: snapshot.value['genre'] == null ? [] : snapshot.value['genre'],
     );
   }
 
