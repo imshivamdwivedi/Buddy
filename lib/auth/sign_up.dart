@@ -55,9 +55,9 @@ class _SignUpState extends State<SignUp> {
       print('invalid-password-format');
       CustomSnackbar().showFloatingFlushbar(
         context: context,
-        title: 'Invalid Password, it should contain:',
+        title: 'Password should contain:',
         message:
-            '\u2022 Minimum 1 Upper case\n\u2022 Minimum 1 lowercase\n\u2022 Minimum 1 Numeric Number\n\u2022 Minimum 1 Special Character\n\u2022 Common Allow Character ( ! @ # \$ & * ~ )',
+            '\u2022 Minimum 1 Upper case\n\u2022 Minimum 1 Numeric Number\n\u2022 Minimum 1 Special Character',
         color: Colors.black87,
       );
       return;
@@ -112,7 +112,7 @@ class _SignUpState extends State<SignUp> {
     UserModel userModel = new UserModel(
       email: email,
       profile: false,
-      genre: [],
+      genre: {},
     );
 
     await _refUser.set(userModel.toJson());

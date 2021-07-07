@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => UserDashBoard(),
+        '/': (ctx) => AuthWrapper(),
         SignUp.routeName: (ctx) => SignUp(),
         UserGenre.routeName: (ctx) => UserGenre(),
         UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
