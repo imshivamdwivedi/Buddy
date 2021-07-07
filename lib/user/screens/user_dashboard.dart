@@ -1,7 +1,7 @@
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/notification.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:flutter/material.dart';
 
