@@ -1,5 +1,6 @@
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/community.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -10,6 +11,26 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  List<Community> communityList = [
+    Community(id: "e1", name: "Love to Build"),
+    Community(id: "e2", name: "Udemy"),
+    Community(id: "e3", name: "JS lovers"),
+    Community(id: "e4", name: "Java Guys"),
+    Community(id: "e5", name: "Python"),
+  ];
+
+  static const kListHeight = 150.0;
+
+  // Widget _buildHorizontalList() => SizedBox(
+  //       height: kListHeight,
+  //       child: ListView.builder(
+  //         scrollDirection: Axis.horizontal,
+  //         itemCount: 20,
+  //         itemBuilder: (_, index) =>
+  //             CTile(heading: 'Hip Hop', subheading: '623 Beats'),
+  //       ),
+  //     );
+
   Widget _buildChip(
     String label,
   ) {
@@ -70,7 +91,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ),
                         ),
                       ),
-                      Container(child: _buildChip("4.5")),
+                      Container(
+                        child: _buildChip("4.5"),
+                        margin: EdgeInsets.all(4),
+                      ),
                     ],
                   ),
                   Row(
@@ -107,6 +131,44 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ],
                   ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.width * 0.8,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 50,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                    width: 85,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text("projects"),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/google.png'),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text("Java")
+                                      ],
+                                    ));
+                              }),
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
