@@ -27,49 +27,76 @@ class _SignInState extends State<SignIn> {
     print(_email);
     print(_pass);
 
-    if (_email.isEmpty && _pass.isEmpty) {
+    if (_email.isEmpty || _pass.isEmpty) {
       //return 'signin#empty';
       print('empty-fields');
       CustomSnackbar().showFloatingFlushbar(
         context: context,
-        message: 'Please provide Proper Credentials!',
+        message: 'Fields can\' be empty, please provide Credentials!',
         color: Colors.black87,
       );
       return;
     }
+
+    //---( Password Pattern )----//
+    if (!validateStructure(_pass)) {
+      print('invalid-password-format');
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        title: 'Invalid Password, it should contain:',
+        message:
+            '\u2022 Minimum 1 Upper case\n\u2022 Minimum 1 lowercase\n\u2022 Minimum 1 Numeric Number\n\u2022 Minimum 1 Special Character\n\u2022 Common Allow Character ( ! @ # \$ & * ~ )',
+        color: Colors.black87,
+      );
+      return;
+    }
+
     //---( Password and email Pattern )---//
     try {
       await _auth.signInWithEmailAndPassword(email: _email, password: _pass);
       print('Signed User In !');
-      CustomSnackbar().showFloatingFlushbar(
-        context: context,
-        message: 'Signed User In!',
-        color: Colors.black87,
-      );
       //return 'signin#done';
-    } on PlatformException catch (error) {
-      var msg = 'An error Occured, Please check your Credentials!';
-      if (error.message != null) {
-        msg = error.message.toString();
-      }
+    } on FirebaseAuthException catch (error) {
+      var msg = 'An error Occured, Please try again!';
+
       print(msg);
+      print(error.code);
+
+      //----( Error Code Output )-----//
+      switch (error.code) {
+        case 'user-not-found':
+          msg = 'User with this email doesn\'t exist!';
+          break;
+        case 'wrong-password':
+          msg = 'Wrong Password, please enter correct password!';
+          break;
+        case 'invalid-email':
+          msg = 'Please provide a valid email!';
+          break;
+        default:
+          msg = 'An error Occured, Please try again!';
+      }
       CustomSnackbar().showFloatingFlushbar(
         context: context,
         message: msg,
-        color: Colors.black87,
+        color: Colors.red,
       );
       //return msg;
       return;
     } catch (e) {
       print(e);
       CustomSnackbar().showFloatingFlushbar(
-        context: context,
-        message: e.toString(),
-        color: Colors.black87,
-      );
+          context: context, message: e.toString(), color: Colors.black87);
       //return 'signin#error';
       return;
     }
+  }
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 
   @override
