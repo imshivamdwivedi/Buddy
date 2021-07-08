@@ -4,6 +4,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class UserDashBoard extends StatefulWidget {
   static const routeName = 'user-dashboard';
@@ -23,6 +24,38 @@ class _UserDashBoardState extends State<UserDashBoard> {
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = UserHome();
 
+  _openPopup(context) {
+    Alert(
+        context: context,
+        title: "Create",
+        content: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.account_circle),
+                labelText: 'Username',
+              ),
+            ),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                icon: Icon(Icons.lock),
+                labelText: 'Password',
+              ),
+            ),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "LOGIN",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +68,9 @@ class _UserDashBoardState extends State<UserDashBoard> {
             Icons.add,
           ),
           backgroundColor: Colors.black87,
-          onPressed: () {},
+          onPressed: () {
+            _openPopup(context);
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(

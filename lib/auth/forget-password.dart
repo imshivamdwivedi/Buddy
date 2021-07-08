@@ -28,7 +28,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               height: 10,
             ),
             RoundedInputField(
-              icon: Icons.person,
+              icon: Icons.account_circle,
               text: "Email ",
               val: false,
               controller: _emailController,

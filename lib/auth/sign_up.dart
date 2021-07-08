@@ -204,7 +204,7 @@ class _SignUpState extends State<SignUp> {
               height: 10,
             ),
             RoundedInputField(
-              icon: Icons.person,
+              icon: Icons.account_circle,
               text: "Email ",
               val: false,
               controller: _emailController,
