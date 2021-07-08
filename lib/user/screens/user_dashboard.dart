@@ -1,5 +1,6 @@
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
+import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
@@ -18,6 +19,7 @@ class UserDashBoard extends StatefulWidget {
 class _UserDashBoardState extends State<UserDashBoard> {
   final _topicController = TextEditingController();
   final _startTimeController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   int currentTab = 0;
   List<Widget> screens = [
@@ -53,6 +55,10 @@ class _UserDashBoardState extends State<UserDashBoard> {
               val: false,
               controller: _startTimeController,
             ),
+            TextArea(
+                text: "Write description here ... ",
+                val: false,
+                controller: _descriptionController)
           ],
         ),
         buttons: [
