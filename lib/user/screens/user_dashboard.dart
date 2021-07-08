@@ -1,3 +1,5 @@
+import 'package:buddy/components/rounded_button.dart';
+import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
@@ -14,6 +16,9 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
+  final _topicController = TextEditingController();
+  final _startTimeController = TextEditingController();
+
   int currentTab = 0;
   List<Widget> screens = [
     UserHome(),
@@ -30,29 +35,35 @@ class _UserDashBoardState extends State<UserDashBoard> {
         title: "Create",
         content: Column(
           children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.account_circle),
-                labelText: 'Username',
-              ),
+            RoundedInputField(
+              icon: Icons.account_circle,
+              text: "Topic",
+              val: false,
+              controller: _topicController,
             ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
+            RoundedInputField(
+              icon: Icons.timer_sharp,
+              text: "Start Time",
+              val: false,
+              controller: _startTimeController,
+            ),
+            RoundedInputField(
+              icon: Icons.timer_sharp,
+              text: "Date -  dd/mm/yy",
+              val: false,
+              controller: _startTimeController,
             ),
           ],
         ),
         buttons: [
           DialogButton(
+            color: kPrimaryProfileColor,
             onPressed: () => Navigator.pop(context),
             child: Text(
-              "LOGIN",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              "Create",
+              style: TextStyle(color: Colors.black87, fontSize: 20),
             ),
-          )
+          ),
         ]).show();
   }
 
