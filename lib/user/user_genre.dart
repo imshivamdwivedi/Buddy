@@ -1,9 +1,9 @@
-import 'package:buddy/main.dart';
-import 'package:buddy/user/item_model.dart';
+import 'package:buddy/user/models/item_model.dart';
+import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
-import 'package:buddy/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
 
 import '../components/social_icons.dart';
 import 'package:flutter/material.dart';
@@ -16,64 +16,55 @@ class UserGenre extends StatefulWidget {
 }
 
 class _UserGenreState extends State<UserGenre> {
+  bool init = true;
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
   final _databaseReference =
       FirebaseDatabase.instance.reference().child('Items');
+  final _userDatabase = FirebaseDatabase.instance.reference().child('Users');
 
-  List<ItemModel> myList = [];
-
-  void getList() async {
-    await _databaseReference.once().then((DataSnapshot snapshot) {
-      List res = snapshot.value;
-      print(snapshot.value);
-      for (var item in res) {
-        myList.add(ItemModel(text: item['text']));
-      }
-    });
-  }
-
-  void _togglePress(String title) {
-    setState(() {
-      print('tapped');
-      final _toggle =
-          myList.firstWhere((element) => element.text == title).isSelected;
-      myList.firstWhere((element) => element.text == title).isSelected =
-          !_toggle;
-    });
-  }
-
-  void _saveUserGenre(BuildContext context) async {
-    Map<int, String> genreList = {};
-    int i = 0;
-    myList.forEach((element) {
-      if (element.isSelected) {
-        genreList.addAll({i: element.text});
-        i++;
-      }
-    });
-    Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
+  void _saveUserGenre(List<ItemModel> finalList) async {
     final _user = _auth.currentUser;
-    final _refUser =
-        _firebaseDatabase.reference().child('Users').child(_user!.uid);
+    final _refUser = _firebaseDatabase
+        .reference()
+        .child('Users')
+        .child(_user!.uid)
+        .child('userGenre');
 
-    await _refUser.once().then((DataSnapshot snapshot) {
-      UserModel prevModel = UserModel.fromJson(snapshot);
-      prevModel.genre = genreList;
-      _refUser.set(prevModel.toJson());
-    });
+    _refUser.set(null);
+
+    for (int i = 0; i < finalList.length; i++) {
+      _refUser.child(i.toString()).child('text').set(finalList[i].text);
+    }
 
     Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
-  }
-
-  @override
-  void initState() {
-    getList();
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (init) {
+      final _user = _auth.currentUser;
+      _userDatabase
+          .orderByChild('id')
+          .equalTo(_user!.uid)
+          .once()
+          .then((DataSnapshot snapshot) {
+        String name = snapshot.value[_user.uid]['firstName'].toString() +
+            ' ' +
+            snapshot.value[_user.uid]['lastName'].toString();
+        print(name);
+        Provider.of<UserGenreProvider>(context, listen: false).setName(name);
+      });
+      _databaseReference.once().then((DataSnapshot snapshot) {
+        List<ItemModel> myList = [];
+        List res = snapshot.value;
+        for (var item in res) {
+          myList.add(ItemModel(text: item['text']));
+        }
+        Provider.of<UserGenreProvider>(context, listen: false).addList(myList);
+      });
+      init = false;
+    }
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -88,19 +79,21 @@ class _UserGenreState extends State<UserGenre> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Parneet Raghuvanshi",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Consumer<UserGenreProvider>(
+                      builder: (_, userGenre, ch) => Text(
+                        userGenre.userName,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 4,
                     ),
                     Text(
-                      "Home",
+                      "Choose your Genre",
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
@@ -111,7 +104,9 @@ class _UserGenreState extends State<UserGenre> {
                 ),
                 SocalIcon(
                   onPressed: () {
-                    _saveUserGenre(context);
+                    _saveUserGenre(
+                        Provider.of<UserGenreProvider>(context, listen: false)
+                            .onlySelected);
                   },
                   iconSrc: 'assets/icons/next.svg',
                 ),
@@ -121,35 +116,49 @@ class _UserGenreState extends State<UserGenre> {
           SizedBox(
             height: 40,
           ),
-          Flexible(
-            child: GridView.count(
-                childAspectRatio: 5 / 2,
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                children: myList.map((data) {
-                  return InkWell(
-                    onTap: () => _togglePress(data.text),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: data.isSelected ? Colors.black87 : Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+          Consumer<UserGenreProvider>(
+            builder: (_, userGenre, ch) => Flexible(
+              child: userGenre.allGenre.isEmpty
+                  ? CircularProgressIndicator.adaptive()
+                  : GridView.builder(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                      itemCount: userGenre.allGenre.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 5 / 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
                       ),
-                      child: Center(
-                        child: Text(
-                          data.text,
-                          style: TextStyle(
-                            color:
-                                data.isSelected ? Colors.white : Colors.black87,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                      itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                        value: userGenre.allGenre[index],
+                        child: Consumer<ItemModel>(
+                          builder: (ctx, product, child) => InkWell(
+                            onTap: () => product.toggleSelected(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: product.isSelected
+                                    ? Colors.black87
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  product.text,
+                                  style: TextStyle(
+                                    color: product.isSelected
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  );
-                }).toList()),
+            ),
           ),
         ],
       ),

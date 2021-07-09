@@ -1,14 +1,15 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
-class UserModel {
+class UserModel with ChangeNotifier {
   String firstName;
   String lastName;
   String dob;
   String gender;
   String email;
   String collegeName;
+  String id;
   bool profile;
-  Map<dynamic, dynamic> genre;
 
   UserModel({
     this.firstName = '',
@@ -17,20 +18,20 @@ class UserModel {
     this.gender = '',
     this.email = '',
     this.collegeName = '',
+    this.id = '',
     required this.profile,
-    required this.genre,
   });
 
-  factory UserModel.fromJson(DataSnapshot snapshot) {
+  factory UserModel.fromJson(DataSnapshot snapshot, String uid) {
     return UserModel(
-      firstName: snapshot.value['firstName'],
-      lastName: snapshot.value['lastName'],
-      dob: snapshot.value['dob'],
-      gender: snapshot.value['gender'],
-      email: snapshot.value['email'],
-      collegeName: snapshot.value['collegeName'],
-      profile: snapshot.value['profile'],
-      genre: snapshot.value['genre'] == null ? [] : snapshot.value['genre'],
+      firstName: snapshot.value[uid]['firstName'],
+      lastName: snapshot.value[uid]['lastName'],
+      dob: snapshot.value[uid]['dob'],
+      gender: snapshot.value[uid]['gender'],
+      email: snapshot.value[uid]['email'],
+      collegeName: snapshot.value[uid]['collegeName'],
+      id: snapshot.value[uid]['id'],
+      profile: snapshot.value[uid]['profile'],
     );
   }
 
@@ -41,7 +42,7 @@ class UserModel {
         'gender': gender,
         'email': email,
         'collegeName': collegeName,
+        'id': id,
         'profile': profile,
-        'genre': genre,
       };
 }

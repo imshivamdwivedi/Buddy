@@ -2,11 +2,17 @@ import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
+import 'package:buddy/user/screens/user_intial_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:intl/intl.dart';
 
@@ -18,9 +24,12 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
-  final _titleController = TextEditingController();
+  bool init = true;
   final _startTimeController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  final _titleController = TextEditingController();
+
   late DateTime _selectedDate = DateTime.now();
   late TimeOfDay _selectedTime = TimeOfDay.now();
 
@@ -55,6 +64,9 @@ class _UserDashBoardState extends State<UserDashBoard> {
       print(_selectedTime);
     });
   }
+
+  final _firebaseDatabase = FirebaseDatabase.instance;
+  final _auth = FirebaseAuth.instance;
 
   int currentTab = 0;
   List<Widget> screens = [
@@ -188,6 +200,24 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    if (init) {
+      final _user = _auth.currentUser;
+      final _refUser = _firebaseDatabase.reference().child('Users');
+      _refUser
+          .orderByChild('id')
+          .equalTo(_user!.uid)
+          .once()
+          .then((DataSnapshot snapshot) {
+        if (!snapshot.value[_user.uid]['profile']) {
+          Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
+          return;
+        } else {
+          Provider.of<UserProvider>(context, listen: false)
+              .updateUserData(UserModel.fromJson(snapshot, _user.uid));
+        }
+      });
+      init = false;
+    }
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: PageStorage(

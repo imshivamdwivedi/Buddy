@@ -1,7 +1,9 @@
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/community.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -76,18 +78,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(
-                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-                          ),
-                          title: Text(
-                            "Monalisa",
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          subtitle: Text(
-                            "KIET Group Of Institutions",
+                        child: Consumer<UserProvider>(
+                          builder: (_, userModel, ch) => ListTile(
+                            leading: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(
+                                  "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                            ),
+                            title: Text(
+                              userModel.getUserName(),
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            subtitle: Text(userModel.getUserCollege()),
                           ),
                         ),
                       ),
