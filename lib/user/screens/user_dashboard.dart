@@ -8,6 +8,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:intl/intl.dart';
 
 class UserDashBoard extends StatefulWidget {
   static const routeName = 'user-dashboard';
@@ -17,9 +18,43 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
-  final _topicController = TextEditingController();
+  final _titleController = TextEditingController();
   final _startTimeController = TextEditingController();
   final _descriptionController = TextEditingController();
+  late DateTime _selectedDate = DateTime.now();
+  late TimeOfDay _selectedTime = TimeOfDay.now();
+
+  void _birthDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime(2000),
+            firstDate: DateTime(1970),
+            lastDate: DateTime(2011))
+        .then((datePicked) {
+      if (datePicked == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = datePicked;
+      });
+      print(_selectedDate);
+    });
+  }
+
+  void _birthTime() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then((timePicked) {
+      if (timePicked == null) {
+        return;
+      }
+      setState(() {
+        _selectedTime = timePicked;
+      });
+      print(_selectedTime);
+    });
+  }
 
   int currentTab = 0;
   List<Widget> screens = [
@@ -35,31 +70,109 @@ class _UserDashBoardState extends State<UserDashBoard> {
     Alert(
         context: context,
         title: "Create",
-        content: Column(
-          children: <Widget>[
-            RoundedInputField(
-              icon: Icons.account_circle,
-              text: "Topic",
-              val: false,
-              controller: _topicController,
-            ),
-            RoundedInputField(
-              icon: Icons.timer_sharp,
-              text: "Start Time",
-              val: false,
-              controller: _startTimeController,
-            ),
-            RoundedInputField(
-              icon: Icons.timer_sharp,
-              text: "Date -  dd/mm/yy",
-              val: false,
-              controller: _startTimeController,
-            ),
-            TextArea(
-                text: "Write description here ... ",
-                val: false,
-                controller: _descriptionController)
-          ],
+        content: Container(
+          width: double.infinity,
+          child: Column(
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Title",
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black87),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black87),
+                  ),
+                ),
+                cursorColor: Colors.black87,
+                controller: _titleController,
+                autofocus: true,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "From:",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Expanded(
+                      child: TextButton(
+                    // ignore: unnecessary_null_comparison
+                    child: Text(_selectedDate == null
+                        ? "From"
+                        : "${DateFormat.yMd().format(_selectedDate)}"),
+                    onPressed: _birthDatePicker,
+                  )),
+                  Text(
+                    "Time:",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Expanded(
+                      child: TextButton(
+                    child:
+                        // ignore: unnecessary_null_comparison
+                        Text(_selectedTime == null
+                            ? "From"
+                            : _selectedTime.toString()),
+                    onPressed: _birthTime,
+                  ))
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: " To",
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                        ),
+                      ),
+                      cursorColor: Colors.black87,
+                      controller: _titleController,
+                      autofocus: true,
+                    ),
+                  ),
+                  Spacer(),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Time",
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                        ),
+                      ),
+                      cursorColor: Colors.black87,
+                      controller: _titleController,
+                      autofocus: true,
+                    ),
+                  )
+                ],
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  border: new OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.teal)),
+                  hintText: 'Tell us about yourself',
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black87),
+                  ),
+                ),
+                minLines:
+                    6, // any number you need (It works as the rows for the textarea)
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                cursorColor: Colors.black87,
+                controller: _titleController,
+                autofocus: true,
+              ),
+            ],
+          ),
         ),
         buttons: [
           DialogButton(
