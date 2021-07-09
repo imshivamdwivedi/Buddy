@@ -20,25 +20,30 @@ class _UserHomeState extends State<UserHome> {
     return Scaffold(
         body: Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SearchBar(
-              icon: Icons.search,
-              text: "Find Buddy ",
-              val: false,
-              controller: _nameController,
-            ),
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(UserChatList.routeName);
-                },
-                icon: Icon(
-                  Icons.message,
-                  color: Colors.brown,
-                )),
-          ],
+        Container(
+          margin: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.height * 0.02,
+              horizontal: MediaQuery.of(context).size.width * 0.01),
+          padding: EdgeInsets.all(5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SearchBar(
+                icon: Icons.search,
+                text: "Find Buddy ",
+                val: false,
+                controller: _nameController,
+              ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(UserChatList.routeName);
+                  },
+                  icon: Icon(
+                    Icons.message,
+                    color: Colors.brown,
+                  )),
+            ],
+          ),
         )
       ],
     ));
