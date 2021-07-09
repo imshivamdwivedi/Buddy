@@ -1,3 +1,7 @@
+import 'package:buddy/components/rounded_input_field.dart';
+import 'package:buddy/components/searchbar.dart';
+import 'package:buddy/components/social_icons.dart';
+import 'package:buddy/constants.dart';
 import 'package:flutter/material.dart';
 
 class UserHome extends StatefulWidget {
@@ -8,15 +12,31 @@ class UserHome extends StatefulWidget {
 }
 
 class _UserHomeState extends State<UserHome> {
+  final _nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(
-          "Home",
-          style: TextStyle(fontSize: 40),
-        ),
-      ),
-    );
+        body: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SearchBar(
+              icon: Icons.search,
+              text: "Find Buddy ",
+              val: false,
+              controller: _nameController,
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.message,
+                  color: Colors.brown,
+                )),
+          ],
+        )
+      ],
+    ));
   }
 }

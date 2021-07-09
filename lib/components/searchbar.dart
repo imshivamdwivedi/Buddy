@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 
-class TextArea extends StatelessWidget {
+class SearchBar extends StatelessWidget {
+  final IconData icon;
   final String text;
   final bool val;
   final TextEditingController controller;
 
-  TextArea({
-    required this.text,
-    this.val = false,
-    required this.controller,
-  });
+  const SearchBar(
+      {required this.text,
+      required this.val,
+      required this.controller,
+      required this.icon});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
       width: size.width * 0.8,
       decoration: BoxDecoration(
         color: Color(0xFFD6D5C5),
@@ -26,11 +29,11 @@ class TextArea extends StatelessWidget {
         controller: controller,
         obscureText: val,
         cursorColor: Colors.black,
-        minLines:
-            6, // any number you need (It works as the rows for the textarea)
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
         decoration: InputDecoration(
+          icon: Icon(
+            icon,
+            color: Colors.black,
+          ),
           hintText: text,
           border: InputBorder.none,
         ),

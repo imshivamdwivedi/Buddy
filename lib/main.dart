@@ -3,7 +3,6 @@ import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:buddy/user/user_genre.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

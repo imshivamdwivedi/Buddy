@@ -76,6 +76,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: PageStorage(
           child: currentScreen,
           bucket: bucket,
