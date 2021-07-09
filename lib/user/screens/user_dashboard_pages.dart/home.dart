@@ -1,3 +1,4 @@
+import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/components/social_icons.dart';
@@ -29,7 +30,10 @@ class _UserHomeState extends State<UserHome> {
               controller: _nameController,
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(UserChatList.routeName);
+                },
                 icon: Icon(
                   Icons.message,
                   color: Colors.brown,

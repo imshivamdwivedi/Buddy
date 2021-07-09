@@ -1,5 +1,6 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
         UserDashBoard.routeName: (ctx) => UserDashBoard(),
         OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
+        UserChatList.routeName: (ctx) => UserChatList(),
       },
     );
   }
