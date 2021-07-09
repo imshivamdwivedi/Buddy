@@ -94,6 +94,7 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
       email: _user.email.toString(),
       collegeName: _college,
       profile: true,
+      id: _user.uid,
     );
     await _refUser.set(userModel.toJson());
 

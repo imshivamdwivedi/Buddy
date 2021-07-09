@@ -112,6 +112,7 @@ class _SignUpState extends State<SignUp> {
     UserModel userModel = new UserModel(
       email: email,
       profile: false,
+      id: _uid,
     );
 
     await _refUser.set(userModel.toJson());
