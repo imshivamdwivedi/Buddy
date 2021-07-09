@@ -1,5 +1,8 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/user/models/user_genre_provider.dart';
+import 'package:buddy/user/models/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
@@ -23,23 +26,33 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        canvasColor: Color(0XFFF1F0E8),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => UserGenreProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => UserProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          canvasColor: Color(0XFFF1F0E8),
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (ctx) => AuthWrapper(),
+          SignUp.routeName: (ctx) => SignUp(),
+          UserGenre.routeName: (ctx) => UserGenre(),
+          UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
+          UserDashBoard.routeName: (ctx) => UserDashBoard(),
+          OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
+          UserChatList.routeName: (ctx) => UserChatList(),
+        },
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (ctx) => AuthWrapper(),
-        SignUp.routeName: (ctx) => SignUp(),
-        UserGenre.routeName: (ctx) => UserGenre(),
-        UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
-        UserDashBoard.routeName: (ctx) => UserDashBoard(),
-        OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
-        UserChatList.routeName: (ctx) => UserChatList(),
-      },
     );
   }
 }

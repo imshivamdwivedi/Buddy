@@ -3,7 +3,7 @@ import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
-import 'package:buddy/user/user_model.dart';
+import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +94,6 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
       email: _user.email.toString(),
       collegeName: _college,
       profile: true,
-      genre: {},
     );
     await _refUser.set(userModel.toJson());
 
