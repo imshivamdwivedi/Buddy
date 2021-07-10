@@ -1,8 +1,10 @@
 import 'package:buddy/components/pop_up.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
@@ -34,7 +36,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
     UserHome(),
     UserCalender(),
     UserNotification(),
-    UserProfileScreen()
+    UserProfileScreen(),
+    OnboarderWidget(),
   ];
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = UserHome();
@@ -80,18 +83,23 @@ class _UserDashBoardState extends State<UserDashBoard> {
           bucket: bucket,
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-          ),
-          backgroundColor: Colors.black87,
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (_) {
-                  return PopUp();
-                });
-          },
-        ),
+            child: Icon(
+              Icons.add,
+            ),
+            backgroundColor: Colors.black87,
+            // onPressed: () {
+            //   showDialog(
+            //       context: context,
+            //       builder: (_) {
+            //         return PopUp();
+            //       });
+            // },
+            onPressed: () {
+              setState(() {
+                currentScreen = CreateActivityScreen();
+                currentTab = 5;
+              });
+            }),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           color: kPrimaryColor,

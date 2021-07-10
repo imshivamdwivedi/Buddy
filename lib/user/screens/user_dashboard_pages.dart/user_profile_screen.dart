@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
+  static const routeName = "/user-profile";
   const UserProfileScreen({Key? key}) : super(key: key);
 
   @override
