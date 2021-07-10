@@ -4,11 +4,13 @@ import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CreateActivityScreen extends StatefulWidget {
   const CreateActivityScreen({Key? key}) : super(key: key);
@@ -27,6 +29,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
   final _auth = FirebaseAuth.instance;
   final _firebaseDatabase = FirebaseDatabase.instance;
+  bool init = true;
+  String _creatorName = '';
+  String _creatorClg = '';
 
   void _fromTimePicker() {
     showTimePicker(
@@ -92,16 +97,25 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     //----( Variables Input )-------//
     final _title = _titleController.text.toString();
     final _desc = _descriptionController.text.toString();
-    final _startDate = _fromDate.toString();
-    final _startTime = _fromTime.toString();
-    final _endDate = _toDate.toString();
-    final _endTime = _toTime.toString();
+    final _startDate = DateFormat.yMd().format(_fromDate);
+    final _startTime = _fromTime.toString().substring(10, 15);
+    final _endDate = DateFormat.yMd().format(_toDate);
+    final _endTime = _toTime.toString().substring(10, 15);
 
     //---( Validation Strings )----//
     if (_title.isEmpty || _desc.isEmpty) {
       CustomSnackbar().showFloatingFlushbar(
         context: context,
         message: 'Please provide Proper Details!',
+        color: Colors.black87,
+      );
+      return;
+    }
+
+    if (_creatorName.isEmpty || _creatorClg.isEmpty) {
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Please try after some time!',
         color: Colors.black87,
       );
       return;
@@ -120,6 +134,8 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       endDate: _endDate,
       endTime: _endTime,
       creatorId: _uid,
+      creatorClg: _creatorClg,
+      creatorName: _creatorName,
     );
 
     await _refUser.child(_kid).set(model.toJson());
@@ -129,12 +145,17 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       message: 'Activity Created Successfully!',
       color: Colors.green,
     );
-    Navigator.pushReplacementNamed(context, UserProfileScreen.routeName);
+    // Navigator.pushReplacementNamed(context, UserProfileScreen.routeName);
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    if (init) {
+      final tempData = Provider.of<UserProvider>(context);
+      _creatorName = tempData.getUserName();
+      _creatorClg = tempData.getUserCollege();
+    }
 
     return Scaffold(
       appBar: AppBar(

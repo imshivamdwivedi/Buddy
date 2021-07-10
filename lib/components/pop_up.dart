@@ -1,10 +1,12 @@
 import 'package:buddy/components/custom_snackbar.dart';
 
 import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PopUp extends StatefulWidget {
   const PopUp({Key? key}) : super(key: key);
@@ -14,6 +16,9 @@ class PopUp extends StatefulWidget {
 }
 
 class _PopUpState extends State<PopUp> {
+  bool init = true;
+  String _creatorName = '';
+  String _creatorClg = '';
   late DateTime _fromDate = DateTime.now();
   late TimeOfDay _fromTime = TimeOfDay.now();
   late DateTime _toDate = DateTime.now();
@@ -87,16 +92,24 @@ class _PopUpState extends State<PopUp> {
     //----( Variables Input )-------//
     final _title = _titleController.text.toString();
     final _desc = _descriptionController.text.toString();
-    final _startDate = _fromDate.toString();
-    final _startTime = _fromTime.toString();
-    final _endDate = _toDate.toString();
-    final _endTime = _toTime.toString();
+    final _startDate = DateFormat.yMd().format(_fromDate);
+    final _startTime = _fromTime.toString().substring(10, 15);
+    final _endDate = DateFormat.yMd().format(_toDate);
+    final _endTime = _toTime.toString().substring(10, 15);
 
     //---( Validation Strings )----//
     if (_title.isEmpty || _desc.isEmpty) {
       CustomSnackbar().showFloatingFlushbar(
         context: context,
         message: 'Please provide Proper Details!',
+        color: Colors.black87,
+      );
+      return;
+    }
+    if (_creatorName.isEmpty || _creatorClg.isEmpty) {
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Please try after some time!',
         color: Colors.black87,
       );
       return;
@@ -115,6 +128,8 @@ class _PopUpState extends State<PopUp> {
       endDate: _endDate,
       endTime: _endTime,
       creatorId: _uid,
+      creatorName: _creatorName,
+      creatorClg: _creatorClg,
     );
 
     await _refUser.child(_kid).set(model.toJson());
@@ -129,6 +144,11 @@ class _PopUpState extends State<PopUp> {
 
   @override
   Widget build(BuildContext context) {
+    if (init) {
+      final tempData = Provider.of<UserProvider>(context);
+      _creatorName = tempData.getUserName();
+      _creatorClg = tempData.getUserCollege();
+    }
     Size size = MediaQuery.of(context).size;
     return AlertDialog(
       title: Text("Create"),
