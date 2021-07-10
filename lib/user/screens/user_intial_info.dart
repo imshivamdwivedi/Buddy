@@ -1,4 +1,5 @@
 import 'package:buddy/auth/sign_in.dart';
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/social_icons.dart';
@@ -22,8 +23,8 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   late DateTime _selectedDate = DateTime.now();
-  String _genderName = 'Male';
-  List list = ['Male', 'Female', 'Other'];
+  String _genderName = 'Select gender';
+  List list = ['Select gender', 'Male', 'Female', 'Other'];
   final _collegeController = TextEditingController();
 
   void _birthDatePicker() {
@@ -79,6 +80,11 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
         _gender.isEmpty ||
         _college.isEmpty) {
       print('empty-fileds');
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Fields can\'t be empty, please fill all details ! :(',
+        color: Colors.black87,
+      );
       return;
     }
 

@@ -1,6 +1,4 @@
-import 'package:buddy/components/rounded_button.dart';
-import 'package:buddy/components/rounded_input_field.dart';
-import 'package:buddy/components/textarea.dart';
+import 'package:buddy/components/pop_up.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -13,8 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:intl/intl.dart';
 
 class UserDashBoard extends StatefulWidget {
   static const routeName = 'user-dashboard';
@@ -30,41 +26,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
   final _titleController = TextEditingController();
 
-  late DateTime _selectedDate = DateTime.now();
-  late TimeOfDay _selectedTime = TimeOfDay.now();
-
-  void _birthDatePicker() {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime(2000),
-            firstDate: DateTime(1970),
-            lastDate: DateTime(2011))
-        .then((datePicked) {
-      if (datePicked == null) {
-        return;
-      }
-      setState(() {
-        _selectedDate = datePicked;
-      });
-      print(_selectedDate);
-    });
-  }
-
-  void _birthTime() {
-    showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    ).then((timePicked) {
-      if (timePicked == null) {
-        return;
-      }
-      setState(() {
-        _selectedTime = timePicked;
-      });
-      print(_selectedTime);
-    });
-  }
-
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 
@@ -78,125 +39,19 @@ class _UserDashBoardState extends State<UserDashBoard> {
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = UserHome();
 
-  _openPopup(context) {
-    Alert(
-        context: context,
-        title: "Create",
-        content: Container(
-          width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Title",
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black87),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black87),
-                  ),
-                ),
-                cursorColor: Colors.black87,
-                controller: _titleController,
-                autofocus: true,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "From:",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  Expanded(
-                      child: TextButton(
-                    // ignore: unnecessary_null_comparison
-                    child: Text(_selectedDate == null
-                        ? "From"
-                        : "${DateFormat.yMd().format(_selectedDate)}"),
-                    onPressed: _birthDatePicker,
-                  )),
-                  Text(
-                    "Time:",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  Expanded(
-                      child: TextButton(
-                    child:
-                        // ignore: unnecessary_null_comparison
-                        Text(_selectedTime == null
-                            ? "From"
-                            : _selectedTime.toString()),
-                    onPressed: _birthTime,
-                  ))
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: " To",
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                      ),
-                      cursorColor: Colors.black87,
-                      controller: _titleController,
-                      autofocus: true,
-                    ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Time",
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87),
-                        ),
-                      ),
-                      cursorColor: Colors.black87,
-                      controller: _titleController,
-                      autofocus: true,
-                    ),
-                  )
-                ],
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.teal)),
-                  hintText: 'Tell us about yourself',
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black87),
-                  ),
-                ),
-                minLines:
-                    6, // any number you need (It works as the rows for the textarea)
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                cursorColor: Colors.black87,
-                controller: _titleController,
-                autofocus: true,
-              ),
-            ],
-          ),
-        ),
-        buttons: [
-          DialogButton(
-            color: kPrimaryProfileColor,
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              "Create",
-              style: TextStyle(color: Colors.black87, fontSize: 20),
-            ),
-          ),
-        ]).show();
-  }
+  // Future<dynamic> _openPopup(context) {
+  //   final Size size = MediaQuery.of(context).size;
+  //   // return showDialog(
+  //   //   context: context,
+  //   //   builder: (context) {
+  //   //     return StatefulBuilder(
+  //   //       builder: (context, setState) {
+
+  //   //       },
+  //   //     );
+  //   //   },
+  //   // );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +85,11 @@ class _UserDashBoardState extends State<UserDashBoard> {
           ),
           backgroundColor: Colors.black87,
           onPressed: () {
-            _openPopup(context);
+            showDialog(
+                context: context,
+                builder: (_) {
+                  return PopUp();
+                });
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

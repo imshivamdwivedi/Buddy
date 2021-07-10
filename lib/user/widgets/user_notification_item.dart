@@ -20,25 +20,13 @@ class UserNotificationItem extends StatelessWidget {
             msg,
             style: TextStyle(color: Colors.black87),
           ),
-          trailing: MediaQuery.of(context).size.width > 360
-              ? TextButton.icon(
-                  onPressed: () => () {},
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.black87,
-                  ),
-                  label: Text(
-                    "Delete",
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                )
-              : IconButton(
-                  onPressed: () => () {},
-                  icon: Icon(
-                    Icons.close_rounded,
-                  ),
-                  color: Colors.black87,
-                ),
+          trailing: IconButton(
+            onPressed: () => () {},
+            icon: Icon(
+              Icons.close_rounded,
+            ),
+            color: Colors.black87,
+          ),
         ),
       ),
     );
