@@ -9,6 +9,8 @@ class ActivityModel {
   String endDate;
   String endTime;
   String creatorId;
+  String creatorName;
+  String creatorClg;
 
   ActivityModel({
     required this.id,
@@ -19,6 +21,8 @@ class ActivityModel {
     required this.endDate,
     required this.endTime,
     required this.creatorId,
+    required this.creatorName,
+    required this.creatorClg,
   });
 
   factory ActivityModel.fromJson(DataSnapshot snapshot, String id) {
@@ -30,7 +34,9 @@ class ActivityModel {
       startTime: snapshot.value[id]['startTime'],
       endDate: snapshot.value[id]['endDate'],
       endTime: snapshot.value[id]['endTime'],
-      creatorId: snapshot.value[id]['creatotId'],
+      creatorId: snapshot.value[id]['creatorId'],
+      creatorName: snapshot.value[id]['creatorName'],
+      creatorClg: snapshot.value[id]['creatorClg'],
     );
   }
 
@@ -43,5 +49,7 @@ class ActivityModel {
         'endDate': endDate,
         'endTime': endTime,
         'creatorId': creatorId,
+        'creatorName': creatorName,
+        'creatorClg': creatorClg,
       };
 }

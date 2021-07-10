@@ -4,6 +4,8 @@ import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
 class UserHome extends StatefulWidget {
@@ -15,6 +17,7 @@ class UserHome extends StatefulWidget {
 
 class _UserHomeState extends State<UserHome> {
   final _nameController = TextEditingController();
+  Query _refAct = FirebaseDatabase.instance.reference().child('Activity');
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,17 @@ class _UserHomeState extends State<UserHome> {
             ],
           ),
         ),
-        ActivityItem(),
+        Container(
+          height: 500,
+          child: FirebaseAnimatedList(
+            query: _refAct,
+            itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                Animation<double> animation, int index) {
+              Map data = snapshot.value;
+              return ActivityItem(activityItem: data);
+            },
+          ),
+        ),
       ],
     ));
   }

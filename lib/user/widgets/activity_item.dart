@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ActivityItem extends StatefulWidget {
-  const ActivityItem({Key? key}) : super(key: key);
+  final Map activityItem;
+
+  ActivityItem({required this.activityItem});
 
   @override
   _ActivityItemState createState() => _ActivityItemState();
@@ -28,8 +31,8 @@ class _ActivityItemState extends State<ActivityItem> {
                     backgroundImage: NetworkImage(
                         "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
                   ),
-                  title: Text("Parneet"),
-                  subtitle: Text("KIET Group OF Institutions"),
+                  title: Text(widget.activityItem['creatorName']),
+                  subtitle: Text(widget.activityItem['creatorClg']),
                 )),
               ],
             ),
@@ -39,15 +42,15 @@ class _ActivityItemState extends State<ActivityItem> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "Title",
+                    widget.activityItem['title'],
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Date",
+                    widget.activityItem['startDate'],
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Start Time",
+                    widget.activityItem['startTime'],
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -58,8 +61,7 @@ class _ActivityItemState extends State<ActivityItem> {
               child: Row(
                 children: [
                   Flexible(
-                    child: Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."),
+                    child: Text(widget.activityItem['desc']),
                   )
                 ],
               ),
