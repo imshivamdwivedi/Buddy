@@ -1,3 +1,8 @@
+import 'package:buddy/components/custom_snackbar.dart';
+
+import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +20,8 @@ class _PopUpState extends State<PopUp> {
   late TimeOfDay _toTime = TimeOfDay.now();
   final _descriptionController = TextEditingController();
   final _titleController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  final _firebaseDatabase = FirebaseDatabase.instance;
 
   void _fromTimePicker() {
     showTimePicker(
@@ -74,6 +81,50 @@ class _PopUpState extends State<PopUp> {
         _toDate = datePicked;
       });
     });
+  }
+
+  void _createActivity() async {
+    //----( Variables Input )-------//
+    final _title = _titleController.text.toString();
+    final _desc = _descriptionController.text.toString();
+    final _startDate = _fromDate.toString();
+    final _startTime = _fromTime.toString();
+    final _endDate = _toDate.toString();
+    final _endTime = _toTime.toString();
+
+    //---( Validation Strings )----//
+    if (_title.isEmpty || _desc.isEmpty) {
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Please provide Proper Details!',
+        color: Colors.black87,
+      );
+      return;
+    }
+
+    final _uid = _auth.currentUser!.uid;
+    final _refUser = _firebaseDatabase.reference().child('Activity');
+    String _kid = _refUser.push().key;
+
+    ActivityModel model = ActivityModel(
+      id: _kid,
+      title: _title,
+      desc: _desc,
+      startDate: _startDate,
+      startTime: _startTime,
+      endDate: _endDate,
+      endTime: _endTime,
+      creatorId: _uid,
+    );
+
+    await _refUser.child(_kid).set(model.toJson());
+
+    Navigator.pop(context);
+    CustomSnackbar().showFloatingFlushbar(
+      context: context,
+      message: 'Activity Created Successfully!',
+      color: Colors.green,
+    );
   }
 
   @override
@@ -200,7 +251,9 @@ class _PopUpState extends State<PopUp> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.black87,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _createActivity();
+                },
                 child: Text(
                   "Create",
                   style: TextStyle(color: Colors.white),
