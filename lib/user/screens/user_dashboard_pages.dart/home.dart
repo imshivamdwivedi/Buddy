@@ -51,7 +51,7 @@ class _UserHomeState extends State<UserHome> {
             ),
           ),
           Container(
-            height: 500,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: FirebaseAnimatedList(
               query: _refAct,
               itemBuilder: (BuildContext context, DataSnapshot snapshot,

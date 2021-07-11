@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ActivityItem extends StatefulWidget {
   final Map activityItem;
@@ -70,6 +69,7 @@ class _ActivityItemState extends State<ActivityItem> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+                IconButton(onPressed: () {}, icon: Icon(Icons.comment)),
                 IconButton(onPressed: () {}, icon: Icon(Icons.add))
               ],
             ),

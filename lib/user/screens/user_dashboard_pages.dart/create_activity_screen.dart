@@ -5,7 +5,6 @@ import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/create_activity/activity_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
