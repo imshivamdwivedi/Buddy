@@ -1,6 +1,6 @@
 class Category {
   final String name;
-  final List<String> categoriesList;
+  final int count;
 
-  Category({required this.name, required this.categoriesList});
+  Category({required this.name, required this.count});
 }

@@ -1,3 +1,4 @@
+import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/category_class.dart';
 import 'package:buddy/user/widgets/category_chips.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +12,11 @@ class UserGenreScreen extends StatefulWidget {
 
 class _UserGenreScreenState extends State<UserGenreScreen> {
   List<Category> userCatgeoryList = [
-    Category(name: "Tech", categoriesList: [
-      'backend',
-      'Frontend',
-      'Android',
-      'LLD',
-      'HLD',
-      'Competitive Programming'
-    ]),
-    Category(name: 'Music', categoriesList: ['Guitar', 'Ukulele', 'Drum']),
+    Category(name: "Flutter", count: 1),
+    Category(name: 'Music', count: 2),
+    Category(name: "Cricket", count: 3),
+    Category(name: "Time", count: 3),
+    Category(name: "History", count: 3),
   ];
 
   @override
@@ -44,14 +41,21 @@ class _UserGenreScreenState extends State<UserGenreScreen> {
                     String name = userCatgeoryList[index].name;
                     return Column(
                       children: [
-                        ListTile(
-                          title: Text(
-                            name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                        InkWell(
+                          onTap: () {},
+                          child: Chip(
+                            labelPadding: EdgeInsets.all(2.0),
+                            label: Text(
+                              name,
+                              style: TextStyle(
+                                color: Colors.black87,
+                              ),
+                            ),
+                            backgroundColor: kPrimaryLightColor,
+                            elevation: 6.0,
+                            shadowColor: Colors.grey[60],
+                            padding: EdgeInsets.all(8.0),
                           ),
-                        ),
-                        CatogoryChips(
-                          categories: userCatgeoryList[index].categoriesList,
                         ),
                       ],
                     );
