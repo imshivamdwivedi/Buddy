@@ -1,11 +1,11 @@
-import 'package:buddy/user/models/item_model.dart';
+import 'package:buddy/user/models/category_class.dart';
 import 'package:flutter/material.dart';
 
 class UserGenreProvider with ChangeNotifier {
-  List<ItemModel> genreList = [];
+  List<Category> genreList = [];
   String userName = 'User Name';
 
-  void addList(List<ItemModel> value) {
+  void addList(List<Category> value) {
     genreList.clear();
     genreList.addAll(value);
     notifyListeners();
@@ -16,15 +16,15 @@ class UserGenreProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<ItemModel> get allGenre {
+  List<Category> get allGenre {
     return [...genreList];
   }
 
-  List<ItemModel> get onlySelected {
+  List<Category> get onlySelected {
     return genreList.where((element) => element.isSelected).toList();
   }
 
-  ItemModel genreByText(String text) {
-    return genreList.firstWhere((element) => element.text == text);
+  Category genreByText(String text) {
+    return genreList.firstWhere((element) => element.name == text);
   }
 }

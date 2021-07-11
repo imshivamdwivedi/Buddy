@@ -1,6 +1,18 @@
-class Category {
-  final String name;
-  final int count;
+import 'package:flutter/material.dart';
 
-  Category({required this.name, required this.count});
+class Category with ChangeNotifier {
+  final String name;
+  final int id;
+  bool isSelected;
+
+  Category({
+    required this.name,
+    required this.id,
+    this.isSelected = false,
+  });
+
+  void toggleSelected() {
+    isSelected = !isSelected;
+    notifyListeners();
+  }
 }

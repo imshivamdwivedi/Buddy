@@ -1,4 +1,4 @@
-import 'package:buddy/user/models/item_model.dart';
+import 'package:buddy/user/models/category_class.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +23,17 @@ class _UserGenreState extends State<UserGenre> {
       FirebaseDatabase.instance.reference().child('Items');
   final _userDatabase = FirebaseDatabase.instance.reference().child('Users');
 
-  void _saveUserGenre(List<ItemModel> finalList) async {
+  void _saveUserGenre(List<Category> finalList) async {
+    String finVal = '';
+
+    for (int i = 0; i < finalList.length; i++) {
+      if (i == 0) {
+        finVal += finalList[i].name.toLowerCase();
+      } else {
+        finVal += '+' + finalList[i].name.toLowerCase();
+      }
+    }
+
     final _user = _auth.currentUser;
     final _refUser = _firebaseDatabase
         .reference()
@@ -33,11 +43,9 @@ class _UserGenreState extends State<UserGenre> {
 
     _refUser.set(null);
 
-    for (int i = 0; i < finalList.length; i++) {
-      _refUser.child(i.toString()).child('text').set(finalList[i].text);
-    }
+    await _refUser.set(finVal);
 
-    Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
+    //Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
   }
 
   @override
@@ -56,10 +64,10 @@ class _UserGenreState extends State<UserGenre> {
         Provider.of<UserGenreProvider>(context, listen: false).setName(name);
       });
       _databaseReference.once().then((DataSnapshot snapshot) {
-        List<ItemModel> myList = [];
+        List<Category> myList = [];
         List res = snapshot.value;
         for (var item in res) {
-          myList.add(ItemModel(text: item['text']));
+          myList.add(Category(name: item['name'], id: item['id']));
         }
         Provider.of<UserGenreProvider>(context, listen: false).addList(myList);
       });
@@ -121,17 +129,17 @@ class _UserGenreState extends State<UserGenre> {
               child: userGenre.allGenre.isEmpty
                   ? CircularProgressIndicator.adaptive()
                   : GridView.builder(
-                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                       itemCount: userGenre.allGenre.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 5 / 2,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
+                        childAspectRatio: 7 / 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
                       ),
                       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
                         value: userGenre.allGenre[index],
-                        child: Consumer<ItemModel>(
+                        child: Consumer<Category>(
                           builder: (ctx, product, child) => InkWell(
                             onTap: () => product.toggleSelected(),
                             child: Container(
@@ -142,14 +150,16 @@ class _UserGenreState extends State<UserGenre> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
-                                child: Text(
-                                  product.text,
-                                  style: TextStyle(
-                                    color: product.isSelected
-                                        ? Colors.white
-                                        : Colors.black87,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                child: FittedBox(
+                                  child: Text(
+                                    product.name,
+                                    style: TextStyle(
+                                      color: product.isSelected
+                                          ? Colors.white
+                                          : Colors.black87,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),

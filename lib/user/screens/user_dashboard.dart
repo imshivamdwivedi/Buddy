@@ -1,4 +1,3 @@
-import 'package:buddy/components/pop_up.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -8,8 +7,8 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_scr
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
-import 'package:buddy/user/screens/user_genre_screen.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
+import 'package:buddy/user/user_genre.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -202,7 +201,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = UserGenreScreen();
+                        currentScreen = UserGenre();
                         currentTab = 3;
                       });
                     },
