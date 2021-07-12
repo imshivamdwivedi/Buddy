@@ -1,9 +1,10 @@
+import 'package:buddy/user/create_activity/activity_model.dart';
 import 'package:flutter/material.dart';
 
 class ActivityItem extends StatefulWidget {
-  final Map activityItem;
+  final ActivityModel dataModel;
 
-  ActivityItem({required this.activityItem});
+  ActivityItem({required this.dataModel});
 
   @override
   _ActivityItemState createState() => _ActivityItemState();
@@ -30,8 +31,8 @@ class _ActivityItemState extends State<ActivityItem> {
                     backgroundImage: NetworkImage(
                         "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
                   ),
-                  title: Text(widget.activityItem['creatorName']),
-                  subtitle: Text(widget.activityItem['creatorClg']),
+                  title: Text(widget.dataModel.creatorName),
+                  subtitle: Text(widget.dataModel.creatorClg),
                 )),
               ],
             ),
@@ -41,15 +42,15 @@ class _ActivityItemState extends State<ActivityItem> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    widget.activityItem['title'],
+                    widget.dataModel.title,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.activityItem['startDate'],
+                    widget.dataModel.startDate,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.activityItem['startTime'],
+                    widget.dataModel.startTime,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -60,7 +61,7 @@ class _ActivityItemState extends State<ActivityItem> {
               child: Row(
                 children: [
                   Flexible(
-                    child: Text(widget.activityItem['desc']),
+                    child: Text(widget.dataModel.desc),
                   )
                 ],
               ),

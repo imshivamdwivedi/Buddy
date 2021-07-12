@@ -48,5 +48,6 @@ class ConnectionHandler {
     //---( Fetch Request )---//
     final _refReq =
         _firebaseDatabase.reference().child('Connection').child('Requests');
+    _refReq.child(rid).set(null);
   }
 }

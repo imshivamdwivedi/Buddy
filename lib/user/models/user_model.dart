@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class UserModel with ChangeNotifier {
@@ -22,20 +21,20 @@ class UserModel with ChangeNotifier {
     required this.profile,
   });
 
-  factory UserModel.fromJson(DataSnapshot snapshot, String uid) {
+  factory UserModel.fromMap(Map map) {
     return UserModel(
-      firstName: snapshot.value[uid]['firstName'],
-      lastName: snapshot.value[uid]['lastName'],
-      dob: snapshot.value[uid]['dob'],
-      gender: snapshot.value[uid]['gender'],
-      email: snapshot.value[uid]['email'],
-      collegeName: snapshot.value[uid]['collegeName'],
-      id: snapshot.value[uid]['id'],
-      profile: snapshot.value[uid]['profile'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      dob: map['dob'],
+      gender: map['gender'],
+      email: map['email'],
+      collegeName: map['collegeName'],
+      id: map['id'],
+      profile: map['profile'],
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'firstName': firstName,
         'lastName': lastName,
         'dob': dob,

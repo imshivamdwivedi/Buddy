@@ -70,8 +70,11 @@ class _UserDashBoardState extends State<UserDashBoard> {
           Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
           return;
         } else {
-          Provider.of<UserProvider>(context, listen: false)
-              .updateUserData(UserModel.fromJson(snapshot, _user.uid));
+          Map map = snapshot.value;
+          map.values.forEach((element) {
+            Provider.of<UserProvider>(context, listen: false)
+                .updateUserData(UserModel.fromMap(map));
+          });
         }
       });
       init = false;

@@ -132,7 +132,7 @@ class _PopUpState extends State<PopUp> {
       creatorClg: _creatorClg,
     );
 
-    await _refUser.child(_kid).set(model.toJson());
+    await _refUser.child(_kid).set(model.toMap());
 
     Navigator.pop(context);
     CustomSnackbar().showFloatingFlushbar(

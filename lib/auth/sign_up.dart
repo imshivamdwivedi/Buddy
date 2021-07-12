@@ -109,13 +109,13 @@ class _SignUpState extends State<SignUp> {
     final _uid = _auth.currentUser!.uid;
     final _refUser = _firebaseDatabase.reference().child('Users').child(_uid);
 
-    UserModel userModel = new UserModel(
+    final userModel = new UserModel(
       email: email,
       profile: false,
       id: _uid,
     );
 
-    await _refUser.set(userModel.toJson());
+    await _refUser.set(userModel.toMap());
   }
 
   void _signinUserByGoogle() async {

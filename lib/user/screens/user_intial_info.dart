@@ -92,7 +92,7 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
     final _user = _auth.currentUser;
     final _refUser =
         _firebaseDatabase.reference().child('Users').child(_user!.uid);
-    UserModel userModel = new UserModel(
+    final userModel = new UserModel(
       firstName: _firstName,
       lastName: _lastName,
       dob: _dob,
@@ -102,7 +102,7 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
       profile: true,
       id: _user.uid,
     );
-    await _refUser.set(userModel.toJson());
+    await _refUser.set(userModel.toMap());
 
     Navigator.pushReplacementNamed(context, OnboarderWidget.routeName);
   }

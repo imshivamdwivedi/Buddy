@@ -1,6 +1,5 @@
 import 'package:buddy/user/models/category_class.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
-import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +23,8 @@ class _UserGenreState extends State<UserGenre> {
   final _userDatabase = FirebaseDatabase.instance.reference().child('Users');
 
   void _saveUserGenre(List<Category> finalList) async {
+    //---( Saving Data to user Profile )---//
     String finVal = '';
-
     for (int i = 0; i < finalList.length; i++) {
       if (i == 0) {
         finVal += finalList[i].name.toLowerCase();
@@ -33,17 +32,31 @@ class _UserGenreState extends State<UserGenre> {
         finVal += '+' + finalList[i].name.toLowerCase();
       }
     }
-
     final _user = _auth.currentUser;
     final _refUser = _firebaseDatabase
         .reference()
         .child('Users')
         .child(_user!.uid)
         .child('userGenre');
-
     _refUser.set(null);
-
     await _refUser.set(finVal);
+
+    //---( Updating Count )---//
+    finalList.forEach((element) async {
+      final _refUpdate = _firebaseDatabase.reference().child('Items');
+      await _refUpdate
+          .orderByChild('id')
+          .equalTo(element.id)
+          .once()
+          .then((value) {
+        Map map = value.value;
+        map.values.forEach((element) async {
+          final newGenre = Category.fromMap(element);
+          newGenre.count += 1;
+          await _refUpdate.child(newGenre.id.toString()).set(newGenre.toMap());
+        });
+      });
+    });
 
     //Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
   }
@@ -65,8 +78,8 @@ class _UserGenreState extends State<UserGenre> {
       _databaseReference.once().then((DataSnapshot snapshot) {
         List<Category> myList = [];
         List res = snapshot.value;
-        for (var item in res) {
-          myList.add(Category(name: item['name'], id: item['id']));
+        for (var map in res) {
+          myList.add(Category.fromMap(map));
         }
         Provider.of<UserGenreProvider>(context, listen: false).addList(myList);
       });

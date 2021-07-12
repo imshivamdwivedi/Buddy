@@ -3,6 +3,7 @@ import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/create_activity/activity_model.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -57,7 +58,9 @@ class _UserHomeState extends State<UserHome> {
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int index) {
                 Map data = snapshot.value;
-                return ActivityItem(activityItem: data);
+                return ActivityItem(
+                  dataModel: ActivityModel.fromMap(data),
+                );
               },
             ),
           ),

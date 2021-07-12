@@ -1,5 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
-
 class ActivityModel {
   String id;
   String title;
@@ -25,22 +23,22 @@ class ActivityModel {
     required this.creatorClg,
   });
 
-  factory ActivityModel.fromJson(DataSnapshot snapshot, String id) {
+  factory ActivityModel.fromMap(Map map) {
     return ActivityModel(
-      id: snapshot.value[id]['id'],
-      title: snapshot.value[id]['title'],
-      desc: snapshot.value[id]['desc'],
-      startDate: snapshot.value[id]['startDate'],
-      startTime: snapshot.value[id]['startTime'],
-      endDate: snapshot.value[id]['endDate'],
-      endTime: snapshot.value[id]['endTime'],
-      creatorId: snapshot.value[id]['creatorId'],
-      creatorName: snapshot.value[id]['creatorName'],
-      creatorClg: snapshot.value[id]['creatorClg'],
+      id: map['id'],
+      title: map['title'],
+      desc: map['desc'],
+      startDate: map['startDate'],
+      startTime: map['startTime'],
+      endDate: map['endDate'],
+      endTime: map['endTime'],
+      creatorId: map['creatorId'],
+      creatorName: map['creatorName'],
+      creatorClg: map['creatorClg'],
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'id': id,
         'title': title,
         'desc': desc,
