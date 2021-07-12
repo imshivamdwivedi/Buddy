@@ -31,14 +31,21 @@ class _ModalBootomState extends State<ModalBootom> {
       data: SfCalendarThemeData(
         timeTextStyle: TextStyle(fontSize: 16, color: Colors.black87),
       ),
-      child: SfCalendar(
-        view: CalendarView.timelineDay,
-        dataSource: EventDataSource(provider.events),
-        initialDisplayDate: provider.selectedDate,
-        appointmentBuilder: appointmentBuilder,
-        headerHeight: 0,
-        todayHighlightColor: Colors.black87,
-        selectionDecoration: BoxDecoration(color: Colors.red.withOpacity(0.3)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15.0),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: SfCalendar(
+            view: CalendarView.timelineDay,
+            dataSource: EventDataSource(provider.events),
+            initialDisplayDate: provider.selectedDate,
+            appointmentBuilder: appointmentBuilder,
+            headerHeight: 0,
+            todayHighlightColor: Colors.black87,
+            selectionDecoration:
+                BoxDecoration(color: Colors.red.withOpacity(0.3)),
+          ),
+        ),
       ),
     );
   }

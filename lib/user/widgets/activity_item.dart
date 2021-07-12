@@ -1,5 +1,6 @@
 import 'package:buddy/user/create_activity/activity_model.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:intl/intl.dart';
 
 class ActivityItem extends StatefulWidget {
@@ -71,9 +72,16 @@ class _ActivityItemState extends State<ActivityItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.share)),
                 IconButton(onPressed: () {}, icon: Icon(Icons.comment)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.add))
+                Transform.rotate(
+                    angle: -math.pi / 4,
+                    child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.send,
+                        ))),
+                IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                IconButton(onPressed: () {}, icon: Icon(Icons.share)),
               ],
             ),
           ],
