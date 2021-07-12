@@ -269,6 +269,9 @@
 //     );
 //   }
 // }
+import 'package:buddy/components/rounded_input_field.dart';
+import 'package:buddy/components/textarea.dart';
+import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -286,6 +289,7 @@ class CreateActivityScreen extends StatefulWidget {
 class _CreateActivityScreenState extends State<CreateActivityScreen> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
   late DateTime fromDate;
   late DateTime toDate;
 
@@ -307,7 +311,11 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: buildEdtingActions(),
-        backgroundColor: Colors.pink,
+        title: const Text(
+          "Create Events",
+          style: TextStyle(color: Colors.black87),
+        ),
+        backgroundColor: kPrimaryColor,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(12),
@@ -315,7 +323,11 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [buildTitle(), buildDateTimePickers()],
+            children: [
+              buildTitle(),
+              buildDateTimePickers(),
+              buildDescription(),
+            ],
           ),
         ),
       ),
@@ -327,19 +339,34 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
             style: ElevatedButton.styleFrom(
                 primary: Colors.transparent, shadowColor: Colors.transparent),
             onPressed: saveForm,
-            icon: Icon(Icons.done),
-            label: Text("Save"))
+            icon: Icon(
+              Icons.done,
+              color: Colors.black87,
+            ),
+            label: Text(
+              "Save",
+              style: TextStyle(color: Colors.black87),
+            ))
       ];
 
-  Widget buildTitle() => TextFormField(
-        style: TextStyle(fontSize: 24),
-        decoration: InputDecoration(
-            border: UnderlineInputBorder(), hintText: "Add title"),
-        onFieldSubmitted: (_) => saveForm(),
-        validator: (title) =>
-            title != null && title.isEmpty ? 'Title Can not be empty' : null,
+  Widget buildTitle() => RoundedInputField(
+        text: "Add Title",
         controller: titleController,
+        sizeRatio: 0.9,
       );
+  Widget buildDescription() => TextArea(
+      text: "Provide deescription...",
+      controller: descriptionController,
+      sizeRatio: 0.9);
+  // TextFormField(
+  //       style: TextStyle(fontSize: 24),
+  //       decoration: InputDecoration(
+  //           border: UnderlineInputBorder(), hintText: "Add title"),
+  //       onFieldSubmitted: (_) => saveForm(),
+  //       validator: (title) =>
+  //           title != null && title.isEmpty ? 'Title Can not be empty' : null,
+  //       controller: titleController,
+  //     );
 
   Widget buildDateTimePickers() => Column(
         children: [
@@ -397,9 +424,13 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   Widget buildHeader({required String header, required Widget child}) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            header,
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.03),
+            child: Text(
+              header,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           child
         ],
@@ -472,7 +503,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     if (isValid) {
       final event = EventCalender(
           title: titleController.text,
-          description: "description here",
+          description: descriptionController.text,
           from: fromDate,
           to: toDate,
           isAllDay: false);

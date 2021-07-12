@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextArea extends StatelessWidget {
+  final double sizeRatio;
   final String text;
   final bool val;
   final TextEditingController controller;
@@ -9,6 +10,7 @@ class TextArea extends StatelessWidget {
     required this.text,
     this.val = false,
     required this.controller,
+    this.sizeRatio = 0.8,
   });
 
   @override
@@ -17,7 +19,7 @@ class TextArea extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      width: size.width * 0.8,
+      width: size.width * sizeRatio,
       decoration: BoxDecoration(
         color: Color(0xFFD6D5C5),
         borderRadius: BorderRadius.circular(15),

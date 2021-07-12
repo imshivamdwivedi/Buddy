@@ -6,10 +6,12 @@ class RoundedInputField extends StatelessWidget {
   final IconData icon;
   final String text;
   final bool val;
+  final double sizeRatio;
   final TextEditingController controller;
 
   RoundedInputField({
     this.icon = Icons.person,
+    this.sizeRatio = 0.8,
     required this.text,
     this.val = false,
     required this.controller,
@@ -31,6 +33,7 @@ class RoundedInputField extends StatelessWidget {
           border: InputBorder.none,
         ),
       ),
+      sizeR: sizeRatio,
     );
   }
 }
