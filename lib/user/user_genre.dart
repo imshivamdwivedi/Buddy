@@ -60,7 +60,6 @@ class _UserGenreState extends State<UserGenre> {
         String name = snapshot.value[_user.uid]['firstName'].toString() +
             ' ' +
             snapshot.value[_user.uid]['lastName'].toString();
-        print(name);
         Provider.of<UserGenreProvider>(context, listen: false).setName(name);
       });
       _databaseReference.once().then((DataSnapshot snapshot) {

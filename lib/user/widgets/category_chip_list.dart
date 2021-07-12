@@ -17,7 +17,7 @@ class _CategoryChipListState extends State<CategoryChipList> {
       children: [
         ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: widget.categoryChipList!.length,
+          itemCount: widget.categoryChipList.length,
           itemBuilder: (context, index) {
             return Row(
               children: [
@@ -26,7 +26,7 @@ class _CategoryChipListState extends State<CategoryChipList> {
                   child: Chip(
                     labelPadding: EdgeInsets.all(2.0),
                     label: Text(
-                      widget.categoryChipList![index],
+                      widget.categoryChipList[index],
                       style: TextStyle(
                         color: Colors.black87,
                       ),

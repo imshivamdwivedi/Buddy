@@ -96,7 +96,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
             // },
             onPressed: () {
               setState(() {
-                currentScreen = CreateActivityScreen();
+                currentScreen = CreateActivityScreen(null);
                 currentTab = 5;
               });
             }),

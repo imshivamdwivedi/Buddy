@@ -2,6 +2,7 @@ import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
+import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => EventProvider(),
         ),
       ],
       child: MaterialApp(
