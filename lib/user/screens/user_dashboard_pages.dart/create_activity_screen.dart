@@ -512,8 +512,18 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
   Future saveForm() async {
     final isValid = _formKey.currentState!.validate();
+    final _title = titleController.text.trim();
+    final _desc = descriptionController.text.trim();
 
     if (isValid) {
+      if (_title.isEmpty || _desc.isEmpty) {
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: 'Please provide Proper Details!',
+          color: Colors.black87,
+        );
+        return;
+      }
       if (_creatorName.isEmpty || _creatorClg.isEmpty) {
         CustomSnackbar().showFloatingFlushbar(
           context: context,
@@ -529,8 +539,8 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
       final payload = ActivityModel(
         id: _aid,
-        title: titleController.text.trim(),
-        desc: descriptionController.text.trim(),
+        title: _title,
+        desc: _desc,
         startDate: fromDate.toString(),
         endDate: toDate.toString(),
         creatorId: _user!.uid,
