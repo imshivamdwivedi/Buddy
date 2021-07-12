@@ -3,9 +3,7 @@ class ActivityModel {
   String title;
   String desc;
   String startDate;
-  String startTime;
   String endDate;
-  String endTime;
   String creatorId;
   String creatorName;
   String creatorClg;
@@ -15,9 +13,7 @@ class ActivityModel {
     required this.title,
     required this.desc,
     required this.startDate,
-    required this.startTime,
     required this.endDate,
-    required this.endTime,
     required this.creatorId,
     required this.creatorName,
     required this.creatorClg,
@@ -29,9 +25,7 @@ class ActivityModel {
       title: map['title'],
       desc: map['desc'],
       startDate: map['startDate'],
-      startTime: map['startTime'],
       endDate: map['endDate'],
-      endTime: map['endTime'],
       creatorId: map['creatorId'],
       creatorName: map['creatorName'],
       creatorClg: map['creatorClg'],
@@ -43,9 +37,7 @@ class ActivityModel {
         'title': title,
         'desc': desc,
         'startDate': startDate,
-        'startTime': startTime,
         'endDate': endDate,
-        'endTime': endTime,
         'creatorId': creatorId,
         'creatorName': creatorName,
         'creatorClg': creatorClg,

@@ -1,8 +1,11 @@
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/create_activity/activity_model.dart';
 import 'package:buddy/user/screens/calender_screen/bottom_sheet.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,23 +21,48 @@ class UserCalender extends StatefulWidget {
 class _UserCalenderState extends State<UserCalender> {
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      final List<EventCalender> events = [
-        EventCalender(
-          title: 'Temp Title',
-          description: 'Temp Description',
-          from: DateTime.now(),
-          to: DateTime.now().add(Duration(hours: 2)),
-          isAllDay: false,
-        ),
-        EventCalender(
-          title: 'Temp Title 2',
-          description: 'Temp Description 2',
-          from: DateTime.now().add(Duration(hours: 1)),
-          to: DateTime.now().add(Duration(hours: 6)),
-          isAllDay: false,
-        ),
-      ];
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      final _user = FirebaseAuth.instance.currentUser;
+      final _dbref = FirebaseDatabase.instance.reference().child('Activity');
+      List<EventCalender> events = [];
+      await _dbref
+          .orderByChild('creatorId')
+          .equalTo(_user!.uid)
+          .once()
+          .then((DataSnapshot snapshot) {
+        if (snapshot.value == null) {
+          events = [];
+        } else {
+          Map myMap = snapshot.value;
+          myMap.values.forEach((element) {
+            final activityData = ActivityModel.fromMap(element);
+            final event = EventCalender(
+              title: activityData.title,
+              description: activityData.desc,
+              from: DateTime.parse(activityData.startDate),
+              to: DateTime.parse(activityData.endDate),
+              isAllDay: false,
+            );
+            events.add(event);
+          });
+        }
+      });
+      // final List<EventCalender> events = [
+      //   EventCalender(
+      //     title: 'Temp Title',
+      //     description: 'Temp Description',
+      //     from: DateTime.now(),
+      //     to: DateTime.now().add(Duration(hours: 2)),
+      //     isAllDay: false,
+      //   ),
+      //   EventCalender(
+      //     title: 'Temp Title 2',
+      //     description: 'Temp Description 2',
+      //     from: DateTime.now().add(Duration(hours: 1)),
+      //     to: DateTime.now().add(Duration(hours: 6)),
+      //     isAllDay: false,
+      //   ),
+      // ];
       Provider.of<EventProvider>(context, listen: false).addEventList(events);
     });
     super.initState();

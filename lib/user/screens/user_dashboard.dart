@@ -73,7 +73,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
           Map map = snapshot.value;
           map.values.forEach((element) {
             Provider.of<UserProvider>(context, listen: false)
-                .updateUserData(UserModel.fromMap(map));
+                .updateUserData(UserModel.fromMap(element));
           });
         }
       });

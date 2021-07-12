@@ -1,5 +1,6 @@
 import 'package:buddy/user/create_activity/activity_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ActivityItem extends StatefulWidget {
   final ActivityModel dataModel;
@@ -13,6 +14,7 @@ class ActivityItem extends StatefulWidget {
 class _ActivityItemState extends State<ActivityItem> {
   @override
   Widget build(BuildContext context) {
+    var dateTime = DateTime.parse(widget.dataModel.startDate);
     return Card(
       elevation: 5,
       margin: EdgeInsets.all(5),
@@ -46,11 +48,11 @@ class _ActivityItemState extends State<ActivityItem> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.dataModel.startDate,
+                    DateFormat.yMMMEd().format(dateTime),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.dataModel.startTime,
+                    DateFormat.Hm().format(dateTime),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],

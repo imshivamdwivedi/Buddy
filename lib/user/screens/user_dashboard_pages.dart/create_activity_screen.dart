@@ -269,13 +269,17 @@
 //     );
 //   }
 // }
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/screens/calender_screen/events.dart';
+import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateActivityScreen extends StatefulWidget {
   final Event? event;
@@ -292,6 +296,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   final descriptionController = TextEditingController();
   late DateTime fromDate;
   late DateTime toDate;
+  bool init = true;
+  String _creatorName = '';
+  String _creatorClg = '';
 
   @override
   void initState() {
@@ -308,6 +315,12 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (init) {
+      final tempData = Provider.of<UserProvider>(context);
+      _creatorName = tempData.getUserName();
+      _creatorClg = tempData.getUserCollege();
+      init = false;
+    }
     return Scaffold(
       appBar: AppBar(
         actions: buildEdtingActions(),
@@ -501,13 +514,44 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
-      final event = EventCalender(
-          title: titleController.text,
-          description: descriptionController.text,
-          from: fromDate,
-          to: toDate,
-          isAllDay: false);
-      print(event.title);
+      if (_creatorName.isEmpty || _creatorClg.isEmpty) {
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: 'Please try after some time!',
+          color: Colors.black87,
+        );
+        return;
+      }
+      final _user = FirebaseAuth.instance.currentUser;
+      final _dbref = FirebaseDatabase.instance.reference().child('Activity');
+
+      final _aid = _dbref.push().key;
+
+      final payload = ActivityModel(
+        id: _aid,
+        title: titleController.text.trim(),
+        desc: descriptionController.text.trim(),
+        startDate: fromDate.toString(),
+        endDate: toDate.toString(),
+        creatorId: _user!.uid,
+        creatorName: _creatorName,
+        creatorClg: _creatorClg,
+      );
+
+      await _dbref.child(_aid).set(payload.toMap());
+
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Activity Created Successfully!',
+        color: Colors.green,
+      );
+      // final event = EventCalender(
+      //     title: titleController.text,
+      //     description: descriptionController.text,
+      //     from: fromDate,
+      //     to: toDate,
+      //     isAllDay: false);
+      // print(event.title);
       /*final provider = Provider.of<EventProvider>(context, listen: false);
       provider.addEvents(event);*/
       //Navigator.of(context).pop();
