@@ -455,8 +455,11 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       return;
     }
     if (date.isAfter(toDate)) {
-      toDate = DateTime(
-          date.year, date.month, date.minute, toDate.hour, toDate.minute);
+      // print(toDate);
+      setState(() {
+        toDate = date.add(Duration(hours: 2));
+      });
+      // print(toDate);
     }
     setState(() {
       fromDate = date;
@@ -469,10 +472,10 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     if (date == null) {
       return;
     }
-    // if (date.isAfter(toDate)) {
-    //   toDate = DateTime(
-    //       date.year, date.month, date.minute, toDate.hour, toDate.minute);
-    // }
+    if (date.isBefore(fromDate)) {
+      toDate = DateTime(
+          date.year, date.month, date.minute, toDate.hour, toDate.minute);
+    }
     setState(() {
       toDate = date;
     });
