@@ -1,9 +1,11 @@
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/screens/calender_screen/bottom_sheet.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +67,17 @@ class _UserCalenderState extends State<UserCalender> {
       //   ),
       // ];
       Provider.of<EventProvider>(context, listen: false).addEventList(events);
+
+      //---( Snack Payload )---//
+      final helper = Provider.of<ScreenHelperProvider>(context, listen: false);
+      if (helper.getSnackAvail) {
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: helper.getSnackPayload,
+          color: Colors.green,
+        );
+      }
+      helper.flushSnackMessage();
     });
     super.initState();
   }

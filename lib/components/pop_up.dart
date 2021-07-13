@@ -1,6 +1,6 @@
 import 'package:buddy/components/custom_snackbar.dart';
 
-import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

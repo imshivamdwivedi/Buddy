@@ -6,6 +6,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:buddy/user/user_genre.dart';
@@ -25,9 +26,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
   bool init = true;
   final _startTimeController = TextEditingController();
   final _descriptionController = TextEditingController();
-
   final _titleController = TextEditingController();
-
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 
@@ -77,6 +76,12 @@ class _UserDashBoardState extends State<UserDashBoard> {
           });
         }
       });
+      if (Provider.of<ScreenHelperProvider>(context, listen: false)
+              .getCurrentTab ==
+          1) {
+        currentTab = 1;
+        currentScreen = UserCalender();
+      }
       init = false;
     }
     return Scaffold(

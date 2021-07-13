@@ -2,10 +2,12 @@ import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/create_activity/activity_model.dart';
+import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
+import 'package:buddy/user/screens/user_dashboard.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -310,16 +312,22 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 .set(existingPayLoad.toMap());
           });
         });
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: 'Activity Edited Successfully!',
+          color: Colors.green,
+        );
       } else {
         await _dbref.child(_aid).set(payload.toMap());
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: 'Activity Created Successfully!',
+          color: Colors.green,
+        );
       }
-
-      CustomSnackbar().showFloatingFlushbar(
-        context: context,
-        message: 'Activity Created Successfully!',
-        color: Colors.green,
-      );
-
+      /*Provider.of<ScreenHelperProvider>(context, listen: false)
+                .setCurrentTab(1);
+            Navigator.of(context).pushReplacementNamed(UserDashBoard.routeName);*/
       // final event = EventCalender(
       //     title: titleController.text,
       //     description: descriptionController.text,
