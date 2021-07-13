@@ -1,10 +1,12 @@
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/user/models/category_class.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
+import 'package:buddy/user/screens/genre_searchbar/serach_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
 
-import '../components/social_icons.dart';
+import '../../components/social_icons.dart';
 import 'package:flutter/material.dart';
 
 class UserGenre extends StatefulWidget {
@@ -27,9 +29,9 @@ class _UserGenreState extends State<UserGenre> {
     String finVal = '';
     for (int i = 0; i < finalList.length; i++) {
       if (i == 0) {
-        finVal += finalList[i].name.toLowerCase();
+        finVal += finalList[i].id;
       } else {
-        finVal += '+' + finalList[i].name.toLowerCase();
+        finVal += '+' + finalList[i].id;
       }
     }
     final _user = _auth.currentUser;
@@ -41,22 +43,34 @@ class _UserGenreState extends State<UserGenre> {
     _refUser.set(null);
     await _refUser.set(finVal);
 
-    //---( Updating Count )---//
+    //---( Updating Firebase Database )---//
     finalList.forEach((element) async {
-      final _refUpdate = _firebaseDatabase.reference().child('Items');
-      await _refUpdate
-          .orderByChild('id')
-          .equalTo(element.id)
-          .once()
-          .then((value) {
-        Map map = value.value;
-        map.values.forEach((element) async {
-          final newGenre = Category.fromMap(element);
-          newGenre.count += 1;
-          await _refUpdate.child(newGenre.id.toString()).set(newGenre.toMap());
+      if (!element.isNew) {
+        //---( Updating Count )---//
+        final _refUpdate = _firebaseDatabase.reference().child('Items');
+        await _refUpdate
+            .orderByChild('id')
+            .equalTo(element.id)
+            .once()
+            .then((value) {
+          Map map = value.value;
+          map.values.forEach((element) async {
+            final newGenre = Category.fromMap(element);
+            newGenre.count += 1;
+            await _refUpdate
+                .child(newGenre.id.toString())
+                .set(newGenre.toMap());
+          });
         });
-      });
+      } else {
+        //---( Adding New Ones )---//
+        final _refUpdate = _firebaseDatabase.reference().child('Items');
+        await _refUpdate.child(element.id.toString()).set(element.toMap());
+      }
     });
+
+    print(
+        'SUCCESS +++++++++++ ___________ ++++++++++++++ +==================== ');
 
     //Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
   }
@@ -77,15 +91,33 @@ class _UserGenreState extends State<UserGenre> {
       });
       _databaseReference.once().then((DataSnapshot snapshot) {
         List<Category> myList = [];
-        List res = snapshot.value;
-        for (var map in res) {
-          myList.add(Category.fromMap(map));
-        }
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          myList.add(Category.fromMap(element));
+        });
         Provider.of<UserGenreProvider>(context, listen: false).addList(myList);
       });
       init = false;
     }
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Browse Category',
+        backgroundColor: Colors.black87,
+        child: Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          Navigator.of(context).pushNamed(SearchScreen.routeName).then((value) {
+            if (value != null) {
+              CustomSnackbar().showFloatingFlushbar(
+                context: context,
+                message: value.toString(),
+                color: Colors.green,
+              );
+            }
+          });
+        },
+      ),
       body: Column(
         children: <Widget>[
           SizedBox(
@@ -138,11 +170,11 @@ class _UserGenreState extends State<UserGenre> {
           ),
           Consumer<UserGenreProvider>(
             builder: (_, userGenre, ch) => Flexible(
-              child: userGenre.allGenre.isEmpty
+              child: userGenre.topGenre.isEmpty
                   ? CircularProgressIndicator.adaptive()
                   : GridView.builder(
                       padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      itemCount: userGenre.allGenre.length,
+                      itemCount: userGenre.topGenre.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 7 / 2,
@@ -150,7 +182,7 @@ class _UserGenreState extends State<UserGenre> {
                         mainAxisSpacing: 10,
                       ),
                       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                        value: userGenre.allGenre[index],
+                        value: userGenre.topGenre[index],
                         child: Consumer<Category>(
                           builder: (ctx, product, child) => InkWell(
                             onTap: () => product.toggleSelected(),

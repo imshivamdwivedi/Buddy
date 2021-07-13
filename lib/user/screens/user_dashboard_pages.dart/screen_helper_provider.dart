@@ -25,6 +25,7 @@ class ScreenHelperProvider with ChangeNotifier {
   void setSnackMessage(String payload) {
     snackAvail = true;
     snackPayload = payload;
+    notifyListeners();
   }
 
   void setCurrentTab(int index) {

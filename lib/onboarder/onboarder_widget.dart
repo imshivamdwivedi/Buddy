@@ -1,4 +1,4 @@
-import 'package:buddy/user/user_genre.dart';
+import 'package:buddy/user/screens/user_genre.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 

@@ -1,4 +1,4 @@
-import 'package:buddy/user/user_genre.dart';
+import 'package:buddy/user/screens/user_genre.dart';
 import 'package:flutter/material.dart';
 
 class OnboarderPages {
