@@ -1,5 +1,6 @@
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
+import 'package:buddy/user/screens/calender_screen/event_viewing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -44,6 +45,13 @@ class _ModalBootomState extends State<ModalBootom> {
             todayHighlightColor: Colors.black87,
             selectionDecoration:
                 BoxDecoration(color: Colors.red.withOpacity(0.3)),
+            onTap: (details) {
+              if (details.appointments == null) return;
+              final event = details.appointments!.first;
+
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EventViewingScreen(event: event)));
+            },
           ),
         ),
       ),

@@ -37,6 +37,7 @@ class _UserCalenderState extends State<UserCalender> {
           myMap.values.forEach((element) {
             final activityData = ActivityModel.fromMap(element);
             final event = EventCalender(
+              id: activityData.id,
               title: activityData.title,
               description: activityData.desc,
               from: DateTime.parse(activityData.startDate),

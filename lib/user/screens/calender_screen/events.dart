@@ -1,4 +1,5 @@
 class EventCalender {
+  final String id;
   final String title;
   final String description;
   final DateTime from;
@@ -6,6 +7,7 @@ class EventCalender {
   final bool isAllDay;
 
   const EventCalender({
+    required this.id,
     required this.title,
     required this.description,
     required this.from,

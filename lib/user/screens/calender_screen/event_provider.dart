@@ -27,4 +27,13 @@ class EventProvider extends ChangeNotifier {
     _events.addAll(events);
     notifyListeners();
   }
+
+  // void updateEvent(EventCalender eventCalender) {
+  //   EventCalender editEvent =  _events.firstWhere((element) => element.id == id);
+
+  // }
+
+  // void deleteEvent(EventCalender event) {
+  //   _events.remove(event);
+  // }
 }
