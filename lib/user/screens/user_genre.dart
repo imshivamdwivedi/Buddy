@@ -25,6 +25,14 @@ class _UserGenreState extends State<UserGenre> {
   final _userDatabase = FirebaseDatabase.instance.reference().child('Users');
 
   void _saveUserGenre(List<Category> finalList) async {
+    if (finalList.isEmpty) {
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Please choose a genre!',
+        color: Colors.red,
+      );
+      return;
+    }
     //---( Saving Data to user Profile )---//
     String finVal = '';
     for (int i = 0; i < finalList.length; i++) {
