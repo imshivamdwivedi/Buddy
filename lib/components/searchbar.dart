@@ -10,12 +10,13 @@ class SearchBar extends StatelessWidget {
       {required this.text,
       required this.val,
       required this.controller,
-      required this.icon});
+      this.icon = Icons.ac_unit});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
+      height: size.height * 0.07,
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(
         horizontal: 10,
@@ -30,10 +31,12 @@ class SearchBar extends StatelessWidget {
         obscureText: val,
         cursorColor: Colors.black,
         decoration: InputDecoration(
-          icon: Icon(
-            icon,
-            color: Colors.black,
-          ),
+          icon: icon == Icons.ac_unit
+              ? null
+              : Icon(
+                  icon,
+                  color: Colors.black,
+                ),
           hintText: text,
           border: InputBorder.none,
         ),

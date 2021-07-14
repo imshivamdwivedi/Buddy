@@ -1,7 +1,7 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/user/models/category_class.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
-import 'package:buddy/user/screens/genre_searchbar/serach_screen.dart';
+import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';

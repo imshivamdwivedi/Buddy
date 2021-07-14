@@ -3,7 +3,8 @@ import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
-import 'package:buddy/user/screens/genre_searchbar/serach_screen.dart';
+import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
+import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (ctx) => UserGenre(),
+          '/': (ctx) => UserDashBoard(),
           SignUp.routeName: (ctx) => SignUp(),
           UserGenre.routeName: (ctx) => UserGenre(),
           UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
@@ -78,6 +79,7 @@ class MyApp extends StatelessWidget {
           OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
           UserChatList.routeName: (ctx) => UserChatList(),
           SearchScreen.routeName: (cts) => SearchScreen(),
+          SearchConnectionScreen.routeName: (ctx) => SearchConnectionScreen(),
         },
       ),
     );
