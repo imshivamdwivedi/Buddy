@@ -5,11 +5,11 @@ import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/notification_screen.dart';
+import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile_screen.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
-import 'package:buddy/user/screens/user_genre.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
