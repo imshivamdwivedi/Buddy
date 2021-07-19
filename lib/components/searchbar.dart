@@ -17,9 +17,9 @@ class SearchBar extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.07,
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
       padding: EdgeInsets.symmetric(
-        horizontal: 10,
+        horizontal: size.width * 0.1,
       ),
       width: size.width * 0.8,
       decoration: BoxDecoration(
