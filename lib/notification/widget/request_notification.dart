@@ -1,12 +1,20 @@
 import 'package:buddy/constants.dart';
+import 'package:buddy/notification/model/notification_model.dart';
+import 'package:buddy/notification/model/notification_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RequestNotification extends StatefulWidget {
+  final NotificationModel notificationModel;
+  RequestNotification({required this.notificationModel});
   @override
   _RequestNotificationState createState() => _RequestNotificationState();
 }
 
 class _RequestNotificationState extends State<RequestNotification> {
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -27,7 +35,7 @@ class _RequestNotificationState extends State<RequestNotification> {
                         "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
                   ),
                   title: Text(
-                    "Shivam Dwivedi",
+                    widget.notificationModel.name,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.black87),
                   ),
@@ -59,7 +67,94 @@ class _RequestNotificationState extends State<RequestNotification> {
         text,
         style: TextStyle(color: Colors.white, fontSize: 12),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (text == 'Delete') {
+          //---( Deleting Request )---//
+          //---( From Target Side )---//
+          final _deleteDB = FirebaseDatabase.instance
+              .reference()
+              .child('Notification')
+              .child(_auth.currentUser!.uid);
+          _deleteDB.child(widget.notificationModel.id).set(null);
+          //---( From Sender Side )---//
+          final _clearDB = FirebaseDatabase.instance
+              .reference()
+              .child('Users')
+              .child(widget.notificationModel.nameId)
+              .child('Request');
+          _clearDB.child(widget.notificationModel.id).set(null);
+        } else if (text == 'Confirm') {
+          //---( Accepting Request )---//
+          final _acceptDB =
+              FirebaseDatabase.instance.reference().child('Users');
+          //---( Accepting Request at Target Side )---//
+          final _fid = _acceptDB
+              .child(widget.notificationModel.nameId)
+              .child('Friends')
+              .push()
+              .key;
+          _acceptDB //adding friends id
+              .child(widget.notificationModel.nameId)
+              .child('Friends')
+              .child(_fid)
+              .child('fid')
+              .set(_fid);
+          _acceptDB //adding alternative id
+              .child(widget.notificationModel.nameId)
+              .child('Friends')
+              .child(_fid)
+              .child('uid')
+              .set(_auth.currentUser!.uid);
+          //---( Accepting Request at Sender Side )---//
+          _acceptDB //adding friends id
+              .child(_auth.currentUser!.uid)
+              .child('Friends')
+              .child(_fid)
+              .child('fid')
+              .set(_fid);
+          _acceptDB //adding friends id
+              .child(_auth.currentUser!.uid)
+              .child('Friends')
+              .child(_fid)
+              .child('uid')
+              .set(widget.notificationModel.nameId);
+          //---( From Target Side )---//
+          final _deleteDB = FirebaseDatabase.instance
+              .reference()
+              .child('Notification')
+              .child(_auth.currentUser!.uid);
+          _deleteDB.child(widget.notificationModel.id).set(null);
+          //---( From Sender Side )---//
+          final _clearDB = FirebaseDatabase.instance
+              .reference()
+              .child('Users')
+              .child(widget.notificationModel.nameId)
+              .child('Request');
+          _clearDB.child(widget.notificationModel.id).set(null);
+
+          //---( Creating Text Notification )---//
+          final _textNotDB = FirebaseDatabase.instance
+              .reference()
+              .child('Notification')
+              .child(_auth.currentUser!.uid);
+          final _tid = _textNotDB.push().key;
+          final newTextNot = NotificationModel(
+            id: _tid,
+            type: 'TEXT',
+            title: 'You and ${widget.notificationModel.name} are now Friends!',
+            name: '',
+            nameId: '',
+            uid: '',
+            eventName: '',
+            eventId: '',
+            createdAt: '',
+          );
+          _textNotDB.child(_tid).set(newTextNot.toMap());
+        }
+        //---( Updating Providers )---//
+        Provider.of<NotificationProvider>(context, listen: false)
+            .removeNotification(widget.notificationModel);
+      },
     );
   }
 }

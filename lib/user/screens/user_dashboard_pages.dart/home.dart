@@ -33,9 +33,23 @@ class _UserHomeState extends State<UserHome> {
     final List<String> friendsId = [];
     final _friendsDB = FirebaseDatabase.instance
         .reference()
-        .child('Friends')
-        .child(_user!.uid);
+        .child('Users')
+        .child(_user!.uid)
+        .child('Friends');
     await _friendsDB.once().then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          friendsId.add(element['uid']);
+        });
+      }
+    });
+    final _requestDB = FirebaseDatabase.instance
+        .reference()
+        .child('Users')
+        .child(_user.uid)
+        .child('Request');
+    await _requestDB.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         Map map = snapshot.value;
         map.values.forEach((element) {
@@ -52,7 +66,7 @@ class _UserHomeState extends State<UserHome> {
           if (element['id'] != _user.uid) {
             final userM = UserModel.fromMap(element);
             final homeU = HomeSearchHelper(
-                userModel: userM, isFriend: friendsId.contains(element['id']));
+                userModel: userM, isFriend: friendsId.contains(userM.id));
             allUsersList.add(homeU);
           }
         });
