@@ -1,14 +1,14 @@
 import 'package:buddy/chat/screens/user_chat_list.dart';
-import 'package:buddy/components/rounded_input_field.dart';
-import 'package:buddy/components/searchbar.dart';
-import 'package:buddy/components/social_icons.dart';
-import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
+import 'package:buddy/user/models/home_search_provider.dart';
+import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserHome extends StatefulWidget {
   const UserHome({Key? key}) : super(key: key);
@@ -19,7 +19,48 @@ class UserHome extends StatefulWidget {
 
 class _UserHomeState extends State<UserHome> {
   // final _nameController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
   Query _refAct = FirebaseDatabase.instance.reference().child('Activity');
+
+  @override
+  void initState() {
+    _updateSearch(context);
+    super.initState();
+  }
+
+  void _updateSearch(BuildContext context) async {
+    final _user = _auth.currentUser;
+    final List<String> friendsId = [];
+    final _friendsDB = FirebaseDatabase.instance
+        .reference()
+        .child('Friends')
+        .child(_user!.uid);
+    await _friendsDB.once().then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          friendsId.add(element['uid']);
+        });
+      }
+    });
+    final List<HomeSearchHelper> allUsersList = [];
+    final _searchDB = FirebaseDatabase.instance.reference().child('Users');
+    await _searchDB.once().then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          if (element['id'] != _user.uid) {
+            final userM = UserModel.fromMap(element);
+            final homeU = HomeSearchHelper(
+                userModel: userM, isFriend: friendsId.contains(element['id']));
+            allUsersList.add(homeU);
+          }
+        });
+      }
+    });
+    Provider.of<HomeSearchProvider>(context, listen: false)
+        .setAllUsers(allUsersList);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +96,10 @@ class _UserHomeState extends State<UserHome> {
                       IconButton(
                         onPressed: () {
                           Navigator.of(context)
-                              .pushNamed(SearchConnectionScreen.routeName);
+                              .pushNamed(SearchConnectionScreen.routeName)
+                              .then((_) {
+                            _updateSearch(context);
+                          });
                         },
                         icon: Icon(
                           Icons.search,

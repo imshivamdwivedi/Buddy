@@ -1,5 +1,6 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
@@ -60,6 +61,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => ScreenHelperProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => HomeSearchProvider(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

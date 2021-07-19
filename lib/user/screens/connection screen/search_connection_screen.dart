@@ -1,8 +1,11 @@
-import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchConnectionScreen extends StatefulWidget {
   static const routeName = '/search-connection-screen';
@@ -13,57 +16,101 @@ class SearchConnectionScreen extends StatefulWidget {
 }
 
 class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
+  final _auth = FirebaseAuth.instance;
   final _searchController = TextEditingController();
-  final List<UserModel> userList = [
-    UserModel(
-        firstName: 'Parneet',
-        lastName: "Raghuvanshi",
-        dob: '14/07/2021',
-        email: 'hcdgcv@gmail.com',
-        gender: 'male',
-        collegeName: 'Kiet',
-        id: 'bcdvc',
-        profile: true),
-    UserModel(
-        firstName: 'Parneet',
-        lastName: "Sharma",
-        dob: '14/07/2021',
-        email: 'hcdgcv@gmail.com',
-        gender: 'male',
-        collegeName: 'Kiet',
-        id: 'bcdvc',
-        profile: true),
-    UserModel(
-        firstName: 'Parneet',
-        lastName: "Dwivedi",
-        dob: '14/07/2021',
-        email: 'hcdgcv@gmail.com',
-        gender: 'male',
-        collegeName: 'Kiet',
-        id: 'bcdvc',
-        profile: true),
-    UserModel(
-        firstName: 'Parneet',
-        lastName: "Devgan",
-        dob: '14/07/2021',
-        email: 'hcdgcv@gmail.com',
-        gender: 'male',
-        collegeName: 'Kiet',
-        id: 'bcdvc',
-        profile: true),
-    UserModel(
-        firstName: 'Parneet',
-        lastName: "Bieber",
-        dob: '14/07/2021',
-        email: 'hcdgcv@gmail.com',
-        gender: 'male',
-        collegeName: 'Kiet',
-        id: 'bcdvc',
-        profile: true),
-  ];
+
+  // @override
+  // void initState() {
+  //   print("INIT HERE  ============================= ");
+  //   WidgetsBinding.instance!.addPostFrameCallback((_) async {
+  //     final _user = _auth.currentUser;
+  //     final List<String> friendsId = [];
+  //     final _friendsDB = FirebaseDatabase.instance
+  //         .reference()
+  //         .child('Friends')
+  //         .child(_user!.uid);
+  //     await _friendsDB.once().then((DataSnapshot snapshot) {
+  //       if (snapshot.value != null) {
+  //         Map map = snapshot.value;
+  //         map.values.forEach((element) {
+  //           friendsId.add(element['uid']);
+  //         });
+  //       }
+  //     });
+  //     final List<HomeSearchHelper> allUsersList = [];
+  //     final _searchDB = FirebaseDatabase.instance.reference().child('Users');
+  //     await _searchDB.once().then((DataSnapshot snapshot) {
+  //       if (snapshot.value != null) {
+  //         Map map = snapshot.value;
+  //         map.values.forEach((element) {
+  //           if (element['id'] != _user.uid) {
+  //             final userM = UserModel.fromMap(element);
+  //             final homeU = HomeSearchHelper(
+  //                 userModel: userM,
+  //                 isFriend: friendsId.contains(element['id']));
+  //             allUsersList.add(homeU);
+  //           }
+  //         });
+  //       }
+  //     });
+  //     Provider.of<HomeSearchProvider>(context, listen: false)
+  //         .setAllUsers(allUsersList);
+  //   });
+  //   super.initState();
+  // }
+
+  // final List<UserModel> userList = [
+  //   UserModel(
+  //       firstName: 'Parneet',
+  //       lastName: "Raghuvanshi",
+  //       dob: '14/07/2021',
+  //       email: 'hcdgcv@gmail.com',
+  //       gender: 'male',
+  //       collegeName: 'Kiet',
+  //       id: 'bcdvc',
+  //       profile: true),
+  //   UserModel(
+  //       firstName: 'Parneet',
+  //       lastName: "Sharma",
+  //       dob: '14/07/2021',
+  //       email: 'hcdgcv@gmail.com',
+  //       gender: 'male',
+  //       collegeName: 'Kiet',
+  //       id: 'bcdvc',
+  //       profile: true),
+  //   UserModel(
+  //       firstName: 'Parneet',
+  //       lastName: "Dwivedi",
+  //       dob: '14/07/2021',
+  //       email: 'hcdgcv@gmail.com',
+  //       gender: 'male',
+  //       collegeName: 'Kiet',
+  //       id: 'bcdvc',
+  //       profile: true),
+  //   UserModel(
+  //       firstName: 'Parneet',
+  //       lastName: "Devgan",
+  //       dob: '14/07/2021',
+  //       email: 'hcdgcv@gmail.com',
+  //       gender: 'male',
+  //       collegeName: 'Kiet',
+  //       id: 'bcdvc',
+  //       profile: true),
+  //   UserModel(
+  //       firstName: 'Parneet',
+  //       lastName: "Bieber",
+  //       dob: '14/07/2021',
+  //       email: 'hcdgcv@gmail.com',
+  //       gender: 'male',
+  //       collegeName: 'Kiet',
+  //       id: 'bcdvc',
+  //       profile: true),
+  // ];
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final userData = Provider.of<HomeSearchProvider>(context).suggestedUsers;
+    final usermodel = userData[0].userModel;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
@@ -76,8 +123,23 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
           controller: _searchController,
         ),
       ),
+      // body: Container(
+      //   height: MediaQuery.of(context).size.height * 0.8,
+      //   child: FirebaseAnimatedList(
+      //     query: _refAct,
+      //     itemBuilder: (BuildContext context, DataSnapshot snapshot,
+      //         Animation<double> animation, int index) {
+      //       Map data = snapshot.value;
+      //       return ActivityItem(
+      //         dataModel: ActivityModel.fromMap(data),
+      //       );
+      //     },
+      //   ),
+      // ),
       body: SingleChildScrollView(
-        child: UserCard(userList[0]),
+        child: userData.isEmpty
+            ? CircularProgressIndicator()
+            : UserCard(usermodel),
       ),
     );
   }
