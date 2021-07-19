@@ -35,7 +35,7 @@ class HomeSearchHelper with ChangeNotifier {
   });
 
   void toggleFriend() {
-    isFriend = !isFriend;
+    isFriend = true;
     notifyListeners();
   }
 }

@@ -1,53 +1,40 @@
-import 'package:buddy/user/users_connections/request_model.dart';
+import 'package:buddy/notification/model/notification_model.dart';
+import 'package:buddy/user/models/home_search_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 
 class ConnectionHandler {
+  final _auth = FirebaseAuth.instance;
   final _firebaseDatabase = FirebaseDatabase.instance;
 
-  void createRequest(String userId, String targetId) {
+  void createRequest(String userId, String targetId, BuildContext context,
+      String myName, HomeSearchHelper user) async {
     final _refReq =
-        _firebaseDatabase.reference().child('Connection').child('Requests');
+        _firebaseDatabase.reference().child('Notification').child(targetId);
+    final _userDB = _firebaseDatabase
+        .reference()
+        .child('Users')
+        .child(_auth.currentUser!.uid)
+        .child('Request');
     final String _rid = _refReq.push().key;
 
-    RequestModel requestModel = RequestModel(
-      senId: userId,
-      recId: targetId,
-      createdAt: DateTime.now().toString(),
-      status: 'pending',
+    final notPayload = NotificationModel(
       id: _rid,
+      type: 'REQ',
+      title: '',
+      name: myName,
+      nameId: _auth.currentUser!.uid,
+      uid: targetId,
+      eventName: '',
+      eventId: '',
+      createdAt: DateTime.now().toString(),
     );
 
-    _refReq.child(_rid).set(requestModel);
-  }
-
-  void acceptRequest(String rid) {
-    //---( Fetch Request )---//
-    final _refReq =
-        _firebaseDatabase.reference().child('Connection').child('Requests');
-    _refReq.once().then((DataSnapshot dataSnapshot) {
-      Map myMap = dataSnapshot.value;
-      myMap.values.forEach((element) {
-        RequestModel requestModel = RequestModel.fromMap(myMap);
-        final _rid = requestModel.id;
-
-        //---( Accepting Friend and Deleting Request )---//
-        final _refFriend =
-            _firebaseDatabase.reference().child('Connection').child('Friends');
-        final String _fid = _refFriend.push().key;
-        requestModel.id = _fid;
-        requestModel.status = 'accepted';
-        _refFriend.child(_fid).set(requestModel);
-
-        //---( Deleting Request )---//
-        _refReq.child(_rid).set(null);
-      });
-    });
-  }
-
-  void declineRequest(String rid) {
-    //---( Fetch Request )---//
-    final _refReq =
-        _firebaseDatabase.reference().child('Connection').child('Requests');
-    _refReq.child(rid).set(null);
+    await _refReq.child(_rid).set(notPayload.toMap());
+    await _userDB.child(_rid).child('uid').set(targetId);
+    await _userDB.child(_rid).child('rid').set(_rid);
+    //---( Confirming )---//
+    user.toggleFriend();
   }
 }
