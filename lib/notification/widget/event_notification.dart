@@ -36,17 +36,14 @@ class _EventNotificationState extends State<EventNotification> {
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 20,
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Icon(
-                  Icons.add,
-                ),
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-              ),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.add_circle,
+                    color: Colors.black87,
+                  ))
             ],
           ),
         ),
