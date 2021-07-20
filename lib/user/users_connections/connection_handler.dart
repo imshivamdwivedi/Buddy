@@ -1,8 +1,10 @@
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ConnectionHandler {
   final _auth = FirebaseAuth.instance;
@@ -36,5 +38,10 @@ class ConnectionHandler {
     await _userDB.child(_rid).child('rid').set(_rid);
     //---( Confirming )---//
     user.toggleFriend();
+    CustomSnackbar().showFloatingFlushbar(
+      context: context,
+      message: 'Connection request sent successfully!',
+      color: Colors.green,
+    );
   }
 }

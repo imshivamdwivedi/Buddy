@@ -1,6 +1,8 @@
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +85,12 @@ class _RequestNotificationState extends State<RequestNotification> {
               .child(widget.notificationModel.nameId)
               .child('Request');
           _clearDB.child(widget.notificationModel.id).set(null);
+
+          CustomSnackbar().showFloatingFlushbar(
+            context: context,
+            message: 'Connection request deleted successfully!',
+            color: Colors.red,
+          );
         } else if (text == 'Confirm') {
           //---( Accepting Request )---//
           final _acceptDB =
@@ -132,7 +140,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               .child('Request');
           _clearDB.child(widget.notificationModel.id).set(null);
 
-          //---( Creating Text Notification )---//
+          //---( Creating Text Notification Acceptor Side )---//
           final _textNotDB = FirebaseDatabase.instance
               .reference()
               .child('Notification')
@@ -150,10 +158,36 @@ class _RequestNotificationState extends State<RequestNotification> {
             createdAt: '',
           );
           _textNotDB.child(_tid).set(newTextNot.toMap());
+
+          //---( Creating Text Notification Acceptor Side )---//
+          final tempName =
+              Provider.of<UserProvider>(context, listen: false).getUserName();
+          final _text1NotDB = FirebaseDatabase.instance
+              .reference()
+              .child('Notification')
+              .child(widget.notificationModel.nameId);
+          final _tid1 = _textNotDB.push().key;
+          final newText1Not = NotificationModel(
+            id: _tid1,
+            type: 'TEXT',
+            title: 'You and $tempName are now Friends!',
+            name: '',
+            nameId: '',
+            uid: '',
+            eventName: '',
+            eventId: '',
+            createdAt: '',
+          );
+          _text1NotDB.child(_tid1).set(newText1Not.toMap());
         }
         //---( Updating Providers )---//
         Provider.of<NotificationProvider>(context, listen: false)
             .removeNotification(widget.notificationModel);
+        CustomSnackbar().showFloatingFlushbar(
+          context: context,
+          message: 'Connection request accepted successfully!',
+          color: Colors.green,
+        );
       },
     );
   }
