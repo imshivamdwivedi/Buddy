@@ -1,4 +1,3 @@
-import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';

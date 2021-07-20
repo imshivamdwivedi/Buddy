@@ -24,9 +24,9 @@ class UserDashBoard extends StatefulWidget {
 
 class _UserDashBoardState extends State<UserDashBoard> {
   bool init = true;
-  final _startTimeController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _titleController = TextEditingController();
+  //final _startTimeController = TextEditingController();
+  //final _descriptionController = TextEditingController();
+  //final _titleController = TextEditingController();
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 

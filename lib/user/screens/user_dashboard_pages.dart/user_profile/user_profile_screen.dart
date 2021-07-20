@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:buddy/components/drawer/app_drawer.dart';
-import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/community.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -25,7 +23,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     Community(id: "e5", name: "Python"),
   ];
 
-  static const kListHeight = 150.0;
+  //static const kListHeight = 150.0;
 
   // Widget _buildHorizontalList() => SizedBox(
   //       height: kListHeight,

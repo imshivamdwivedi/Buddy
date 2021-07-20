@@ -93,9 +93,9 @@ class _PopUpState extends State<PopUp> {
     final _title = _titleController.text.toString();
     final _desc = _descriptionController.text.toString();
     final _startDate = DateFormat.yMd().format(_fromDate);
-    final _startTime = _fromTime.toString().substring(10, 15);
+    //final _startTime = _fromTime.toString().substring(10, 15);
     final _endDate = DateFormat.yMd().format(_toDate);
-    final _endTime = _toTime.toString().substring(10, 15);
+    //final _endTime = _toTime.toString().substring(10, 15);
 
     //---( Validation Strings )----//
     if (_title.isEmpty || _desc.isEmpty) {

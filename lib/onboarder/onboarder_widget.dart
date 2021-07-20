@@ -6,7 +6,7 @@ import '../onboarder/onboarder_pages.dart';
 
 class OnboarderWidget extends StatelessWidget {
   static const routeName = '/onboarder-screen';
-  int entry = 0;
+  static int entry = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
