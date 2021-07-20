@@ -22,7 +22,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    //final Size size = MediaQuery.of(context).size;
     final userData = Provider.of<HomeSearchProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +40,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
           value: userData.suggestedUsers[index],
           child: Consumer<HomeSearchHelper>(
-            builder: (_, user, child) => UserCard(user.userModel, user),
+            builder: (_, user, child) => userCard(user.userModel, user),
           ),
         ),
         itemCount: userData.suggestedUsers.length,
@@ -48,7 +48,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
     );
   }
 
-  Widget UserCard(UserModel userModel, HomeSearchHelper user) {
+  Widget userCard(UserModel userModel, HomeSearchHelper user) {
     return Card(
       color: kPrimaryColor,
       elevation: 5,

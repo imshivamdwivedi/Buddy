@@ -11,7 +11,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../auth/sign_in.dart';
 import '../components/rounded_button.dart';
 import '../components/rounded_input_field.dart';
-import '../components/social_icons.dart';
 
 class SignUp extends StatefulWidget {
   static const routeName = '/sign-up';
@@ -139,7 +138,7 @@ class _SignUpState extends State<SignUp> {
         _saveUserData(_auth.currentUser!.email.toString());
         Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
         //return 'signin#done';
-      } on FirebaseAuthException catch (error) {
+      } on FirebaseAuthException catch (_) {
         var msg = 'An error Occured, Please try again!';
         print(msg);
         CustomSnackbar().showFloatingFlushbar(

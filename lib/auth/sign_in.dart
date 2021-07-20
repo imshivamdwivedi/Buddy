@@ -3,7 +3,6 @@ import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../components/rounded_button.dart';
 import '../components/rounded_input_field.dart';

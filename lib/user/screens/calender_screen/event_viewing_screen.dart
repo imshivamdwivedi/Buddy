@@ -1,9 +1,7 @@
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
