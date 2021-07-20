@@ -199,8 +199,6 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
       onPressed: user.isFriend
           ? null
           : () {
-              // String name =
-              //     user.userModel.firstName + " " + user.userModel.lastName;
               //---(Creating Request)----//
               ConnectionHandler().createRequest(_auth.currentUser!.uid,
                   user.userModel.id, context, userName, user);

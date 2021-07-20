@@ -53,23 +53,45 @@ class _UserNotificationState extends State<UserNotification> {
         ),
         backgroundColor: kPrimaryColor,
       ),
-      body: ListView.builder(
-        itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-          value: notData.allNotification[index],
-          child: Consumer<NotificationModel>(
-            builder: (_, not, child) {
-              if (not.type == 'REQ') {
-                return RequestNotification(
-                  notificationModel: not,
-                );
-              } else {
-                return SimpleNotification('No New Notifications!');
-              }
-            },
-          ),
-        ),
-        itemCount: notData.allNotification.length,
-      ),
+      body: notData.allNotification.isEmpty
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/nonewnot.png",
+                  height: 400.0,
+                  width: 400.0,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: Text(
+                    'No New Notifications!',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
+            )
+          : ListView.builder(
+              itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                value: notData.allNotification[index],
+                child: Consumer<NotificationModel>(
+                  builder: (_, not, child) {
+                    if (not.type == 'REQ') {
+                      return RequestNotification(
+                        notificationModel: not,
+                      );
+                    } else if (not.type == 'TEXT') {
+                      return SimpleNotification(not.title);
+                    } else {
+                      return SimpleNotification('No New Notifications!');
+                    }
+                  },
+                ),
+              ),
+              itemCount: notData.allNotification.length,
+            ),
     );
   }
 }

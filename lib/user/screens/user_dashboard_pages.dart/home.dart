@@ -31,10 +31,12 @@ class _UserHomeState extends State<UserHome> {
   void _updateSearch(BuildContext context) async {
     final _user = _auth.currentUser;
     final List<String> friendsId = [];
+    friendsId.add(_user!.uid);
+    final List<String> requestsId = [];
     final _friendsDB = FirebaseDatabase.instance
         .reference()
         .child('Users')
-        .child(_user!.uid)
+        .child(_user.uid)
         .child('Friends');
     await _friendsDB.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
@@ -53,7 +55,7 @@ class _UserHomeState extends State<UserHome> {
       if (snapshot.value != null) {
         Map map = snapshot.value;
         map.values.forEach((element) {
-          friendsId.add(element['uid']);
+          requestsId.add(element['uid']);
         });
       }
     });
@@ -63,10 +65,10 @@ class _UserHomeState extends State<UserHome> {
       if (snapshot.value != null) {
         Map map = snapshot.value;
         map.values.forEach((element) {
-          if (element['id'] != _user.uid) {
+          if (!friendsId.contains(element['id'])) {
             final userM = UserModel.fromMap(element);
             final homeU = HomeSearchHelper(
-                userModel: userM, isFriend: friendsId.contains(userM.id));
+                userModel: userM, isFriend: requestsId.contains(userM.id));
             allUsersList.add(homeU);
           }
         });
