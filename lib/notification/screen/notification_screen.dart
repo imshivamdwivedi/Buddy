@@ -59,8 +59,8 @@ class _UserNotificationState extends State<UserNotification> {
               children: [
                 Image.asset(
                   "assets/images/nonewnot.png",
-                  height: 400.0,
-                  width: 400.0,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  width: MediaQuery.of(context).size.width * 0.5,
                 ),
                 SizedBox(
                   height: 20,

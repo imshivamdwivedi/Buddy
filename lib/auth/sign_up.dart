@@ -1,3 +1,4 @@
+import 'package:buddy/auth/verify.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -68,7 +69,7 @@ class _SignUpState extends State<SignUp> {
           email: _email, password: _pass);
       print('Signed User Up !');
       _saveUserData(_email);
-      Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
+      Navigator.of(context).pushNamed(VerifyEmail.routeName);
       //return 'signin#done';
     } on PlatformException catch (error) {
       var msg = 'An error Occured, Please try again!';
@@ -192,88 +193,92 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Sign Up ",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            RoundedInputField(
-              icon: Icons.account_circle,
-              text: "Email ",
-              val: false,
-              controller: _emailController,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            RoundedInputField(
-              icon: Icons.lock,
-              text: "Password",
-              val: true,
-              controller: _passwordController,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Or",
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RoundedButton(
-                  size,
-                  0.7,
-                  Text(
-                    'Signin with Google',
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                  () {
-                    _signinUserByGoogle();
-                  },
-                  'assets/icons/googlesignin.svg',
-                ),
-              ],
-            ),
-            RoundedButton(
-              size,
-              0.4,
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.height * 0.15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               Text(
-                'Next ',
-                style: TextStyle(color: Colors.black87),
+                "Sign Up ",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              () => _createUser(),
-              '',
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Already Exist ?",
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(SignIn.routeName);
+              SizedBox(
+                height: 10,
+              ),
+              RoundedInputField(
+                icon: Icons.account_circle,
+                text: "Email ",
+                val: false,
+                controller: _emailController,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              RoundedInputField(
+                icon: Icons.lock,
+                text: "Password",
+                val: true,
+                controller: _passwordController,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Or",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RoundedButton(
+                    size,
+                    0.7,
+                    Text(
+                      'Signin with Google',
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    () {
+                      _signinUserByGoogle();
                     },
-                    child: Text("Sign in !")),
-              ],
-            ),
-          ],
+                    'assets/icons/googlesignin.svg',
+                  ),
+                ],
+              ),
+              RoundedButton(
+                size,
+                0.4,
+                Text(
+                  'Next ',
+                  style: TextStyle(color: Colors.black87),
+                ),
+                () => _createUser(),
+                '',
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already Exist ?",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(SignIn.routeName);
+                      },
+                      child: Text("Sign in !")),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
