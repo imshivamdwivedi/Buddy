@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (ctx) => AuthChoiceScreen(),
+          '/': (ctx) => AuthWrapper(),
           SignUp.routeName: (ctx) => SignUp(),
           VerifyEmail.routeName: (ctx) => VerifyEmail(),
           UserGenre.routeName: (ctx) => UserGenre(),
