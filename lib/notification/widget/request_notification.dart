@@ -1,5 +1,6 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -92,40 +93,39 @@ class _RequestNotificationState extends State<RequestNotification> {
             color: Colors.red,
           );
         } else if (text == 'Confirm') {
+          final tempName =
+              Provider.of<UserProvider>(context, listen: false).getUserName();
           //---( Accepting Request )---//
           final _acceptDB =
               FirebaseDatabase.instance.reference().child('Users');
-          //---( Accepting Request at Target Side )---//
+          //---( Generating Friendsid key )---//
           final _fid = _acceptDB
               .child(widget.notificationModel.nameId)
               .child('Friends')
               .push()
               .key;
-          _acceptDB //adding friends id
+          //---( Accepting Request at Target Side )---//
+          final friendPayload = FriendsModel(
+            fid: _fid,
+            uid: _auth.currentUser!.uid,
+            name: tempName,
+          );
+          _acceptDB
               .child(widget.notificationModel.nameId)
               .child('Friends')
               .child(_fid)
-              .child('fid')
-              .set(_fid);
-          _acceptDB //adding alternative id
-              .child(widget.notificationModel.nameId)
-              .child('Friends')
-              .child(_fid)
-              .child('uid')
-              .set(_auth.currentUser!.uid);
+              .set(friendPayload.toMap());
           //---( Accepting Request at Sender Side )---//
-          _acceptDB //adding friends id
+          final myPayload = FriendsModel(
+            fid: _fid,
+            uid: widget.notificationModel.nameId,
+            name: widget.notificationModel.name,
+          );
+          _acceptDB
               .child(_auth.currentUser!.uid)
               .child('Friends')
               .child(_fid)
-              .child('fid')
-              .set(_fid);
-          _acceptDB //adding friends id
-              .child(_auth.currentUser!.uid)
-              .child('Friends')
-              .child(_fid)
-              .child('uid')
-              .set(widget.notificationModel.nameId);
+              .set(myPayload.toMap());
           //---( From Target Side )---//
           final _deleteDB = FirebaseDatabase.instance
               .reference()
@@ -160,8 +160,6 @@ class _RequestNotificationState extends State<RequestNotification> {
           _textNotDB.child(_tid).set(newTextNot.toMap());
 
           //---( Creating Text Notification Acceptor Side )---//
-          final tempName =
-              Provider.of<UserProvider>(context, listen: false).getUserName();
           final _text1NotDB = FirebaseDatabase.instance
               .reference()
               .child('Notification')
