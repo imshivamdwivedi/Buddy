@@ -30,20 +30,38 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: SearchBar(
-          text: 'Search',
-          val: false,
-          controller: _searchController,
+        title: Text(
+          "Find Buddy",
+          style: TextStyle(color: Colors.black),
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-          value: userData.suggestedUsers[index],
-          child: Consumer<HomeSearchHelper>(
-            builder: (_, user, child) => userCard(user.userModel, user),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            child: TextField(
+              decoration: InputDecoration(
+                focusColor: Colors.black87,
+                prefixIcon: Icon(Icons.search),
+                hintText: 'Search Buddy',
+              ),
+            ),
           ),
-        ),
-        itemCount: userData.suggestedUsers.length,
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                value: userData.suggestedUsers[index],
+                child: Consumer<HomeSearchHelper>(
+                  builder: (_, user, child) => userCard(user.userModel, user),
+                ),
+              ),
+              itemCount: userData.suggestedUsers.length,
+            ),
+          ),
+        ],
       ),
     );
   }

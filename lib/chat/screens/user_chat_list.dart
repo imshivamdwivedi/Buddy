@@ -29,16 +29,13 @@ class _UserChatListState extends State<UserChatList> {
       ),
       body: Column(children: [
         Container(
-          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(10),
           child: TypeAheadField<UserModel>(
             debounceDuration: Duration(microseconds: 500),
             textFieldConfiguration: TextFieldConfiguration(
               decoration: InputDecoration(
                 focusColor: Colors.black87,
                 prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black87)),
                 hintText: 'Search User name',
               ),
             ),
@@ -53,16 +50,14 @@ class _UserChatListState extends State<UserChatList> {
             noItemsFoundBuilder: (context) => Container(
               height: 100,
               child: Center(
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "No User found",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "No User found",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ],
                 ),
               ),
             ),

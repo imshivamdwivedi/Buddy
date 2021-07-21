@@ -26,91 +26,93 @@ class _SearchScreenState extends State<SearchScreen> {
           style: TextStyle(color: Colors.black87),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              padding: EdgeInsets.all(20),
-              child: TypeAheadField<Category?>(
-                debounceDuration: Duration(microseconds: 500),
-                textFieldConfiguration: TextFieldConfiguration(
-                  decoration: InputDecoration(
-                    focusColor: Colors.black87,
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black87)),
-                    hintText: 'Search User name',
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                child: TypeAheadField<Category?>(
+                  debounceDuration: Duration(microseconds: 500),
+                  textFieldConfiguration: TextFieldConfiguration(
+                    decoration: InputDecoration(
+                      focusColor: Colors.black87,
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Search User name',
+                    ),
                   ),
-                ),
-                suggestionsCallback: CategoryAPI.getUserSuggestion,
-                itemBuilder: (context, Category? suggestions) {
-                  final category = suggestions!;
-                  return ListTile(
-                    onTap: () {
-                      Provider.of<UserGenreProvider>(context, listen: false)
-                          .addGenre(category);
-                      Navigator.of(context).pop('Genre added successfully!');
-                    },
-                    title: Text(category.name),
-                  );
-                },
-                noItemsFoundBuilder: (context) => Container(
-                  height: 100,
-                  child: Center(
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "No such genre found",
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          if (Provider.of<UserGenreProvider>(context)
-                                  .getQuery
-                                  .length >
-                              2)
-                            TextButton(
-                              onPressed: () {
-                                String str = Provider.of<UserGenreProvider>(
-                                        context,
-                                        listen: false)
-                                    .getQuery;
-                                String string = str.replaceAll(
-                                    new RegExp(r'(?:_|[^\w\s])+'), '');
-                                string =
-                                    string.replaceAll(' ', '').toLowerCase();
-                                final newGenre =
-                                    Category(name: str, id: string, count: 1);
-                                Provider.of<UserGenreProvider>(context,
-                                        listen: false)
-                                    .createGenre(newGenre);
-                                Navigator.of(context)
-                                    .pop('New genre created successfully!');
-                              },
-                              child: Text(
-                                "Create One",
-                                style: TextStyle(color: Colors.blue),
-                              ),
+                  suggestionsCallback: CategoryAPI.getUserSuggestion,
+                  itemBuilder: (context, Category? suggestions) {
+                    final category = suggestions!;
+                    return ListTile(
+                      onTap: () {
+                        Provider.of<UserGenreProvider>(context, listen: false)
+                            .addGenre(category);
+                        Navigator.of(context).pop('Genre added successfully!');
+                      },
+                      title: Text(category.name),
+                    );
+                  },
+                  noItemsFoundBuilder: (context) => Container(
+                    height: 100,
+                    child: Center(
+                      child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "No such genre found",
+                              style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                        ],
+                            if (Provider.of<UserGenreProvider>(context)
+                                    .getQuery
+                                    .length >
+                                2)
+                              TextButton(
+                                onPressed: () {
+                                  String str = Provider.of<UserGenreProvider>(
+                                          context,
+                                          listen: false)
+                                      .getQuery;
+                                  String string = str.replaceAll(
+                                      new RegExp(r'(?:_|[^\w\s])+'), '');
+                                  string =
+                                      string.replaceAll(' ', '').toLowerCase();
+                                  final newGenre =
+                                      Category(name: str, id: string, count: 1);
+                                  Provider.of<UserGenreProvider>(context,
+                                          listen: false)
+                                      .createGenre(newGenre);
+                                  Navigator.of(context)
+                                      .pop('New genre created successfully!');
+                                },
+                                child: Text(
+                                  "Create One",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onSuggestionSelected: (Category? suggestions) {
-                  final category = suggestions;
+                  onSuggestionSelected: (Category? suggestions) {
+                    final category = suggestions;
 
-                  Text(category!.name);
-                },
+                    Text(category!.name);
+                  },
+                ),
               ),
-            ),
-            new Image.asset(
-              "assets/images/Search.gif",
-              height: 200.0,
-              width: 200.0,
-            )
-          ],
+              SizedBox(
+                height: 20,
+              ),
+              new Image.asset(
+                "assets/images/Search.gif",
+                height: 200.0,
+                width: 200.0,
+              )
+            ],
+          ),
         ),
       ),
     );
