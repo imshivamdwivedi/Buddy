@@ -1,3 +1,4 @@
+import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -14,24 +15,22 @@ class _UserChatListState extends State<UserChatList> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      margin: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.02,
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.03,
       ),
-      child: Card(
-        elevation: 5,
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-        child: ListTile(
-          tileColor: kPrimaryLightColor,
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-            radius: 20,
-          ),
-          title: Text(
-            "Hey, How are you ?",
-            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-          ),
-          // subtitle: Text(DateFormat.yMMMEd().format(widget.transaction.date))
+      child: ListTile(
+        onTap: () {
+          Navigator.of(context).pushNamed(DmChatScreen.routeName);
+        },
+        tileColor: kPrimaryLightColor,
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(
+              "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+          radius: 20,
+        ),
+        title: Text(
+          "Chat With Me !",
+          style: TextStyle(fontSize: 14, color: Colors.grey[700]),
         ),
       ),
     ));
