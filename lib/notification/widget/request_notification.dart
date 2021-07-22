@@ -3,7 +3,6 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
-import 'package:buddy/user/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,7 @@ class _RequestNotificationState extends State<RequestNotification> {
                         "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
                   ),
                   title: Text(
-                    widget.notificationModel.name,
+                    widget.notificationModel.title,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.black87),
                   ),
@@ -93,8 +92,6 @@ class _RequestNotificationState extends State<RequestNotification> {
             color: Colors.red,
           );
         } else if (text == 'Confirm') {
-          final tempName =
-              Provider.of<UserProvider>(context, listen: false).getUserName();
           //---( Accepting Request )---//
           final _acceptDB =
               FirebaseDatabase.instance.reference().child('Users');
@@ -108,7 +105,6 @@ class _RequestNotificationState extends State<RequestNotification> {
           final friendPayload = FriendsModel(
             fid: _fid,
             uid: _auth.currentUser!.uid,
-            name: tempName,
           );
           _acceptDB
               .child(widget.notificationModel.nameId)
@@ -119,7 +115,6 @@ class _RequestNotificationState extends State<RequestNotification> {
           final myPayload = FriendsModel(
             fid: _fid,
             uid: widget.notificationModel.nameId,
-            name: widget.notificationModel.name,
           );
           _acceptDB
               .child(_auth.currentUser!.uid)
@@ -148,35 +143,14 @@ class _RequestNotificationState extends State<RequestNotification> {
           final _tid = _textNotDB.push().key;
           final newTextNot = NotificationModel(
             id: _tid,
-            type: 'TEXT',
-            title: 'You and ${widget.notificationModel.name} are now Friends!',
-            name: '',
-            nameId: '',
+            type: 'REQT',
+            title: '#NAME started following you !',
+            nameId: widget.notificationModel.uid,
             uid: '',
-            eventName: '',
             eventId: '',
-            createdAt: '',
+            createdAt: DateTime.now().toString(),
           );
           _textNotDB.child(_tid).set(newTextNot.toMap());
-
-          //---( Creating Text Notification Acceptor Side )---//
-          final _text1NotDB = FirebaseDatabase.instance
-              .reference()
-              .child('Notification')
-              .child(widget.notificationModel.nameId);
-          final _tid1 = _textNotDB.push().key;
-          final newText1Not = NotificationModel(
-            id: _tid1,
-            type: 'TEXT',
-            title: 'You and $tempName are now Friends!',
-            name: '',
-            nameId: '',
-            uid: '',
-            eventName: '',
-            eventId: '',
-            createdAt: '',
-          );
-          _text1NotDB.child(_tid1).set(newText1Not.toMap());
         }
         //---( Updating Providers )---//
         Provider.of<NotificationProvider>(context, listen: false)

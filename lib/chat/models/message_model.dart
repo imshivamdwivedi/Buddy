@@ -2,6 +2,7 @@ class NewMessage {
   String msgId;
   String senderId;
   String text;
+  int createdAt;
   bool isRead;
 
   NewMessage({
@@ -9,6 +10,7 @@ class NewMessage {
     required this.senderId,
     required this.text,
     required this.isRead,
+    required this.createdAt,
   });
 
   factory NewMessage.fromMap(Map map) {
@@ -17,6 +19,7 @@ class NewMessage {
       senderId: map['senderId'],
       text: map['text'],
       isRead: map['isRead'],
+      createdAt: map['createdAt'],
     );
   }
 
@@ -26,6 +29,7 @@ class NewMessage {
       'senderId': senderId,
       'text': text,
       'isRead': isRead,
+      'createdAt': createdAt,
     };
   }
 }
