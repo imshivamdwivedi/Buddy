@@ -3,6 +3,8 @@ import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/auth/verify.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
+import 'package:buddy/chat/screens/group_detail_screen.dart';
+import 'package:buddy/chat/screens/group_screen.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
@@ -11,7 +13,7 @@ import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:provider/provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
@@ -22,6 +24,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 
 Map<int, Color> colorCodes = {
   50: Color.fromRGBO(0, 0, 0, .1),
@@ -95,6 +99,7 @@ class MyApp extends StatelessWidget {
           UserChatList.routeName: (ctx) => UserChatList(),
           SearchScreen.routeName: (cts) => SearchScreen(),
           DmChatScreen.routeName: (ctx) => DmChatScreen(),
+          GroupDetailScreen.routeName: (ctx) => GroupDetailScreen(),
           SearchConnectionScreen.routeName: (ctx) => SearchConnectionScreen(),
         },
       ),
