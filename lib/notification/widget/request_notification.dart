@@ -81,9 +81,8 @@ class _RequestNotificationState extends State<RequestNotification> {
           //---( From Sender Side )---//
           final _clearDB = FirebaseDatabase.instance
               .reference()
-              .child('Users')
-              .child(widget.notificationModel.nameId)
-              .child('Request');
+              .child('Requests')
+              .child(widget.notificationModel.nameId);
           _clearDB.child(widget.notificationModel.id).set(null);
 
           CustomSnackbar().showFloatingFlushbar(
@@ -94,13 +93,10 @@ class _RequestNotificationState extends State<RequestNotification> {
         } else if (text == 'Confirm') {
           //---( Accepting Request )---//
           final _acceptDB =
-              FirebaseDatabase.instance.reference().child('Users');
+              FirebaseDatabase.instance.reference().child('Friends');
           //---( Generating Friendsid key )---//
-          final _fid = _acceptDB
-              .child(widget.notificationModel.nameId)
-              .child('Friends')
-              .push()
-              .key;
+          final _fid =
+              _acceptDB.child(widget.notificationModel.nameId).push().key;
           //---( Accepting Request at Target Side )---//
           final friendPayload = FriendsModel(
             fid: _fid,
@@ -108,7 +104,6 @@ class _RequestNotificationState extends State<RequestNotification> {
           );
           _acceptDB
               .child(widget.notificationModel.nameId)
-              .child('Friends')
               .child(_fid)
               .set(friendPayload.toMap());
           //---( Accepting Request at Sender Side )---//
@@ -118,7 +113,6 @@ class _RequestNotificationState extends State<RequestNotification> {
           );
           _acceptDB
               .child(_auth.currentUser!.uid)
-              .child('Friends')
               .child(_fid)
               .set(myPayload.toMap());
           //---( From Target Side )---//
@@ -130,9 +124,8 @@ class _RequestNotificationState extends State<RequestNotification> {
           //---( From Sender Side )---//
           final _clearDB = FirebaseDatabase.instance
               .reference()
-              .child('Users')
-              .child(widget.notificationModel.nameId)
-              .child('Request');
+              .child('Requests')
+              .child(widget.notificationModel.nameId);
           _clearDB.child(widget.notificationModel.id).set(null);
 
           //---( Creating Text Notification Acceptor Side )---//
@@ -145,7 +138,7 @@ class _RequestNotificationState extends State<RequestNotification> {
             id: _tid,
             type: 'REQT',
             title: '#NAME started following you !',
-            nameId: widget.notificationModel.uid,
+            nameId: widget.notificationModel.nameId,
             uid: '',
             eventId: '',
             createdAt: DateTime.now().toString(),

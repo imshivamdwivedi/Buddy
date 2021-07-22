@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:buddy/chat/screens/group_detail_screen.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/avatar_bottom_sheet.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/connection_view_screen.dart';
@@ -222,7 +223,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             );
                           },
                           child: Text(
-                            "Shivam Dwivedi",
+                            Provider.of<UserProvider>(context).getUserName(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
