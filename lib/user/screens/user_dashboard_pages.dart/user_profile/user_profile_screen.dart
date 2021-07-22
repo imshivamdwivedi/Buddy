@@ -169,7 +169,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: Row(
                       children: [
                         Text(
-                          "Shivam Dwivedi",
+                          Provider.of<UserProvider>(context).getUserName(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),

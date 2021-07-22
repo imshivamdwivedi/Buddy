@@ -94,7 +94,6 @@ class MyApp extends StatelessWidget {
           OnboarderWidget.routeName: (ctx) => OnboarderWidget(),
           UserChatList.routeName: (ctx) => UserChatList(),
           SearchScreen.routeName: (cts) => SearchScreen(),
-          DmChatScreen.routeName: (ctx) => DmChatScreen(),
           SearchConnectionScreen.routeName: (ctx) => SearchConnectionScreen(),
         },
       ),

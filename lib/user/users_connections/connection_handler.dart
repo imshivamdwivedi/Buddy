@@ -16,19 +16,16 @@ class ConnectionHandler {
         _firebaseDatabase.reference().child('Notification').child(targetId);
     final _userDB = _firebaseDatabase
         .reference()
-        .child('Users')
-        .child(_auth.currentUser!.uid)
-        .child('Request');
+        .child('Requests')
+        .child(_auth.currentUser!.uid);
     final String _rid = _refReq.push().key;
 
     final notPayload = NotificationModel(
       id: _rid,
       type: 'REQ',
       title: '',
-      name: myName,
       nameId: _auth.currentUser!.uid,
       uid: targetId,
-      eventName: '',
       eventId: '',
       createdAt: DateTime.now().toString(),
     );

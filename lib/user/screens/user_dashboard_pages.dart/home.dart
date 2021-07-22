@@ -33,11 +33,8 @@ class _UserHomeState extends State<UserHome> {
     final List<String> friendsId = [];
     friendsId.add(_user!.uid);
     final List<String> requestsId = [];
-    final _friendsDB = FirebaseDatabase.instance
-        .reference()
-        .child('Users')
-        .child(_user.uid)
-        .child('Friends');
+    final _friendsDB =
+        FirebaseDatabase.instance.reference().child('Friends').child(_user.uid);
     await _friendsDB.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         Map map = snapshot.value;
@@ -48,9 +45,8 @@ class _UserHomeState extends State<UserHome> {
     });
     final _requestDB = FirebaseDatabase.instance
         .reference()
-        .child('Users')
-        .child(_user.uid)
-        .child('Request');
+        .child('Requests')
+        .child(_user.uid);
     await _requestDB.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         Map map = snapshot.value;
@@ -141,7 +137,7 @@ class _UserHomeState extends State<UserHome> {
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.8,
+            height: MediaQuery.of(context).size.height * 0.75,
             child: FirebaseAnimatedList(
               query: _refAct,
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
