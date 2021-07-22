@@ -25,10 +25,10 @@ class _DmChatScreenState extends State<DmChatScreen> {
   int _getDate() {
     final DateTime now = DateTime.now();
     String secOne = now.toString().substring(11).replaceAll(':', '');
-    secOne = secOne.replaceAll('.', '');
+    secOne = secOne.replaceAll('.', '').substring(0, 8);
     final DateFormat formatter = DateFormat('yyyyMMdd');
     final String formatted = formatter.format(now);
-    String date = secOne;
+    String date = formatted + secOne;
     int datenum = int.parse(date);
     return datenum;
   }
