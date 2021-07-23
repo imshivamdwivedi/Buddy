@@ -4,7 +4,7 @@ import 'package:buddy/chat/screens/group_detail_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/avatar_bottom_sheet.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/update_screens/avatar_bottom_sheet.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/connection_view_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/update_screens/community_view_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/update_screens/update_bio.dart';
@@ -65,6 +65,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -100,36 +101,38 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Column(
                 children: [
                   Row(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
+                      Flexible(
                         child: Consumer<UserProvider>(
-                          builder: (_, userModel, ch) => ListTile(
-                            leading: InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    context: context,
-                                    builder: (context) {
-                                      return Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.8,
-                                          child: AvatarBottomSheet());
-                                    });
-                              },
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundImage: NetworkImage(
-                                    "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                          builder: (_, userModel, ch) => InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.8,
+                                        child: AvatarBottomSheet());
+                                  });
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(40.0),
+                              child: Container(
+                                height: 110.0,
+                                width: 110.0,
+                                child: Image.asset(
+                                  'assets/images/elon.jpg',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
 
-                            // subtitle: Text(userModel.getUserCollege()),
+                              // subtitle: Text(userModel.getUserCollege()),
+                            ),
                           ),
                         ),
                       ),
@@ -239,25 +242,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 5, left: 2),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => updateBioScreen()),
-                              );
-                            },
-                            child: Text(
-                              "Wait to watch me fall, Cause I'am not going down easily ",
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: size.height * 0.01,
+                          horizontal: size.width * 0.01),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => updateBioScreen()),
+                                );
+                              },
+                              child: Text(
+                                "Wait to watch me fall, Cause I'am not going down easily ",
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Container(
