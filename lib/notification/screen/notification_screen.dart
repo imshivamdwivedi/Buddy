@@ -21,11 +21,17 @@ class _UserNotificationState extends State<UserNotification> {
   bool init = true;
 
   @override
+  void initState() {
+    super.initState();
+    _getNotificationsList(context);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (init) {
-      _getNotificationsList(context);
       init = false;
+      _getNotificationsList(context);
     }
   }
 

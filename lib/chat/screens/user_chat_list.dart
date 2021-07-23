@@ -77,6 +77,7 @@ class _UserChatListState extends State<UserChatList> {
         });
       }
     });
+    //---( Recheck but safe )---//
     await _checkDb
         .orderByChild('users')
         .equalTo(userKey2)
@@ -187,26 +188,27 @@ class _UserChatListState extends State<UserChatList> {
             },
           ),
         ),
+        Container(
+          margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.03,
+          ),
+          child: ListTile(
+            onTap: () {
+              print('tapped');
+            },
+            tileColor: kPrimaryLightColor,
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+              radius: 20,
+            ),
+            title: Text(
+              "Chat With Me !",
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+          ),
+        ),
       ]),
-      // body: Container(
-      //   margin: EdgeInsets.only(
-      //     top: MediaQuery.of(context).size.height * 0.03,
-      //   ),
-      //   child: ListTile(
-      //     onTap: () {
-      //       Navigator.of(context).pushNamed(DmChatScreen.routeName);
-      //     },
-      //     tileColor: kPrimaryLightColor,
-      //     leading: CircleAvatar(
-      //       backgroundImage: NetworkImage(
-      //           "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-      //       radius: 20,
-      //     ),
-      //     title: Text(
-      //       "Chat With Me !",
-      //       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-      //     ),
-      //   ),
     );
   }
 }
