@@ -13,6 +13,14 @@ class UserProvider with ChangeNotifier {
     return _userModel.firstName + ' ' + _userModel.lastName;
   }
 
+  String getFirstName() {
+    return _userModel.firstName;
+  }
+
+  String getLastName() {
+    return _userModel.lastName;
+  }
+
   String getUserCollege() {
     return _userModel.collegeName;
   }

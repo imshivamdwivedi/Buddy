@@ -24,7 +24,7 @@ class RoundedInputField extends StatelessWidget {
         controller: controller,
         obscureText: val,
         cursorColor: Colors.black,
-        autofocus: true,
+        autofocus: false,
         decoration: InputDecoration(
           icon: Icon(
             icon,

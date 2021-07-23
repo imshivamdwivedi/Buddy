@@ -8,7 +8,7 @@ import '../components/rounded_button.dart';
 import '../components/rounded_input_field.dart';
 
 class SignIn extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/sign-in';
 
   @override
   _SignInState createState() => _SignInState();
@@ -150,7 +150,8 @@ class _SignInState extends State<SignIn> {
                   },
                   child: Text(
                     "Sign up !",
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500, color: Colors.blue),
                   ),
                 ),
               ],

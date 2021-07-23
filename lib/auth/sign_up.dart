@@ -192,10 +192,12 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Center(
         child: Container(
-          margin: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.height * 0.15),
+          // duration: Duration(microseconds: 300),
+          // curve: Curves.bounceOut,
+          // margin:
+          //     EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -224,30 +226,6 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                "Or",
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RoundedButton(
-                    size,
-                    0.7,
-                    Text(
-                      'Signin with Google',
-                      style: TextStyle(color: Colors.black87),
-                    ),
-                    () {
-                      _signinUserByGoogle();
-                    },
-                    'assets/icons/googlesignin.svg',
-                  ),
-                ],
-              ),
               RoundedButton(
                 size,
                 0.4,
@@ -259,7 +237,7 @@ class _SignUpState extends State<SignUp> {
                 '',
               ),
               SizedBox(
-                height: 5,
+                height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -270,10 +248,12 @@ class _SignUpState extends State<SignUp> {
                   ),
                   TextButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(SignIn.routeName);
+                        Navigator.of(context).pushNamed(SignIn.routeName);
                       },
-                      child: Text("Sign in !")),
+                      child: Text(
+                        "Sign in !",
+                        style: TextStyle(color: Colors.blue),
+                      )),
                 ],
               ),
             ],
