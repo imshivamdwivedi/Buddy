@@ -7,7 +7,6 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_scr
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 

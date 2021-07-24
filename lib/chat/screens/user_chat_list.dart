@@ -2,7 +2,6 @@ import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
-import 'package:buddy/chat/screens/group_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/user/models/user_model.dart';
