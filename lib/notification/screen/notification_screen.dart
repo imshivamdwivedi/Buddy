@@ -1,13 +1,11 @@
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/notification_model.dart';
-import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/notification/widget/message_notification.dart';
 import 'package:buddy/notification/widget/request_notification.dart';
-import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class UserNotification extends StatefulWidget {
   const UserNotification({Key? key}) : super(key: key);
@@ -17,72 +15,13 @@ class UserNotification extends StatefulWidget {
 }
 
 class _UserNotificationState extends State<UserNotification> {
-  final _auth = FirebaseAuth.instance;
-  bool init = true;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (init) {
-      _getNotificationsList(context);
-      init = false;
-    }
-  }
-
-  void _getNotificationsList(BuildContext ctx) async {
-    final List<NotificationModel> notifications = [];
-    final _searchDB = FirebaseDatabase.instance
-        .reference()
-        .child('Notification')
-        .child(_auth.currentUser!.uid);
-    await _searchDB.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          final model = NotificationModel.fromMap(element);
-          if (model.type == 'REQT') {
-            final _dbRef = FirebaseDatabase.instance.reference().child('Users');
-            _dbRef
-                .orderByChild('id')
-                .equalTo(model.nameId)
-                .once()
-                .then((value) {
-              Map map = value.value;
-              map.values.forEach((element) {
-                final user = UserModel.fromMap(element);
-                final title = model.title.replaceAll(
-                    '#NAME', (user.firstName + " " + user.lastName));
-                model.title = title;
-              });
-            });
-            notifications.add(model);
-          } else if (model.type == 'REQ') {
-            final _dbRef = FirebaseDatabase.instance.reference().child('Users');
-            _dbRef
-                .orderByChild('id')
-                .equalTo(model.nameId)
-                .once()
-                .then((value) {
-              Map map = value.value;
-              map.values.forEach((element) {
-                final user = UserModel.fromMap(element);
-                final title = (user.firstName + " " + user.lastName);
-                model.title = title;
-              });
-            });
-            notifications.add(model);
-          }
-        });
-      }
-    });
-    Provider.of<NotificationProvider>(ctx, listen: false)
-        .setAllNotification(notifications);
-  }
+  DatabaseReference _notifications = FirebaseDatabase.instance
+      .reference()
+      .child('Notification')
+      .child(FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
-    final allNotifications =
-        Provider.of<NotificationProvider>(context).allNotification;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -91,8 +30,36 @@ class _UserNotificationState extends State<UserNotification> {
         ),
         backgroundColor: kPrimaryColor,
       ),
-      body: allNotifications.isEmpty
-          ? Column(
+      body: StreamBuilder<Event>(
+        stream: _notifications.onValue,
+        builder: (context, snap) {
+          if (snap.hasData &&
+              !snap.hasError &&
+              snap.data!.snapshot.value != null) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: FirebaseAnimatedList(
+                sort: (a, b) {
+                  return a.value['createdAt'] > b.value['createdAt'] ? -1 : 1;
+                },
+                query: _notifications,
+                itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                    Animation<double> animation, int index) {
+                  final notification =
+                      NotificationModel.fromMap(snapshot.value);
+                  if (notification.type == 'REQT') {
+                    return SimpleNotification(notification.title
+                        .replaceAll('#NAME', notification.name));
+                  } else if (notification.type == 'REQ') {
+                    return RequestNotification(notificationModel: notification);
+                  } else {
+                    return SimpleNotification(notification.title);
+                  }
+                },
+              ),
+            );
+          } else {
+            return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
@@ -110,28 +77,10 @@ class _UserNotificationState extends State<UserNotification> {
                   ),
                 ),
               ],
-            )
-          : ListView.builder(
-              itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                value: allNotifications[index],
-                child: Consumer<NotificationModel>(
-                  builder: (_, not, child) {
-                    if (not.type == 'REQ') {
-                      return RequestNotification(
-                        notificationModel: not,
-                      );
-                    } else if (not.type == 'TEXT') {
-                      return SimpleNotification(not.title);
-                    } else if (not.type == 'REQT') {
-                      return SimpleNotification(not.title);
-                    } else {
-                      return SimpleNotification('No New Notifications!');
-                    }
-                  },
-                ),
-              ),
-              itemCount: allNotifications.length,
-            ),
+            );
+          }
+        },
+      ),
     );
   }
 }

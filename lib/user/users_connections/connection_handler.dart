@@ -1,6 +1,7 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
+import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,10 +25,11 @@ class ConnectionHandler {
       id: _rid,
       type: 'REQ',
       title: '',
+      name: myName,
       nameId: _auth.currentUser!.uid,
       uid: targetId,
       eventId: '',
-      createdAt: DateTime.now().toString(),
+      createdAt: DateTimeStamp().getDate(),
     );
 
     await _refReq.child(_rid).set(notPayload.toMap());

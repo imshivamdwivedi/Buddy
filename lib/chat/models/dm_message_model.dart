@@ -1,11 +1,11 @@
-class NewMessage {
+class NewDmMessage {
   String msgId;
   String senderId;
   String text;
   int createdAt;
   bool isRead;
 
-  NewMessage({
+  NewDmMessage({
     required this.msgId,
     required this.senderId,
     required this.text,
@@ -13,8 +13,8 @@ class NewMessage {
     required this.createdAt,
   });
 
-  factory NewMessage.fromMap(Map map) {
-    return NewMessage(
+  factory NewDmMessage.fromMap(Map map) {
+    return NewDmMessage(
       msgId: map['msgId'],
       senderId: map['senderId'],
       text: map['text'],

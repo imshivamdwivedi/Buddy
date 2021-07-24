@@ -1,7 +1,6 @@
 import 'package:buddy/chat/models/dm_message_model.dart';
 import 'package:buddy/chat/widgets/chat_message_widget.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,19 +8,17 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class DmChatScreen extends StatefulWidget {
+class GroupChatScreen extends StatefulWidget {
   final String chatRoomId;
-  final String userId;
-  DmChatScreen({required this.chatRoomId, required this.userId});
+  GroupChatScreen({required this.chatRoomId});
   @override
-  _DmChatScreenState createState() => _DmChatScreenState();
+  _GroupChatScreenState createState() => _GroupChatScreenState();
 }
 
-class _DmChatScreenState extends State<DmChatScreen> {
+class _GroupChatScreenState extends State<GroupChatScreen> {
   final _auth = FirebaseAuth.instance;
   TextEditingController _textEditingController = new TextEditingController();
   DatabaseReference _chats = FirebaseDatabase.instance.reference();
-  String userName = '';
 
   Widget chatMessages() {
     return Container(
@@ -73,16 +70,16 @@ class _DmChatScreenState extends State<DmChatScreen> {
     setState(() {
       _chats = _chats.child('Chats').child(widget.chatRoomId).child('ChatRoom');
     });
-    final _userDb = FirebaseDatabase.instance.reference().child('Users');
-    _userDb.orderByChild('id').equalTo(widget.userId).once().then((value) {
-      Map map = value.value;
-      map.values.forEach((element) {
-        final user = UserModel.fromMap(element);
-        setState(() {
-          userName = user.firstName + " " + user.lastName;
-        });
-      });
-    });
+    // final _userDb = FirebaseDatabase.instance.reference().child('Users');
+    // _userDb.orderByChild('id').equalTo(widget.userId).once().then((value) {
+    //   Map map = value.value;
+    //   map.values.forEach((element) {
+    //     final user = UserModel.fromMap(element);
+    //     setState(() {
+    //       userName = user.firstName + " " + user.lastName;
+    //     });
+    //   });
+    // });
   }
 
   @override
@@ -95,7 +92,7 @@ class _DmChatScreenState extends State<DmChatScreen> {
         foregroundColor: Colors.black87,
         backgroundColor: kPrimaryColor,
         title: Text(
-          userName,
+          'Hydra',
           style: TextStyle(
             color: Colors.black87,
           ),
