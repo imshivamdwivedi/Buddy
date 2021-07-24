@@ -87,17 +87,15 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
   List<Widget> buildEdtingActions() => [
         ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-                primary: Colors.transparent, shadowColor: Colors.transparent),
-            onPressed: saveForm,
-            icon: Icon(
-              Icons.done,
-              color: Colors.black87,
-            ),
-            label: Text(
-              "Save",
-              style: TextStyle(color: Colors.black87),
-            ))
+          style: ElevatedButton.styleFrom(
+              primary: Colors.transparent, shadowColor: Colors.transparent),
+          onPressed: saveForm,
+          icon: Icon(
+            Icons.done,
+            color: Colors.black87,
+          ),
+          label: Text(''),
+        )
       ];
 
   Widget buildTitle() => RoundedInputField(

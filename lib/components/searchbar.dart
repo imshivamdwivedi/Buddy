@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 class SearchBar extends StatelessWidget {
   final IconData icon;
   final String text;
-
-  final TextEditingController controller;
+  final bool val;
 
   const SearchBar(
-      {required this.text,
-      required this.controller,
-      this.icon = Icons.ac_unit});
+      {required this.text, this.icon = Icons.ac_unit, required this.val});
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +15,19 @@ class SearchBar extends StatelessWidget {
       height: size.height * 0.07,
       margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
       padding: EdgeInsets.symmetric(
-        horizontal: size.width * 0.1,
+        horizontal: size.width * 0.05,
+        vertical: size.height * 0.01,
       ),
-      width: size.width * 0.8,
+      width: size.width * 0.75,
       decoration: BoxDecoration(
         color: Color(0xFFD6D5C5),
         borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(blurRadius: 5, color: Colors.grey, spreadRadius: 2)
+        ],
       ),
       child: TextField(
-        controller: controller,
+        enabled: val,
         cursorColor: Colors.black,
         decoration: InputDecoration(
           icon: icon == Icons.ac_unit

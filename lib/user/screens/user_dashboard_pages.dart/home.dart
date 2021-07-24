@@ -1,4 +1,5 @@
 import 'package:buddy/chat/screens/user_chat_list.dart';
+import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -91,33 +92,41 @@ class _UserHomeState extends State<UserHome> {
                 vertical: size.height * 0.02,
               ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Buddy",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                          fontSize: 24),
-                    ),
-                  ),
                   Expanded(
                       child: Row(
                     children: [
-                      IconButton(
-                        onPressed: () {
+                      GestureDetector(
+                        onTap: () {
                           Navigator.of(context)
                               .pushNamed(SearchConnectionScreen.routeName)
                               .then((_) {
                             _updateSearch(context);
                           });
+                          print("dhcvdbcv");
                         },
-                        icon: Icon(
-                          Icons.search,
-                          color: Colors.black87,
+                        child: Container(
+                          child: SearchBar(
+                            text: 'Search buddies',
+                            icon: Icons.search,
+                            val: false,
+                          ),
                         ),
                       ),
+                      // IconButton(
+                      //   onPressed: () {
+                      // Navigator.of(context)
+                      //     .pushNamed(SearchConnectionScreen.routeName)
+                      //     .then((_) {
+                      //   _updateSearch(context);
+                      // });
+                      //   },
+                      //   icon: Icon(
+                      //     Icons.search,
+                      //     color: Colors.black87,
+                      //   ),
+                      // ),
                       SizedBox(
                         width: size.width * 0.03,
                       ),
@@ -128,6 +137,7 @@ class _UserHomeState extends State<UserHome> {
                           },
                           icon: Icon(
                             Icons.message,
+                            size: size.height * 0.05,
                             color: Colors.black87,
                           )),
                     ],

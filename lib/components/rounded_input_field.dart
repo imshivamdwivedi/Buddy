@@ -26,10 +26,12 @@ class RoundedInputField extends StatelessWidget {
         cursorColor: Colors.black,
         autofocus: false,
         decoration: InputDecoration(
-          icon: Icon(
-            icon,
-            color: Colors.black,
-          ),
+          icon: icon != Icons.person
+              ? Icon(
+                  icon,
+                  color: Colors.black,
+                )
+              : null,
           hintText: text,
           border: InputBorder.none,
         ),

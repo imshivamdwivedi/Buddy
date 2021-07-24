@@ -30,16 +30,13 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: Text(
-          "Find Buddy",
-          style: TextStyle(color: Colors.black),
-        ),
       ),
       body: Column(
         children: [
           Container(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: TextField(
+              autofocus: true,
               decoration: InputDecoration(
                 focusColor: Colors.black87,
                 prefixIcon: Icon(Icons.search),
@@ -79,7 +76,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
           Column(
             children: [
               CircleAvatar(
-                radius: MediaQuery.of(context).size.height * 0.06,
+                radius: MediaQuery.of(context).size.height * 0.04,
                 backgroundImage: NetworkImage(
                     "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
               )
@@ -98,7 +95,8 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                       Text(
                         userModel.firstName + " " + userModel.lastName,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -125,7 +123,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                       ),
                       _buildChip("4.5"),
                       SizedBox(
-                        width: 70,
+                        width: MediaQuery.of(context).size.width * 0.26,
                       ),
                       roundButton(
                           'Request',
