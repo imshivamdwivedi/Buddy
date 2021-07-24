@@ -2,11 +2,10 @@ import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/notification/model/notification_model.dart';
-import 'package:buddy/notification/model/notification_provider.dart';
+import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RequestNotification extends StatefulWidget {
   final NotificationModel notificationModel;
@@ -37,7 +36,7 @@ class _RequestNotificationState extends State<RequestNotification> {
                         "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
                   ),
                   title: Text(
-                    widget.notificationModel.title,
+                    widget.notificationModel.name,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.black87),
                   ),
@@ -137,17 +136,16 @@ class _RequestNotificationState extends State<RequestNotification> {
           final newTextNot = NotificationModel(
             id: _tid,
             type: 'REQT',
+            name: widget.notificationModel.name,
             title: '#NAME started following you !',
             nameId: widget.notificationModel.nameId,
             uid: '',
             eventId: '',
-            createdAt: DateTime.now().toString(),
+            createdAt: DateTimeStamp().getDate(),
           );
           _textNotDB.child(_tid).set(newTextNot.toMap());
         }
         //---( Updating Providers )---//
-        Provider.of<NotificationProvider>(context, listen: false)
-            .removeNotification(widget.notificationModel);
         CustomSnackbar().showFloatingFlushbar(
           context: context,
           message: 'Connection request accepted successfully!',

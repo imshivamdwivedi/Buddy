@@ -1,6 +1,8 @@
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
+import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
+import 'package:buddy/chat/screens/group_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -56,16 +58,14 @@ class _UserChatListState extends State<UserChatList> {
   void _createNewDmChannel(FriendsModel model) async {
     //---( Checking if Channel Already Exist )---//
     bool _isNewChannel = true;
-    String userKey1 = _auth.currentUser!.uid + "+" + model.uid;
-    String userKey2 = model.uid + "+" + _auth.currentUser!.uid;
     String chidPrev = '';
     final _checkDb = FirebaseDatabase.instance
         .reference()
         .child('Channels')
         .child(_auth.currentUser!.uid);
     await _checkDb
-        .orderByChild('users')
-        .equalTo(userKey1)
+        .orderByChild('user')
+        .equalTo(model.uid)
         .once()
         .then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
@@ -77,22 +77,6 @@ class _UserChatListState extends State<UserChatList> {
         });
       }
     });
-    //---( Recheck but safe )---//
-    await _checkDb
-        .orderByChild('users')
-        .equalTo(userKey2)
-        .once()
-        .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        _isNewChannel = false;
-        print(_isNewChannel);
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          chidPrev = element['chid'];
-        });
-      }
-    });
-    print(_isNewChannel);
     if (_isNewChannel) {
       //---( Creating New Channel )---//
       final _channelDb = FirebaseDatabase.instance.reference().child('Chats');
@@ -111,7 +95,7 @@ class _UserChatListState extends State<UserChatList> {
           .child(_auth.currentUser!.uid)
           .child(_chid);
       _chRecord.child('chid').set(_chid);
-      _chRecord.child('users').set(userKey1);
+      _chRecord.child('user').set(model.uid);
 
       final _chRecord1 = FirebaseDatabase.instance
           .reference()
@@ -119,7 +103,7 @@ class _UserChatListState extends State<UserChatList> {
           .child(model.uid)
           .child(_chid);
       _chRecord1.child('chid').set(_chid);
-      _chRecord1.child('users').set(userKey2);
+      _chRecord1.child('user').set(_auth.currentUser!.uid);
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => DmChatScreen(
@@ -134,9 +118,50 @@ class _UserChatListState extends State<UserChatList> {
     }
   }
 
+  void _createCommunity() {
+    final String chName = 'Hydra';
+    final String userId = 'bqgcyLPTN7Xhf9sCjkPmW0aVabV2';
+    final users = _auth.currentUser!.uid + '+' + userId;
+    final admins = _auth.currentUser!.uid;
+
+    //---( Creating Basic Channel )---//
+    final _comDb = FirebaseDatabase.instance.reference().child('Chats');
+    final _chid =
+        FirebaseDatabase.instance.reference().child('Chats').push().key;
+    final _newGroupChannel = GroupChannel(
+      chid: _chid,
+      type: 'COM',
+      users: users,
+      admins: admins,
+      chName: chName,
+      createdAt: DateTime.now().toString(),
+    );
+    _comDb.child(_chid).set(_newGroupChannel.toMap());
+
+    //---( Setting Channel Values Checks )---//
+    List<String> usersAll = users.split('+');
+    final _chDb = FirebaseDatabase.instance.reference().child('Channels');
+
+    usersAll.forEach((element) {
+      final _chOne = _chDb.child(element).child(_chid);
+      _chOne.child('chid').set(_chid);
+      _chOne.child('user').set(element);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Create Community',
+        backgroundColor: Colors.black87,
+        child: Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          _createCommunity();
+        },
+      ),
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
         iconTheme: IconThemeData(
@@ -194,7 +219,10 @@ class _UserChatListState extends State<UserChatList> {
           ),
           child: ListTile(
             onTap: () {
-              print('tapped');
+              //---( starting group chat )---//
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (ctx) =>
+              //         GroupChatScreen(chatRoomId: '-MfMFiRfFk3szosdDiTa')));
             },
             tileColor: kPrimaryLightColor,
             leading: CircleAvatar(
