@@ -141,10 +141,6 @@ class _UserChatListState extends State<UserChatList> {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: Text(
-          Provider.of<UserProvider>(context, listen: false).getUserName(),
-          style: TextStyle(color: Colors.black),
-        ),
       ),
       body: Column(children: [
         Container(
