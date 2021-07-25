@@ -6,6 +6,7 @@ import 'package:buddy/components/drawer/app_drawer.dart';
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
+import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/community.dart';
@@ -307,7 +308,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 children: [
                   Flexible(
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.width * 0.3,
                       child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -342,6 +343,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           }),
                     ),
                   )
+                ],
+              ),
+              Row(
+                children: [
+                  SocalIcon(
+                      iconSrc: 'assets/icons/coffee.svg', onPressed: () {}),
+                  SocalIcon(iconSrc: 'assets/icons/beer.svg', onPressed: () {}),
+                  SocalIcon(
+                      iconSrc: 'assets/icons/burger.svg', onPressed: () {}),
+                  SocalIcon(iconSrc: 'assets/icons/game.svg', onPressed: () {}),
                 ],
               )
             ],

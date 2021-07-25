@@ -1,3 +1,4 @@
+import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -183,7 +184,10 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = UserNotification();
+                        currentScreen = DmChatScreen(
+                          chatRoomId: 'sxsxcscsc',
+                          userId: 'cdccscs',
+                        );
                         currentTab = 2;
                       });
                     },

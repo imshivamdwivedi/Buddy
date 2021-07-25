@@ -75,6 +75,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              shareWith(),
               buildTitle(),
               buildDateTimePickers(),
               buildDescription(),
@@ -84,6 +85,57 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       ),
     );
   }
+
+  Widget shareWith() => Container(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        child: Row(
+          children: [
+            Text("Share With :", style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(
+              width: 10,
+            ),
+            InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return BottomSheet();
+                    });
+              },
+              child: Container(
+                padding: const EdgeInsets.all(3.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(
+                            5.0) //                 <--- border radius here
+                        ),
+                    border: Border.all(color: Colors.black)),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      size: 14,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Connections",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(Icons.arrow_drop_down, size: 14),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
 
   List<Widget> buildEdtingActions() => [
         ElevatedButton.icon(
@@ -335,5 +387,78 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       provider.addEvents(event);*/
       //Navigator.of(context).pop();
     }
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  const BottomSheet({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                height: 5.0,
+                width: 40.0,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: new Icon(Icons.settings),
+            title: new Text('Setting'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.calendar_today),
+            title: new Text('Events'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.videocam),
+            title: new Text('Video'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.share),
+            title: new Text('Share'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.share),
+            title: new Text('Share'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.share),
+            title: new Text('Share'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

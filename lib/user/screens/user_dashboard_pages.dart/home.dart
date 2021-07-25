@@ -97,23 +97,21 @@ class _UserHomeState extends State<UserHome> {
                   Expanded(
                       child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(SearchConnectionScreen.routeName)
-                              .then((_) {
-                            _updateSearch(context);
-                          });
-                          print("dhcvdbcv");
-                        },
-                        child: Container(
-                          child: SearchBar(
-                            text: 'Search buddies',
-                            icon: Icons.search,
-                            val: false,
-                          ),
+                      Container(
+                        child: SearchBar(
+                          text: 'Search buddies',
+                          icon: Icons.search,
+                          val: true,
+                          func: () {
+                            Navigator.of(context)
+                                .pushNamed(SearchConnectionScreen.routeName)
+                                .then((_) {
+                              _updateSearch(context);
+                            });
+                          },
                         ),
                       ),
+
                       // IconButton(
                       //   onPressed: () {
                       // Navigator.of(context)

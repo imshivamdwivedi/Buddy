@@ -108,58 +108,56 @@ class _DmChatScreenState extends State<DmChatScreen> {
             Container(
               alignment: Alignment.bottomCenter,
               width: MediaQuery.of(context).size.width,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                color: kPrimaryLightColor,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      controller: _textEditingController,
-                      //style: simpleTextStyle(),
-                      decoration: InputDecoration(
-                          hintText: "Message ...",
-                          hintStyle: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 16,
-                          ),
-                          border: InputBorder.none),
-                    )),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        //---( Send Some Messages )---//
+              child: Row(
+                children: [
+                  Expanded(
+                      child: TextField(
+                    controller: _textEditingController,
+                    //style: simpleTextStyle(),
+                    decoration: InputDecoration(
+                        hintText: "Message ...",
+                        hintStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none),
+                  )),
+                  IconButton(
+                      onPressed: () {
                         _addMessage();
-                        print('msg sent ============== ');
                       },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              // gradient: LinearGradient(
-                              //     colors: [
-                              //       const Color(0x36FFFFFF),
-                              //       const Color(0x0FFFFFFF)
-                              //     ],
-                              //     begin: FractionalOffset.topLeft,
-                              //     end: FractionalOffset.bottomRight),
-                              borderRadius: BorderRadius.circular(40)),
-                          padding: EdgeInsets.all(12),
-                          child: Image.asset(
-                            "assets/images/google.png",
-                            height: 25,
-                            width: 25,
-                          )),
-                    ),
-                  ],
-                ),
+                      icon: Icon(Icons.send))
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  _sendMessageArea() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      height: 70,
+      color: Colors.white,
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration.collapsed(hintText: 'Send a message'),
+              textCapitalization: TextCapitalization.sentences,
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.send,
+            ),
+            iconSize: 25,
+            color: Colors.black,
+          ),
+        ],
       ),
     );
   }

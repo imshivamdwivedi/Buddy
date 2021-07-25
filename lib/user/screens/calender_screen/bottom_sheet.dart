@@ -37,7 +37,7 @@ class _ModalBootomState extends State<ModalBootom> {
         child: Container(
           height: MediaQuery.of(context).size.height * 0.5,
           child: SfCalendar(
-            view: CalendarView.timelineDay,
+            view: CalendarView.schedule,
             dataSource: EventDataSource(provider.events),
             initialDisplayDate: provider.selectedDate,
             appointmentBuilder: appointmentBuilder,

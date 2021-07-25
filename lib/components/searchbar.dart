@@ -4,9 +4,12 @@ class SearchBar extends StatelessWidget {
   final IconData icon;
   final String text;
   final bool val;
-
-  const SearchBar(
-      {required this.text, this.icon = Icons.ac_unit, required this.val});
+  VoidCallback func;
+  SearchBar(
+      {required this.text,
+      this.icon = Icons.ac_unit,
+      required this.val,
+      required this.func});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,11 @@ class SearchBar extends StatelessWidget {
         ],
       ),
       child: TextField(
+        onTap: func,
         enabled: val,
+        autofocus: false,
+        showCursor: true,
+        readOnly: true,
         cursorColor: Colors.black,
         decoration: InputDecoration(
           icon: icon == Icons.ac_unit
