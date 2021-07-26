@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import 'package:buddy/chat/group/screens/create_community_screen.dart';
-=======
 import 'package:buddy/chat/models/chat_list_provider.dart';
->>>>>>> c6ad6a1e0857462fc562926b855b94eaa9d21183
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/user/models/activity_model.dart';
@@ -134,17 +130,6 @@ class _UserHomeState extends State<UserHome> {
                         width: size.width * 0.03,
                       ),
                       IconButton(
-<<<<<<< HEAD
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(CreateCommunityScreen.routeName);
-                          },
-                          icon: Icon(
-                            Icons.message,
-                            size: size.height * 0.05,
-                            color: Colors.black87,
-                          )),
-=======
                         onPressed: () {
                           // showDialog(
                           //   barrierDismissible: false,
@@ -171,7 +156,6 @@ class _UserHomeState extends State<UserHome> {
                           color: Colors.black87,
                         ),
                       ),
->>>>>>> c6ad6a1e0857462fc562926b855b94eaa9d21183
                     ],
                   )),
                 ],
