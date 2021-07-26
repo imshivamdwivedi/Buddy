@@ -8,8 +8,12 @@ import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/community.dart';
 import 'package:buddy/user/models/user_provider.dart';
+import 'package:buddy/utils/firebase_api_storage.dart';
+import 'package:buddy/utils/loading_widget.dart';
+import 'package:file_support/file_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +27,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  UploadTask? task;
   List<Community> communityList = [
     Community(id: "e1", name: "Love to Build"),
     Community(id: "e2", name: "Udemy"),
@@ -49,20 +54,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 
-  File? _image = null;
   final picker = ImagePicker();
 
   Future getImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
-
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        Navigator.pop(context);
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => new CustomLoader().buildLoader(context));
+        uploadFile(File(pickedFile.path));
       } else {
         print('No image selected.');
       }
-      Navigator.pop(context);
     });
+  }
+
+  Future uploadFile(File _file) async {
+    final fileName = FileSupport().getFileNameWithoutExtension(_file);
+    final destination = 'UserImages/${_auth.currentUser!.uid}/$fileName';
+
+    task = FirebaseApi.uploadFile(destination, _file);
+
+    if (task == null) return;
+
+    final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    final _userImgDb = FirebaseDatabase.instance
+        .reference()
+        .child('Users')
+        .child(_auth.currentUser!.uid);
+    _userImgDb.child('userImg').set(urlDownload);
+    Navigator.of(context).pop();
   }
 
   Widget _buildChip(
@@ -168,19 +194,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     spreadRadius: 1)
                               ],
                             ),
-                            child: _image == null
-                                ? Image.asset(
-                                    'assets/images/elon.jpg',
-                                    width: 80.0,
-                                    height: 80.0,
-                                    fit: BoxFit.fill,
-                                  )
-                                : Image.file(
-                                    _image!,
-                                    width: 80.0,
-                                    height: 80.0,
-                                    fit: BoxFit.fill,
-                                  ),
+                            child:
+                                Provider.of<UserProvider>(context).getUserImg ==
+                                        ''
+                                    ? Image.asset(
+                                        'assets/images/elon.jpg',
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        Provider.of<UserProvider>(context)
+                                            .getUserImg,
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                      ),
                           ),
                         ),
                       ),
@@ -199,11 +228,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   _firstNameController.text =
                                       Provider.of<UserProvider>(context,
                                               listen: false)
-                                          .getFirstName();
+                                          .getFirstName;
                                   _secondNameController.text =
                                       Provider.of<UserProvider>(context,
                                               listen: false)
-                                          .getLastName();
+                                          .getLastName;
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) =>
@@ -217,7 +246,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 },
                                 child: Text(
                                   Provider.of<UserProvider>(context)
-                                      .getUserName(),
+                                      .getUserName,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -241,7 +270,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             children: [
                               Text(
                                 Provider.of<UserProvider>(context)
-                                    .getUserCollege(),
+                                    .getUserCollege,
                               ),
                             ],
                           ),

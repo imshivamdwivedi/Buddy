@@ -6,6 +6,7 @@ class UserModel {
   String email;
   String collegeName;
   String id;
+  String userImg;
   bool profile;
 
   UserModel({
@@ -16,6 +17,7 @@ class UserModel {
     this.email = '',
     this.collegeName = '',
     this.id = '',
+    this.userImg = '',
     required this.profile,
   });
 
@@ -28,6 +30,7 @@ class UserModel {
       email: map['email'],
       collegeName: map['collegeName'],
       id: map['id'],
+      userImg: map['userImg'],
       profile: map['profile'],
     );
   }
@@ -40,6 +43,7 @@ class UserModel {
         'email': email,
         'collegeName': collegeName,
         'id': id,
+        'userImg': userImg,
         'profile': profile,
       };
 }

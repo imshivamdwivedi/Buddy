@@ -129,7 +129,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                           'Request',
                           user,
                           Provider.of<UserProvider>(context, listen: false)
-                              .getUserName())
+                              .getUserName)
                     ],
                   ),
                 ),

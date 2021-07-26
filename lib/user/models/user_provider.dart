@@ -26,20 +26,24 @@ class UserProvider with ChangeNotifier {
     });
   }
 
-  String getUserName() {
+  String get getUserName {
     return _userModel.firstName + ' ' + _userModel.lastName;
   }
 
-  String getFirstName() {
+  String get getFirstName {
     return _userModel.firstName;
   }
 
-  String getLastName() {
+  String get getLastName {
     return _userModel.lastName;
   }
 
-  String getUserCollege() {
+  String get getUserCollege {
     return _userModel.collegeName;
+  }
+
+  String get getUserImg {
+    return _userModel.userImg;
   }
 
   @override
