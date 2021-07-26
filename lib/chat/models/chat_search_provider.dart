@@ -8,6 +8,10 @@ class ChatSearchProvider with ChangeNotifier {
     return [...friendsList];
   }
 
+  List<FriendsModel> get allFriends {
+    return [...friendsList];
+  }
+
   void setFriendsList(List<FriendsModel> friends) {
     friendsList.clear();
     friendsList.addAll(friends);

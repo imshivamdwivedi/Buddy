@@ -1,6 +1,8 @@
+import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/notification/model/friends_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateCommunityScreen extends StatefulWidget {
   static const routeName = "/create-community";
@@ -11,11 +13,13 @@ class CreateCommunityScreen extends StatefulWidget {
 }
 
 class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
-  List<int> _userList = [];
+  List<FriendsModel> _userList = [];
 
-  void _addUserToList(int user) {
+  void _addUserToList(FriendsModel user) {
     setState(() {
-      _userList.add(user);
+      if (!_userList.contains(user)) {
+        _userList.add(user);
+      }
     });
   }
 
@@ -28,7 +32,11 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
         child: Icon(
           Icons.arrow_forward,
         ),
-        onPressed: () {},
+        onPressed: () {
+          _userList.forEach((element) {
+            print(element.name);
+          });
+        },
       ),
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -76,7 +84,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                           SizedBox(
                                             height: 5,
                                           ),
-                                          Text('${_userList[index]}')
+                                          Text(_userList[index].name),
                                         ],
                                       ));
                                 }),
@@ -89,43 +97,48 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.5,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 10,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              _addUserToList(0);
-                            },
-                            child: Container(
-                                width: 85,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 5,
-                                              color: Colors.grey,
-                                              spreadRadius: 1)
-                                        ],
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage: AssetImage(
-                                            'assets/images/elon.jpg'),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text('${index}')
-                                  ],
-                                )),
-                          );
-                        }),
+                    child: Consumer<ChatSearchProvider>(
+                      builder: (context, value, child) {
+                        final friends = value.allFriends;
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: friends.length,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () {
+                                  _addUserToList(friends[index]);
+                                },
+                                child: Container(
+                                    width: 85,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 5,
+                                                  color: Colors.grey,
+                                                  spreadRadius: 1)
+                                            ],
+                                          ),
+                                          child: CircleAvatar(
+                                            radius: 30,
+                                            backgroundImage: AssetImage(
+                                                'assets/images/elon.jpg'),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(friends[index].name),
+                                      ],
+                                    )),
+                              );
+                            });
+                      },
+                    ),
                   ),
                 ],
               ),
