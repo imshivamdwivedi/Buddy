@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../auth/sign_in.dart';
@@ -156,37 +155,6 @@ class _SignUpState extends State<SignUp> {
       }
     }
   }
-
-  /*void _signinUserByFacebook() async {
-    print('facebook login reached');
-    final FacebookLogin facebookLogin = FacebookLogin();
-    final FacebookLoginResult result = await facebookLogin.logIn();
-
-    // Create a credential from the access token
-    final facebookAuthCredential =
-        FacebookAuthProvider.credential(result.accessToken!.token);
-
-    try {
-      await _auth.signInWithCredential(facebookAuthCredential);
-      print('Signed User Up Using Facebook !');
-      _saveUserData(_auth.currentUser!.email.toString());
-      Navigator.of(context).pushReplacementNamed(SignIn.routeName);
-      //return 'signin#done';
-    } on FirebaseAuthException catch (error) {
-      var msg = 'An error Occured, Please check your Connection!';
-      if (error.message != null) {
-        msg = error.message.toString();
-      }
-      print('ERROR ------------- ');
-      print(msg);
-      //return msg;
-      return;
-    } catch (e) {
-      print(e);
-      //return 'signin#error';
-      return;
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {

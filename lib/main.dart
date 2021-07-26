@@ -1,7 +1,9 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/auth/verify.dart';
+import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
+import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -68,6 +70,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => ChatSearchProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => NotificationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ChatListProvider(),
         ),
       ],
       child: MaterialApp(

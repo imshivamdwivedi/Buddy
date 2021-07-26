@@ -17,6 +17,9 @@ class ChatSearchProvider with ChangeNotifier {
 
 class UserAPI extends ChatSearchProvider {
   static List<FriendsModel> getUserSuggestion(String query) {
+    if (query == '') {
+      return [];
+    }
     List<FriendsModel> lists = ChatSearchProvider.allFriendsList;
     return lists
         .where((friend) => (friend.name)

@@ -4,12 +4,13 @@ class SearchBar extends StatelessWidget {
   final IconData icon;
   final String text;
   final bool val;
-  VoidCallback func;
-  SearchBar(
-      {required this.text,
-      this.icon = Icons.ac_unit,
-      required this.val,
-      required this.func});
+  final VoidCallback func;
+  SearchBar({
+    required this.text,
+    this.icon = Icons.ac_unit,
+    required this.val,
+    required this.func,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class SearchBar extends StatelessWidget {
         onTap: func,
         enabled: val,
         autofocus: false,
-        showCursor: true,
+        showCursor: false,
         readOnly: true,
         cursorColor: Colors.black,
         decoration: InputDecoration(

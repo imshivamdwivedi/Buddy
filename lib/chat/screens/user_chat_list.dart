@@ -1,3 +1,4 @@
+import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
@@ -9,7 +10,6 @@ import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +24,6 @@ class UserChatList extends StatefulWidget {
 
 class _UserChatListState extends State<UserChatList> {
   final _auth = FirebaseAuth.instance;
-  final _myList = FirebaseDatabase.instance
-      .reference()
-      .child('Channels')
-      .child(FirebaseAuth.instance.currentUser!.uid);
   @override
   void initState() {
     super.initState();
@@ -219,87 +215,84 @@ class _UserChatListState extends State<UserChatList> {
             },
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.03,
-          ),
-          child: StreamBuilder<Event>(
-            stream: _myList.onValue,
-            builder: (context, snap) {
-              if (snap.hasData &&
-                  !snap.hasError &&
-                  snap.data!.snapshot.value != null) {
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: FirebaseAnimatedList(
-                    // sort: (a, b) {
-                    //   return a.value['createdAt'] > b.value['createdAt']
-                    //       ? -1
-                    //       : 1;
-                    // },
-                    query: _myList,
-                    itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                        Animation<double> animation, int index) {
-                      if (snapshot.value['user'] != _auth.currentUser!.uid) {
-                        return ListTile(
-                          onTap: () {
-                            //---( Opening Previous Channel )---//
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (ctx) => DmChatScreen(
-                                    chatRoomId: snapshot.value['chid'],
-                                    userId: snapshot.value['user']),
-                              ),
-                            );
-                          },
-                          tileColor: kPrimaryLightColor,
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-                            radius: 20,
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.03,
+            ),
+            child: Consumer<ChatListProvider>(
+              builder: (context, value, child) {
+                if (value.allChatList.isEmpty) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/nonewnot.png",
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Center(
+                          child: Text(
+                            'No Messages Yet !',
+                            style: TextStyle(fontSize: 20),
                           ),
-                          title: Text(
-                            snapshot.value['name'],
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey[700]),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Container(
+                    height: 600,
+                    child: ListView.builder(
+                      itemCount: value.allChatList.length,
+                      itemBuilder: (context, index) {
+                        final _chatTile = value.allChatList[index];
+                        return Container(
+                          margin: EdgeInsets.only(left: 5, right: 5, bottom: 5),
+                          child: ListTile(
+                            onTap: () {
+                              if (_chatTile.user != _auth.currentUser!.uid) {
+                                //---( Opening Previous Channel )---//
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (ctx) => DmChatScreen(
+                                        chatRoomId: _chatTile.chid,
+                                        userId: _chatTile.user),
+                                  ),
+                                );
+                              } else {
+                                //---( starting group chat )---//
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (ctx) => GroupChatScreen(
+                                        chatRoomId: _chatTile.chid),
+                                  ),
+                                );
+                              }
+                            },
+                            tileColor: kPrimaryLightColor,
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                              radius: 20,
+                            ),
+                            title: Text(
+                              _chatTile.name,
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.grey[700]),
+                            ),
                           ),
                         );
-                      } else {
-                        return InkWell(
-                          onTap: () {
-                            //---( starting group chat )---//
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (ctx) => GroupChatScreen(
-                                    chatRoomId: snapshot.value['chid'])));
-                          },
-                          child: Text(snapshot.value['name']),
-                        );
-                      }
-                    },
-                  ),
-                );
-              } else {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/nonewnot.png",
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      },
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Text(
-                        'No Messages Yet !',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ],
-                );
-              }
-            },
+                  );
+                }
+              },
+            ),
           ),
         ),
       ]),
