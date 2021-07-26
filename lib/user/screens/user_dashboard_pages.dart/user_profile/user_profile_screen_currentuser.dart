@@ -1,9 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:buddy/components/custom_snackbar.dart';
-import 'package:buddy/components/drawer/app_drawer.dart';
-import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/social_icons.dart';
@@ -199,6 +196,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  _firstNameController.text =
+                                      Provider.of<UserProvider>(context,
+                                              listen: false)
+                                          .getFirstName();
+                                  _secondNameController.text =
+                                      Provider.of<UserProvider>(context,
+                                              listen: false)
+                                          .getLastName();
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) =>

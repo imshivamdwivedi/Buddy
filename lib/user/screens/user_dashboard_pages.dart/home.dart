@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import 'package:buddy/chat/group/screens/create_community_screen.dart';
+=======
+import 'package:buddy/chat/models/chat_list_provider.dart';
+>>>>>>> c6ad6a1e0857462fc562926b855b94eaa9d21183
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/user/models/activity_model.dart';
@@ -6,6 +10,7 @@ import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
+import 'package:buddy/utils/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -112,7 +117,6 @@ class _UserHomeState extends State<UserHome> {
                           },
                         ),
                       ),
-
                       // IconButton(
                       //   onPressed: () {
                       // Navigator.of(context)
@@ -130,6 +134,7 @@ class _UserHomeState extends State<UserHome> {
                         width: size.width * 0.03,
                       ),
                       IconButton(
+<<<<<<< HEAD
                           onPressed: () {
                             Navigator.of(context)
                                 .pushNamed(CreateCommunityScreen.routeName);
@@ -139,6 +144,34 @@ class _UserHomeState extends State<UserHome> {
                             size: size.height * 0.05,
                             color: Colors.black87,
                           )),
+=======
+                        onPressed: () {
+                          // showDialog(
+                          //   barrierDismissible: false,
+                          //   context: context,
+                          //   builder: (context) =>
+                          //       new CustomLoader().buildLoader(context),
+                          // );
+
+                          Navigator.of(context)
+                              .pushNamed(UserChatList.routeName);
+
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => ChangeNotifierProvider(
+                          //       create: (ctx) => ChatListProvider(),
+                          //       child: UserChatList(),
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                        icon: Icon(
+                          Icons.message,
+                          size: size.height * 0.05,
+                          color: Colors.black87,
+                        ),
+                      ),
+>>>>>>> c6ad6a1e0857462fc562926b855b94eaa9d21183
                     ],
                   )),
                 ],

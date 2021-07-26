@@ -70,12 +70,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
         if (!snapshot.value[_user.uid]['profile']) {
           Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
           return;
-        } else {
-          Map map = snapshot.value;
-          map.values.forEach((element) {
-            Provider.of<UserProvider>(context, listen: false)
-                .updateUserData(UserModel.fromMap(element));
-          });
         }
       });
       if (Provider.of<ScreenHelperProvider>(context, listen: false)

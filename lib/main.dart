@@ -1,8 +1,9 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/auth/verify.dart';
-import 'package:buddy/chat/group/screens/create_community_screen.dart';
+import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
+import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -21,6 +22,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'chat/group/screens/create_community_screen.dart';
 
 Map<int, Color> colorCodes = {
   50: Color.fromRGBO(0, 0, 0, .1),
@@ -69,6 +72,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => ChatSearchProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => NotificationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ChatListProvider(),
         ),
       ],
       child: MaterialApp(
