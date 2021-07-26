@@ -31,86 +31,94 @@ class _CommunityIntialInfoCreateScreenState
               ))
         ],
       ),
-      body: Container(
-        margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey[100],
-                  radius: 30,
-                  backgroundImage: AssetImage(
-                    'assets/icons/camera.png',
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[100],
+                    radius: 30,
+                    backgroundImage: AssetImage(
+                      'assets/icons/camera.png',
+                    ),
                   ),
-                ),
-                SizedBox(width: size.width * 0.01),
-                Expanded(
-                  child: TextField(
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                  SizedBox(width: size.width * 0.01),
+                  Expanded(
+                    child: TextField(
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Provide a community name and optional community avatar",
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: size.height * 0.02,
-            ),
-            Row(
-              children: [
-                Flexible(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 10,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                              width: 85,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 5,
-                                            color: Colors.grey,
-                                            spreadRadius: 1)
-                                      ],
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage:
-                                          AssetImage('assets/images/elon.jpg'),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text('${index}')
-                                ],
-                              ));
-                        }),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Provide a community name and optional community avatar",
+                    style: TextStyle(fontSize: 12),
                   ),
-                )
-              ],
-            )
-          ],
+                ],
+              ),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            childAspectRatio: 1.8 / 2,
+                            crossAxisSpacing: 0,
+                            mainAxisSpacing: 5,
+                          ),
+                          shrinkWrap: true,
+                          itemCount: 10,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 5,
+                                              color: Colors.grey,
+                                              spreadRadius: 1)
+                                        ],
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/elon.jpg'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text('${index}')
+                                  ],
+                                ));
+                          }),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
