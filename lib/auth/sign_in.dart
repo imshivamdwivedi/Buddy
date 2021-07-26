@@ -1,6 +1,7 @@
 // import 'package:buddy/auth/forget-password.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/components/custom_snackbar.dart';
+import 'package:buddy/utils/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -50,14 +51,21 @@ class _SignInState extends State<SignIn> {
       return;
     }
 
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => new CustomLoader().buildLoader(context),
+    );
+
     //---( Password and email Pattern )---//
     try {
       await _auth.signInWithEmailAndPassword(email: _email, password: _pass);
       print('Signed User In !');
+      Navigator.of(context).pop();
       //return 'signin#done';
     } on FirebaseAuthException catch (error) {
+      Navigator.of(context).pop();
       var msg = 'An error Occured, Please try again!';
-
       print(msg);
       print(error.code);
 
@@ -83,6 +91,7 @@ class _SignInState extends State<SignIn> {
       //return msg;
       return;
     } catch (e) {
+      Navigator.of(context).pop();
       print(e);
       CustomSnackbar().showFloatingFlushbar(
           context: context, message: e.toString(), color: Colors.black87);

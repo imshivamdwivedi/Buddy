@@ -554,10 +554,11 @@ class BottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: new Icon(Icons.share),
-            title: new Text('Share'),
+            leading: new Icon(Icons.logout),
+            title: new Text('Logout'),
             onTap: () {
               Navigator.pop(context);
+              FirebaseAuth.instance.signOut();
             },
           ),
         ],
