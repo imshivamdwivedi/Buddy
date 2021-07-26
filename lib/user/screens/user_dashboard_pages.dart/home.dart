@@ -139,8 +139,8 @@ class _UserHomeState extends State<UserHome> {
                           //       new CustomLoader().buildLoader(context),
                           // );
 
-                          Navigator.of(context).pushNamed(
-                              CommunityIntialInfoCreateScreen.routeName);
+                          Navigator.of(context)
+                              .pushNamed(UserChatList.routeName);
 
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(

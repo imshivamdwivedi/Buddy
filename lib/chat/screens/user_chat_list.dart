@@ -2,7 +2,6 @@ import 'package:buddy/chat/group/screens/create_community_screen.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
-import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/chat/screens/group_chat_screen.dart';
 import 'package:buddy/constants.dart';
@@ -124,38 +123,6 @@ class _UserChatListState extends State<UserChatList> {
     }
   }
 
-  void _createCommunity() {
-    final String chName = 'Hydra';
-    final String userId = 'bqgcyLPTN7Xhf9sCjkPmW0aVabV2';
-    final users = _auth.currentUser!.uid + '+' + userId;
-    final admins = _auth.currentUser!.uid;
-
-    //---( Creating Basic Channel )---//
-    final _comDb = FirebaseDatabase.instance.reference().child('Chats');
-    final _chid =
-        FirebaseDatabase.instance.reference().child('Chats').push().key;
-    final _newGroupChannel = GroupChannel(
-      chid: _chid,
-      type: 'COM',
-      users: users,
-      admins: admins,
-      chName: chName,
-      createdAt: DateTime.now().toString(),
-    );
-    _comDb.child(_chid).set(_newGroupChannel.toMap());
-
-    //---( Setting Channel Values Checks )---//
-    List<String> usersAll = users.split('+');
-    final _chDb = FirebaseDatabase.instance.reference().child('Channels');
-
-    usersAll.forEach((element) {
-      final _chOne = _chDb.child(element).child(_chid);
-      _chOne.child('chid').set(_chid);
-      _chOne.child('user').set(element);
-      _chOne.child('name').set(chName);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,7 +134,6 @@ class _UserChatListState extends State<UserChatList> {
           Icons.add,
         ),
         onPressed: () {
-          //_createCommunity();
           Navigator.of(context).pushNamed(CreateCommunityScreen.routeName);
         },
       ),

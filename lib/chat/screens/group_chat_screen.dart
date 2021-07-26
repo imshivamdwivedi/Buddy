@@ -1,3 +1,4 @@
+import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/dm_message_model.dart';
 import 'package:buddy/chat/widgets/chat_message_widget.dart';
 import 'package:buddy/constants.dart';
@@ -6,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class GroupChatScreen extends StatefulWidget {
   final String chatRoomId;
@@ -19,6 +19,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   final _auth = FirebaseAuth.instance;
   TextEditingController _textEditingController = new TextEditingController();
   DatabaseReference _chats = FirebaseDatabase.instance.reference();
+  var _chName = '';
 
   Widget chatMessages() {
     return Container(
@@ -70,16 +71,19 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     setState(() {
       _chats = _chats.child('Chats').child(widget.chatRoomId).child('ChatRoom');
     });
-    // final _userDb = FirebaseDatabase.instance.reference().child('Users');
-    // _userDb.orderByChild('id').equalTo(widget.userId).once().then((value) {
-    //   Map map = value.value;
-    //   map.values.forEach((element) {
-    //     final user = UserModel.fromMap(element);
-    //     setState(() {
-    //       userName = user.firstName + " " + user.lastName;
-    //     });
-    //   });
-    // });
+    final _chDb = FirebaseDatabase.instance
+        .reference()
+        .child('Channels')
+        .child(_auth.currentUser!.uid);
+    _chDb.orderByChild('chid').equalTo(widget.chatRoomId).once().then((value) {
+      Map map = value.value;
+      map.values.forEach((element) {
+        final chNameBody = ChatListModel.fromMap(element);
+        setState(() {
+          _chName = chNameBody.name;
+        });
+      });
+    });
   }
 
   @override
@@ -92,7 +96,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         foregroundColor: Colors.black87,
         backgroundColor: kPrimaryColor,
         title: Text(
-          'Hydra',
+          _chName,
           style: TextStyle(
             color: Colors.black87,
           ),
