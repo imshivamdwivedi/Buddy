@@ -1,3 +1,4 @@
+import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_viewing_screen.dart';
@@ -67,14 +68,14 @@ class _ModalBootomState extends State<ModalBootom> {
       width: details.bounds.width,
       height: details.bounds.height,
       decoration: BoxDecoration(
-          color: Colors.green, borderRadius: BorderRadius.circular(12)),
+          color: kPrimaryLightColor, borderRadius: BorderRadius.circular(12)),
       child: Center(
         child: Text(
           event.title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
+import 'package:buddy/user/screens/user_genre.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -183,10 +184,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = DmChatScreen(
-                          chatRoomId: 'sxsxcscsc',
-                          userId: 'cdccscs',
-                        );
+                        currentScreen = UserNotification();
+
                         currentTab = 2;
                       });
                     },

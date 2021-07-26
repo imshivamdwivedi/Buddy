@@ -98,7 +98,7 @@ class _UserCalenderState extends State<UserCalender> {
         dataSource: EventDataSource(events),
         initialSelectedDate: DateTime.now(),
         cellBorderColor: Colors.transparent,
-        onLongPress: (details) {
+        onTap: (details) {
           final provider = Provider.of<EventProvider>(context, listen: false);
 
           provider.setDate(details.date!);
