@@ -2,12 +2,14 @@ import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
+import 'package:buddy/chat/screens/group_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +24,10 @@ class UserChatList extends StatefulWidget {
 
 class _UserChatListState extends State<UserChatList> {
   final _auth = FirebaseAuth.instance;
+  final _myList = FirebaseDatabase.instance
+      .reference()
+      .child('Channels')
+      .child(FirebaseAuth.instance.currentUser!.uid);
   @override
   void initState() {
     super.initState();
@@ -77,6 +83,8 @@ class _UserChatListState extends State<UserChatList> {
       }
     });
     if (_isNewChannel) {
+      final tempNameProvider =
+          Provider.of<UserProvider>(context, listen: false);
       //---( Creating New Channel )---//
       final _channelDb = FirebaseDatabase.instance.reference().child('Chats');
       final _chid = _channelDb.push().key;
@@ -95,6 +103,7 @@ class _UserChatListState extends State<UserChatList> {
           .child(_chid);
       _chRecord.child('chid').set(_chid);
       _chRecord.child('user').set(model.uid);
+      _chRecord.child('name').set(model.name);
 
       final _chRecord1 = FirebaseDatabase.instance
           .reference()
@@ -103,6 +112,7 @@ class _UserChatListState extends State<UserChatList> {
           .child(_chid);
       _chRecord1.child('chid').set(_chid);
       _chRecord1.child('user').set(_auth.currentUser!.uid);
+      _chRecord1.child('name').set(tempNameProvider.getUserName());
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => DmChatScreen(
@@ -145,6 +155,7 @@ class _UserChatListState extends State<UserChatList> {
       final _chOne = _chDb.child(element).child(_chid);
       _chOne.child('chid').set(_chid);
       _chOne.child('user').set(element);
+      _chOne.child('name').set(chName);
     });
   }
 
@@ -212,23 +223,83 @@ class _UserChatListState extends State<UserChatList> {
           margin: EdgeInsets.only(
             top: MediaQuery.of(context).size.height * 0.03,
           ),
-          child: ListTile(
-            onTap: () {
-              //---( starting group chat )---//
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (ctx) =>
-              //         GroupChatScreen(chatRoomId: '-MfMFiRfFk3szosdDiTa')));
+          child: StreamBuilder<Event>(
+            stream: _myList.onValue,
+            builder: (context, snap) {
+              if (snap.hasData &&
+                  !snap.hasError &&
+                  snap.data!.snapshot.value != null) {
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: FirebaseAnimatedList(
+                    // sort: (a, b) {
+                    //   return a.value['createdAt'] > b.value['createdAt']
+                    //       ? -1
+                    //       : 1;
+                    // },
+                    query: _myList,
+                    itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                        Animation<double> animation, int index) {
+                      if (snapshot.value['user'] != _auth.currentUser!.uid) {
+                        return ListTile(
+                          onTap: () {
+                            //---( Opening Previous Channel )---//
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctx) => DmChatScreen(
+                                    chatRoomId: snapshot.value['chid'],
+                                    userId: snapshot.value['user']),
+                              ),
+                            );
+                          },
+                          tileColor: kPrimaryLightColor,
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                            radius: 20,
+                          ),
+                          title: Text(
+                            snapshot.value['name'],
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[700]),
+                          ),
+                        );
+                      } else {
+                        return InkWell(
+                          onTap: () {
+                            //---( starting group chat )---//
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (ctx) => GroupChatScreen(
+                                    chatRoomId: snapshot.value['chid'])));
+                          },
+                          child: Text(snapshot.value['name']),
+                        );
+                      }
+                    },
+                  ),
+                );
+              } else {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/nonewnot.png",
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.5,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: Text(
+                        'No Messages Yet !',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ],
+                );
+              }
             },
-            tileColor: kPrimaryLightColor,
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-              radius: 20,
-            ),
-            title: Text(
-              "Chat With Me !",
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-            ),
           ),
         ),
       ]),
