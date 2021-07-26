@@ -1,9 +1,13 @@
+import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/notification/model/friends_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class CommunityIntialInfoCreateScreen extends StatefulWidget {
-  static const routeName = '/Community-intial-info';
-  const CommunityIntialInfoCreateScreen({Key? key}) : super(key: key);
+  final List<FriendsModel> users;
+  CommunityIntialInfoCreateScreen({required this.users});
 
   @override
   _CommunityIntialInfoCreateScreenState createState() =>
@@ -12,6 +16,47 @@ class CommunityIntialInfoCreateScreen extends StatefulWidget {
 
 class _CommunityIntialInfoCreateScreenState
     extends State<CommunityIntialInfoCreateScreen> {
+  final _auth = FirebaseAuth.instance;
+  final TextEditingController _chNameController = new TextEditingController();
+
+  void _createCommunity() {
+    final String chName = _chNameController.text;
+    var users = _auth.currentUser!.uid;
+    final admins = _auth.currentUser!.uid;
+
+    widget.users.forEach((element) {
+      users = users + '+' + element.uid;
+    });
+
+    //---( Creating Basic Channel )---//
+    final _comDb = FirebaseDatabase.instance.reference().child('Chats');
+    final _chid =
+        FirebaseDatabase.instance.reference().child('Chats').push().key;
+    final _newGroupChannel = GroupChannel(
+      chid: _chid,
+      type: 'COM',
+      users: users,
+      admins: admins,
+      chName: chName,
+      createdAt: DateTime.now().toString(),
+    );
+    _comDb.child(_chid).set(_newGroupChannel.toMap());
+
+    //---( Setting Channel Values Checks )---//
+    List<String> usersAll = users.split('+');
+    final _chDb = FirebaseDatabase.instance.reference().child('Channels');
+
+    usersAll.forEach((element) {
+      final _chOne = _chDb.child(element).child(_chid);
+      _chOne.child('chid').set(_chid);
+      _chOne.child('user').set(element);
+      _chOne.child('name').set(chName);
+    });
+
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -25,7 +70,10 @@ class _CommunityIntialInfoCreateScreenState
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                //---( Create Community )---//
+                _createCommunity();
+              },
               icon: Icon(
                 Icons.done,
               ))
@@ -84,7 +132,7 @@ class _CommunityIntialInfoCreateScreenState
                             mainAxisSpacing: 5,
                           ),
                           shrinkWrap: true,
-                          itemCount: 10,
+                          itemCount: widget.users.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                                 margin: EdgeInsets.symmetric(vertical: 5),
@@ -109,7 +157,7 @@ class _CommunityIntialInfoCreateScreenState
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text('${index}')
+                                    Text(widget.users[index].name)
                                   ],
                                 ));
                           }),

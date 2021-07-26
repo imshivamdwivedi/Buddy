@@ -1,3 +1,4 @@
+import 'package:buddy/chat/group/screens/community_intial_info_screen.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
@@ -33,9 +34,10 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
           Icons.arrow_forward,
         ),
         onPressed: () {
-          _userList.forEach((element) {
-            print(element.name);
-          });
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                CommunityIntialInfoCreateScreen(users: _userList),
+          ));
         },
       ),
       appBar: AppBar(
