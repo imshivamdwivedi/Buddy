@@ -1,3 +1,4 @@
+import 'package:buddy/chat/group/screens/community_intial_info_screen.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
@@ -138,8 +139,8 @@ class _UserHomeState extends State<UserHome> {
                           //       new CustomLoader().buildLoader(context),
                           // );
 
-                          Navigator.of(context)
-                              .pushNamed(UserChatList.routeName);
+                          Navigator.of(context).pushNamed(
+                              CommunityIntialInfoCreateScreen.routeName);
 
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(
