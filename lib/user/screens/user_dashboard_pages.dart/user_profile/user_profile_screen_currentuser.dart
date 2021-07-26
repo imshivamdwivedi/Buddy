@@ -118,6 +118,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           "Profile",
           style: TextStyle(color: Colors.black87),

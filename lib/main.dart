@@ -1,6 +1,7 @@
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/auth/verify.dart';
+import 'package:buddy/chat/group/screens/create_community_screen.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
@@ -91,6 +92,7 @@ class MyApp extends StatelessWidget {
           UserChatList.routeName: (ctx) => UserChatList(),
           SearchScreen.routeName: (cts) => SearchScreen(),
           SearchConnectionScreen.routeName: (ctx) => SearchConnectionScreen(),
+          CreateCommunityScreen.routeName: (ctx) => CreateCommunityScreen(),
         },
       ),
     );

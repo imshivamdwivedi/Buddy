@@ -1,3 +1,4 @@
+import 'package:buddy/chat/group/screens/create_community_screen.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/user/models/activity_model.dart';
@@ -131,7 +132,7 @@ class _UserHomeState extends State<UserHome> {
                       IconButton(
                           onPressed: () {
                             Navigator.of(context)
-                                .pushNamed(UserChatList.routeName);
+                                .pushNamed(CreateCommunityScreen.routeName);
                           },
                           icon: Icon(
                             Icons.message,

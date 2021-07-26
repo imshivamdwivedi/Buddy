@@ -25,7 +25,9 @@ class _DmChatScreenState extends State<DmChatScreen> {
 
   Widget chatMessages() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+      padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.12),
+      height: MediaQuery.of(context).size.height * 0.7,
       child: FirebaseAnimatedList(
         sort: (a, b) {
           return a.value['createdAt'] > b.value['createdAt'] ? -1 : 1;
@@ -87,6 +89,7 @@ class _DmChatScreenState extends State<DmChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -106,6 +109,10 @@ class _DmChatScreenState extends State<DmChatScreen> {
           children: [
             chatMessages(),
             Container(
+              padding: EdgeInsets.only(
+                  bottom: size.height * 0.02,
+                  left: size.width * 0.01,
+                  right: size.width * 0.01),
               alignment: Alignment.bottomCenter,
               width: MediaQuery.of(context).size.width,
               child: Row(
@@ -120,7 +127,10 @@ class _DmChatScreenState extends State<DmChatScreen> {
                           color: Colors.black87,
                           fontSize: 16,
                         ),
-                        border: InputBorder.none),
+                        border: OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(25.0),
+                          borderSide: BorderSide(color: Colors.brown),
+                        )),
                   )),
                   IconButton(
                       onPressed: () {

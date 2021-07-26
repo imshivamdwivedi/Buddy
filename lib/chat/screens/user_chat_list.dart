@@ -162,6 +162,7 @@ class _UserChatListState extends State<UserChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create Community',
         backgroundColor: Colors.black87,
@@ -178,131 +179,138 @@ class _UserChatListState extends State<UserChatList> {
           color: Colors.black,
         ),
       ),
-      body: Column(children: [
-        Container(
-          padding: EdgeInsets.all(10),
-          child: TypeAheadField<FriendsModel>(
-            debounceDuration: Duration(microseconds: 500),
-            textFieldConfiguration: TextFieldConfiguration(
-              decoration: InputDecoration(
-                focusColor: Colors.black87,
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search User name',
-              ),
-            ),
-            suggestionsCallback: UserAPI.getUserSuggestion,
-            itemBuilder: (context, FriendsModel? suggestions) {
-              final friend = suggestions!;
-              return ListTile(
-                onTap: () => _createNewDmChannel(friend),
-                title: Text(friend.name),
-              );
-            },
-            noItemsFoundBuilder: (context) => Container(
-              height: 100,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "No User found",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
+      body: SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            child: TypeAheadField<FriendsModel>(
+              debounceDuration: Duration(microseconds: 500),
+              textFieldConfiguration: TextFieldConfiguration(
+                decoration: InputDecoration(
+                  focusColor: Colors.black87,
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search User name',
                 ),
               ),
-            ),
-            onSuggestionSelected: (FriendsModel? suggestions) {
-              final friend = suggestions;
+              suggestionsCallback: UserAPI.getUserSuggestion,
+              itemBuilder: (context, FriendsModel? suggestions) {
+                final friend = suggestions!;
+                return ListTile(
+                  onTap: () => _createNewDmChannel(friend),
+                  title: Text(friend.name),
+                );
+              },
+              noItemsFoundBuilder: (context) => Container(
+                height: 100,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No User found",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              onSuggestionSelected: (FriendsModel? suggestions) {
+                final friend = suggestions;
 
-              Text(friend!.name);
-            },
+                Text(friend!.name);
+              },
+            ),
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.03,
-          ),
-          child: StreamBuilder<Event>(
-            stream: _myList.onValue,
-            builder: (context, snap) {
-              if (snap.hasData &&
-                  !snap.hasError &&
-                  snap.data!.snapshot.value != null) {
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: FirebaseAnimatedList(
-                    // sort: (a, b) {
-                    //   return a.value['createdAt'] > b.value['createdAt']
-                    //       ? -1
-                    //       : 1;
-                    // },
-                    query: _myList,
-                    itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                        Animation<double> animation, int index) {
-                      if (snapshot.value['user'] != _auth.currentUser!.uid) {
-                        return ListTile(
-                          onTap: () {
-                            //---( Opening Previous Channel )---//
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (ctx) => DmChatScreen(
-                                    chatRoomId: snapshot.value['chid'],
-                                    userId: snapshot.value['user']),
+          Container(
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.03,
+            ),
+            child: StreamBuilder<Event>(
+              stream: _myList.onValue,
+              builder: (context, snap) {
+                if (snap.hasData &&
+                    !snap.hasError &&
+                    snap.data!.snapshot.value != null) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: FirebaseAnimatedList(
+                        // sort: (a, b) {
+                        //   return a.value['createdAt'] > b.value['createdAt']
+                        //       ? -1
+                        //       : 1;
+                        // },
+                        query: _myList,
+                        itemBuilder: (BuildContext context,
+                            DataSnapshot snapshot,
+                            Animation<double> animation,
+                            int index) {
+                          if (snapshot.value['user'] !=
+                              _auth.currentUser!.uid) {
+                            return ListTile(
+                              onTap: () {
+                                //---( Opening Previous Channel )---//
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (ctx) => DmChatScreen(
+                                        chatRoomId: snapshot.value['chid'],
+                                        userId: snapshot.value['user']),
+                                  ),
+                                );
+                              },
+                              tileColor: kPrimaryLightColor,
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                                radius: 20,
+                              ),
+                              title: Text(
+                                snapshot.value['name'],
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey[700]),
                               ),
                             );
-                          },
-                          tileColor: kPrimaryLightColor,
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-                            radius: 20,
-                          ),
-                          title: Text(
-                            snapshot.value['name'],
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey[700]),
-                          ),
-                        );
-                      } else {
-                        return InkWell(
-                          onTap: () {
-                            //---( starting group chat )---//
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (ctx) => GroupChatScreen(
-                                    chatRoomId: snapshot.value['chid'])));
-                          },
-                          child: Text(snapshot.value['name']),
-                        );
-                      }
-                    },
-                  ),
-                );
-              } else {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/nonewnot.png",
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      width: MediaQuery.of(context).size.width * 0.5,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Text(
-                        'No Messages Yet !',
-                        style: TextStyle(fontSize: 20),
+                          } else {
+                            return InkWell(
+                              onTap: () {
+                                //---( starting group chat )---//
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (ctx) => GroupChatScreen(
+                                        chatRoomId: snapshot.value['chid'])));
+                              },
+                              child: Text(snapshot.value['name']),
+                            );
+                          }
+                        },
                       ),
                     ),
-                  ],
-                );
-              }
-            },
+                  );
+                } else {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/images/nonewnot.png",
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                          'No Messages Yet !',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }
