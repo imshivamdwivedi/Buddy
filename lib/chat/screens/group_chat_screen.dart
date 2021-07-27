@@ -102,63 +102,58 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           ),
         ),
       ),
-      body: Container(
-        child: Stack(
+      body: SafeArea(
+        child: Column(
           children: [
-            chatMessages(),
+            Expanded(
+                child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  )),
+              child: chatMessages(),
+            )),
             Container(
-              alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                color: kPrimaryLightColor,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      controller: _textEditingController,
-                      //style: simpleTextStyle(),
-                      decoration: InputDecoration(
-                          hintText: "Message ...",
-                          hintStyle: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 16,
-                          ),
-                          border: InputBorder.none),
-                    )),
-                    SizedBox(
-                      width: 16,
+              color: kPrimaryColor,
+              padding: EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: TextField(
+                    autocorrect: true,
+                    enableSuggestions: true,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20.0),
+                        hintText: 'Send message',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 0),
+                          gapPadding: 10,
+                          borderRadius: BorderRadius.circular(25),
+                        )),
+                  )),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _addMessage();
+                      print("Debugger");
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue,
+                      ),
+                      child: Icon(Icons.send, color: Colors.white),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        //---( Send Some Messages )---//
-                        _addMessage();
-                        print('msg sent ============== ');
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              // gradient: LinearGradient(
-                              //     colors: [
-                              //       const Color(0x36FFFFFF),
-                              //       const Color(0x0FFFFFFF)
-                              //     ],
-                              //     begin: FractionalOffset.topLeft,
-                              //     end: FractionalOffset.bottomRight),
-                              borderRadius: BorderRadius.circular(40)),
-                          padding: EdgeInsets.all(12),
-                          child: Image.asset(
-                            "assets/images/google.png",
-                            height: 25,
-                            width: 25,
-                          )),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),
