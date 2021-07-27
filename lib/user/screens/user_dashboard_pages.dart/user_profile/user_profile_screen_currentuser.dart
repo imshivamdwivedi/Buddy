@@ -10,11 +10,13 @@ import 'package:buddy/user/models/community.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:file_support/file_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +75,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future uploadFile(File _file) async {
+    final userImg = Provider.of<UserProvider>(context).getUserImg;
+
+    if (userImg != '') {
+      //---( Delete Previous Image )---//
+      final storageRefrence = FirebaseStorage.instance.refFromURL(userImg);
+      await storageRefrence.delete();
+    }
+
     final fileName = FileSupport().getFileNameWithoutExtension(_file);
     final destination = 'UserImages/${_auth.currentUser!.uid}/$fileName';
 
@@ -137,6 +147,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   @override
+  void dispose() {
+    _firstNameController.dispose();
+    _secondNameController.dispose();
+    _bioController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -156,7 +174,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                     context: context,
                     builder: (context) {
-                      return BottomSheet();
+                      return new BottomSheet();
                     });
               },
               icon: Icon(
@@ -197,11 +215,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             child:
                                 Provider.of<UserProvider>(context).getUserImg ==
                                         ''
-                                    ? Image.asset(
-                                        'assets/images/elon.jpg',
-                                        width: 80.0,
-                                        height: 80.0,
-                                        fit: BoxFit.cover,
+                                    ? NamedProfileAvatar().profileAvatar(
+                                        Provider.of<UserProvider>(context)
+                                            .getUserName
+                                            .substring(0, 1),
                                       )
                                     : Image.network(
                                         Provider.of<UserProvider>(context)
@@ -558,6 +575,7 @@ class BottomSheet extends StatelessWidget {
             title: new Text('Logout'),
             onTap: () {
               Navigator.pop(context);
+              Phoenix.rebirth(context);
               FirebaseAuth.instance.signOut();
             },
           ),

@@ -3,6 +3,7 @@ import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/users_connections/connection_handler.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,10 +77,11 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             children: [
               CircleAvatar(
                 radius: MediaQuery.of(context).size.height * 0.04,
-                backgroundImage: userModel.userImg == ''
-                    ? NetworkImage(
-                        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg")
-                    : NetworkImage(userModel.userImg),
+                child: userModel.userImg == ''
+                    ? NamedProfileAvatar().profileAvatar(
+                        userModel.firstName.substring(0, 1),
+                      )
+                    : Image.network(userModel.userImg),
               )
             ],
           ),
