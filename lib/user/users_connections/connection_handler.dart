@@ -28,7 +28,7 @@ class ConnectionHandler {
       type: 'REQ',
       title: '',
       name: myName,
-      nameImg: Provider.of<UserProvider>(context).getUserImg,
+      nameImg: Provider.of<UserProvider>(context, listen: false).getUserImg,
       nameId: _auth.currentUser!.uid,
       uid: targetId,
       eventId: '',
