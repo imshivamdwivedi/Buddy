@@ -119,6 +119,7 @@ class _DmChatScreenState extends State<DmChatScreen> {
                 children: [
                   Expanded(
                       child: TextField(
+                    controller: _textEditingController,
                     autocorrect: true,
                     enableSuggestions: true,
                     decoration: InputDecoration(
@@ -152,32 +153,6 @@ class _DmChatScreenState extends State<DmChatScreen> {
             )
           ],
         ),
-      ),
-    );
-  }
-
-  _sendMessageArea() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      height: 70,
-      color: Colors.white,
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration.collapsed(hintText: 'Send a message'),
-              textCapitalization: TextCapitalization.sentences,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.send,
-            ),
-            iconSize: 25,
-            color: Colors.black,
-          ),
-        ],
       ),
     );
   }
