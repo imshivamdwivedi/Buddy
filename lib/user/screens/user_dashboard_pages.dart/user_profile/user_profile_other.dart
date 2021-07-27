@@ -1,32 +1,28 @@
 import 'dart:ui';
 
 import 'package:buddy/components/profile_floating_button.dart';
+import 'package:buddy/components/social_icons.dart';
+
 import 'package:buddy/constants.dart';
+
 import 'package:buddy/user/models/user_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/setting_modal_bottom.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
-class UserProfileOtherScreen extends StatefulWidget {
-  static const routeName = "/user-profile-other";
-  const UserProfileOtherScreen({Key? key}) : super(key: key);
+class OtherUserProfileScreen extends StatefulWidget {
+  static const routeName = "/other-user-profile";
+  const OtherUserProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _UserProfileOtherScreenState createState() => _UserProfileOtherScreenState();
+  _OtherUserProfileScreenState createState() => _OtherUserProfileScreenState();
 }
 
-class _UserProfileOtherScreenState extends State<UserProfileOtherScreen> {
-  //static const kListHeight = 150.0;
-
-  // Widget _buildHorizontalList() => SizedBox(
-  //       height: kListHeight,
-  //       child: ListView.builder(
-  //         scrollDirection: Axis.horizontal,
-  //         itemCount: 20,
-  //         itemBuilder: (_, index) =>
-  //             CTile(heading: 'Hip Hop', subheading: '623 Beats'),
-  //       ),
-  //     );
+class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
+  static const kListHeight = 150.0;
 
   Widget _buildChip(
     String label,
@@ -46,12 +42,14 @@ class _UserProfileOtherScreenState extends State<UserProfileOtherScreen> {
           Icon(
             Icons.star,
             color: Colors.amber,
+            size: 18,
           ),
           SizedBox(
             width: 5,
           ),
           Text(
             label,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -60,8 +58,10 @@ class _UserProfileOtherScreenState extends State<UserProfileOtherScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           "Profile",
           style: TextStyle(color: Colors.black87),
@@ -76,7 +76,7 @@ class _UserProfileOtherScreenState extends State<UserProfileOtherScreen> {
                     ),
                     context: context,
                     builder: (context) {
-                      return SettingBottomSheet();
+                      return BottomSheet();
                     });
               },
               icon: Icon(
@@ -87,313 +87,295 @@ class _UserProfileOtherScreenState extends State<UserProfileOtherScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(top: 5),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Card(
-              color: kPrimaryColor,
-              child: Column(
+          margin: EdgeInsets.only(left: 5, top: 5),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  Row(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
+                  Column(
                     children: [
-                      Expanded(
-                        child: Consumer<UserProvider>(
-                          builder: (_, userModel, ch) => ListTile(
-                            leading: InkWell(
-                              onTap: () {
-                                print("hello");
-                              },
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundImage: NetworkImage(
-                                    "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-                              ),
-                            ),
-
-                            // subtitle: Text(userModel.getUserCollege()),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 5,
+                                  color: Colors.grey,
+                                  spreadRadius: 1)
+                            ],
                           ),
+                          child: Provider.of<UserProvider>(context)
+                                      .getUserImg ==
+                                  ''
+                              ? Image.asset(
+                                  'assets/images/elon.jpg',
+                                  width: 80.0,
+                                  height: 80.0,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.network(
+                                  Provider.of<UserProvider>(context).getUserImg,
+                                  width: 80.0,
+                                  height: 80.0,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
-
-                      Container(
-                        margin: EdgeInsets.only(right: 5),
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        child: Row(
-                          children: [
-                            ProfileFloatingButton(
-                              color: kPrimaryLightColor,
-                              icon: Icons.email,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            ProfileFloatingButton(
-                              color: kPrimaryLightColor,
-                              icon: Icons.person_add,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            ProfileFloatingButton(
-                              color: kPrimaryLightColor,
-                              icon: Icons.person_add_disabled,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Container(
-                      //   height: 40.0,
-                      //   margin: EdgeInsets.symmetric(horizontal: 5),
-                      //   child: FloatingActionButton.extended(
-                      //     backgroundColor: kPrimaryLightColor,
-                      //     onPressed: () {},
-                      //     label: Text(
-                      //       "Edit Profile",
-                      //       style: TextStyle(color: Colors.black87),
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // Container(
-                      //   padding: EdgeInsets.symmetric(horizontal: 5),
-                      //   child: Column(
-                      //     children: [
-                      //       Text(
-                      //         "21K",
-                      //         style: TextStyle(
-                      //             fontWeight: FontWeight.bold, fontSize: 18),
-                      //       ),
-                      //       Text("Connections")
-                      //     ],
-                      //   ),
-                      // ),
-                      // Container(
-                      //   padding: EdgeInsets.symmetric(horizontal: 5),
-                      //   child: Column(
-                      //     children: [
-                      //       Text(
-                      //         "21",
-                      //         style: TextStyle(
-                      //             fontWeight: FontWeight.bold, fontSize: 18),
-                      //       ),
-                      //       Text("Event")
-                      //     ],
-                      //   ),
-                      // ),
-                      // Container(
-                      //   padding: EdgeInsets.symmetric(horizontal: 5),
-                      //   child: Column(
-                      //     children: [
-                      //       Text(
-                      //         "10",
-                      //         style: TextStyle(
-                      //             fontWeight: FontWeight.bold, fontSize: 18),
-                      //       ),
-                      //       Text("Community")
-                      //     ],
-                      //   ),
-                      // ),
-                      // Container(
-                      //   child: _buildChip("4.5"),
-                      //   margin: EdgeInsets.all(4),
-                      // ),
                     ],
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            print("name Upadte");
-                          },
-                          child: Text(
-                            "Shivam Dwivedi from other universe",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Icon(
-                          Icons.lens,
-                          color: Colors.green,
-                          size: 12,
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 5, left: 2),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            "Wait to watch me fall, Cause I'am not going down easily ",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      children: [
-                        // SizedBox(
-                        //   width: MediaQuery.of(context).size.width * 0.05,
-                        // ),
-                        InkWell(
-                          onTap: () {
-                            print("Show Connections");
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "21",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text("Connections",
-                                    style: TextStyle(fontSize: 16))
-                              ],
-                            ),
-                          ),
-                        ),
-
                         Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                          margin: EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
                             children: [
                               Text(
-                                "10",
+                                Provider.of<UserProvider>(context).getUserName,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text("Community", style: TextStyle(fontSize: 16))
-                            ],
-                          ),
-                        ),
-                        // Container(
-                        //   child: _buildChip("4.5"),
-                        //   margin: EdgeInsets.all(4),
-                        // ),
-                        // SizedBox(
-                        //   width: MediaQuery.of(context).size.width * 0.05,
-                        // ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      children: [
-                        // SizedBox(
-                        //   width: MediaQuery.of(context).size.width * 0.05,
-                        // ),
-
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Row(
-                            children: [
-                              _buildChip("4.5"),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Icon(Icons.calendar_today_rounded),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text("Joined Nov 2013",
-                                  style: TextStyle(fontSize: 16))
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          child: Row(
-                            children: [
-                              Text(
-                                "Member of Communities",
-                                style: TextStyle(fontSize: 16),
+                                    fontWeight: FontWeight.bold, fontSize: 18),
                               ),
                               SizedBox(
                                 width: 5,
                               ),
                               Icon(
-                                Icons.group,
+                                Icons.lens,
                                 color: Colors.green,
-                                size: 14,
+                                size: 12,
                               ),
                             ],
                           ),
                         ),
+                        Container(
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Row(
+                            children: [
+                              Text(
+                                Provider.of<UserProvider>(context)
+                                    .getUserCollege,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [_buildChip('4.5')],
+                          ),
+                        )
                       ],
                     ),
                   ),
-                  Row(
+                ],
+              ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: size.height * 0.02,
+                      horizontal: size.width * 0.01),
+                  child: Row(
                     children: [
                       Flexible(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.8,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 2,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    print(index);
-                                  },
-                                  child: Container(
-                                      width: 50,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          CircleAvatar(
-                                            radius: 25,
-                                            backgroundImage: AssetImage(
-                                                'assets/images/elon.jpg'),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text("Java")
-                                        ],
-                                      )),
-                                );
-                              }),
-                        ),
-                      )
+                          child: Text(
+                        "Wait to watch me fall, Cause I'm not going down easily ",
+                      )),
                     ],
+                  ),
+                ),
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    Container(
+                      height: 40.0,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      child: FloatingActionButton.extended(
+                        backgroundColor: kPrimaryLightColor,
+                        onPressed: () {},
+                        label: Text(
+                          "Follow",
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    ProfileFloatingButton(
+                      color: kPrimaryLightColor,
+                      icon: Icons.email,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    ProfileFloatingButton(
+                      color: kPrimaryLightColor,
+                      icon: Icons.person_add,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            "Communities",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.group,
+                            color: Colors.green,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.width * 0.3,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 2,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                width: 85,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 5,
+                                              color: Colors.grey,
+                                              spreadRadius: 1)
+                                        ],
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/elon.jpg'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text('${index}')
+                                  ],
+                                ));
+                          }),
+                    ),
                   )
                 ],
               ),
-            ),
+              Row(
+                children: [
+                  SocalIcon(
+                      iconSrc: 'assets/icons/coffee.svg', onPressed: () {}),
+                  SocalIcon(iconSrc: 'assets/icons/beer.svg', onPressed: () {}),
+                  SocalIcon(
+                      iconSrc: 'assets/icons/burger.svg', onPressed: () {}),
+                  SocalIcon(iconSrc: 'assets/icons/game.svg', onPressed: () {}),
+                ],
+              )
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  const BottomSheet({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                height: 5.0,
+                width: 40.0,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: new Icon(Icons.settings),
+            title: new Text('Setting'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.calendar_today),
+            title: new Text('Events'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.videocam),
+            title: new Text('Video'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.share),
+            title: new Text('Share'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.share),
+            title: new Text('Share'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.logout),
+            title: new Text('Logout'),
+            onTap: () {
+              Navigator.pop(context);
+              FirebaseAuth.instance.signOut();
+            },
+          ),
+        ],
       ),
     );
   }

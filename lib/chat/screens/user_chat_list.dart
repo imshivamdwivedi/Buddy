@@ -1,6 +1,7 @@
 import 'package:buddy/chat/group/screens/create_community_screen.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
+import 'package:buddy/chat/models/choice.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/chat/screens/group_chat_screen.dart';
@@ -123,148 +124,173 @@ class _UserChatListState extends State<UserChatList> {
     }
   }
 
+  List<Choice> choices = [
+    Choice(
+        'Chats',
+        Container(
+          child: Center(child: Text("DMS")),
+        )),
+    Choice(
+        'Communities',
+        Container(
+          child: Center(
+            child: Text("Groups"),
+          ),
+        )),
+  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Create Community',
-        backgroundColor: Colors.black87,
-        child: Icon(
-          Icons.add,
+    return DefaultTabController(
+      length: choices.length,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Create Community',
+          backgroundColor: Colors.black87,
+          child: Icon(
+            Icons.add,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushNamed(CreateCommunityScreen.routeName);
+          },
         ),
-        onPressed: () {
-          Navigator.of(context).pushNamed(CreateCommunityScreen.routeName);
-        },
-      ),
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
-      ),
-      body: Column(children: [
-        Container(
-          padding: EdgeInsets.all(10),
-          child: TypeAheadField<FriendsModel>(
-            debounceDuration: Duration(microseconds: 500),
-            textFieldConfiguration: TextFieldConfiguration(
-              decoration: InputDecoration(
-                focusColor: Colors.black87,
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search User name',
+        appBar: new TabBar(
+          indicatorColor: Colors.black,
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey,
+          tabs: choices.map((Choice choice) {
+            return Container(
+              margin: EdgeInsets.only(top: 50),
+              child: Tab(
+                text: choice.title,
               ),
-            ),
-            suggestionsCallback: UserAPI.getUserSuggestion,
-            itemBuilder: (context, FriendsModel? suggestions) {
-              final friend = suggestions!;
-              return ListTile(
-                onTap: () => _createNewDmChannel(friend),
-                title: Text(friend.name),
-              );
-            },
-            noItemsFoundBuilder: (context) => Container(
-              height: 100,
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "No User found",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
+            );
+          }).toList(),
+        ),
+        body: Column(children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            child: TypeAheadField<FriendsModel>(
+              debounceDuration: Duration(microseconds: 500),
+              textFieldConfiguration: TextFieldConfiguration(
+                decoration: InputDecoration(
+                  focusColor: Colors.black87,
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search User name',
                 ),
               ),
-            ),
-            onSuggestionSelected: (FriendsModel? suggestions) {
-              final friend = suggestions;
+              suggestionsCallback: UserAPI.getUserSuggestion,
+              itemBuilder: (context, FriendsModel? suggestions) {
+                final friend = suggestions!;
+                return ListTile(
+                  onTap: () => _createNewDmChannel(friend),
+                  title: Text(friend.name),
+                );
+              },
+              noItemsFoundBuilder: (context) => Container(
+                height: 100,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No User found",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              onSuggestionSelected: (FriendsModel? suggestions) {
+                final friend = suggestions;
 
-              Text(friend!.name);
-            },
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.03,
-            ),
-            child: Consumer<ChatListProvider>(
-              builder: (context, value, child) {
-                if (value.allChatList.isEmpty) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/nonewnot.png",
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Center(
-                          child: Text(
-                            'No Messages Yet !',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Container(
-                    height: 600,
-                    child: ListView.builder(
-                      itemCount: value.allChatList.length,
-                      itemBuilder: (context, index) {
-                        final _chatTile = value.allChatList[index];
-                        return Container(
-                          margin: EdgeInsets.only(left: 5, right: 5, bottom: 5),
-                          child: ListTile(
-                            onTap: () {
-                              if (_chatTile.user != _auth.currentUser!.uid) {
-                                //---( Opening Previous Channel )---//
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (ctx) => DmChatScreen(
-                                        chatRoomId: _chatTile.chid,
-                                        userId: _chatTile.user),
-                                  ),
-                                );
-                              } else {
-                                //---( starting group chat )---//
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (ctx) => GroupChatScreen(
-                                        chatRoomId: _chatTile.chid),
-                                  ),
-                                );
-                              }
-                            },
-                            tileColor: kPrimaryLightColor,
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-                              radius: 20,
-                            ),
-                            title: Text(
-                              _chatTile.name,
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.grey[700]),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
+                Text(friend!.name);
               },
             ),
           ),
-        ),
-      ]),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.03,
+              ),
+              child: Consumer<ChatListProvider>(
+                builder: (context, value, child) {
+                  if (value.allChatList.isEmpty) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/nonewnot.png",
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Center(
+                            child: Text(
+                              'No Messages Yet !',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      height: 600,
+                      child: ListView.builder(
+                        itemCount: value.allChatList.length,
+                        itemBuilder: (context, index) {
+                          final _chatTile = value.allChatList[index];
+                          return Container(
+                            margin:
+                                EdgeInsets.only(left: 5, right: 5, bottom: 5),
+                            child: ListTile(
+                              onTap: () {
+                                if (_chatTile.user != _auth.currentUser!.uid) {
+                                  //---( Opening Previous Channel )---//
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctx) => DmChatScreen(
+                                          chatRoomId: _chatTile.chid,
+                                          userId: _chatTile.user),
+                                    ),
+                                  );
+                                } else {
+                                  //---( starting group chat )---//
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctx) => GroupChatScreen(
+                                          chatRoomId: _chatTile.chid),
+                                    ),
+                                  );
+                                }
+                              },
+                              tileColor: kPrimaryLightColor,
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                                radius: 20,
+                              ),
+                              title: Text(
+                                _chatTile.name,
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey[700]),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+        ]),
+      ),
     );
   }
 }

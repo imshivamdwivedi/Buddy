@@ -10,18 +10,20 @@ class SimpleNotification extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Container(
-        child: Card(
-          elevation: 5,
-          margin: EdgeInsets.symmetric(vertical: 4, horizontal: 5),
-          color: kPrimaryLightColor,
-          child: ListTile(
+        margin: EdgeInsets.only(top: 4, left: 5, right: 5),
+        color: kPrimaryColor,
+        child: Column(children: [
+          ListTile(
             title: Text(
               msg,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: Colors.black87),
             ),
           ),
-        ),
+          Divider(
+            color: Colors.black,
+          )
+        ]),
       ),
     );
   }
