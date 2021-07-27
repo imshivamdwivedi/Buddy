@@ -23,25 +23,20 @@ class _DmChatScreenState extends State<DmChatScreen> {
   String userName = '';
 
   Widget chatMessages() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.12),
-      height: MediaQuery.of(context).size.height * 0.7,
-      child: FirebaseAnimatedList(
-        sort: (a, b) {
-          return a.value['createdAt'] > b.value['createdAt'] ? -1 : 1;
-        },
-        query: _chats,
-        reverse: true,
-        itemBuilder: (BuildContext context, DataSnapshot snapshot,
-            Animation<double> animation, int index) {
-          final msg = NewDmMessage.fromMap(snapshot.value);
-          return MessageTile(
-            message: msg.text,
-            sendByMe: (msg.senderId == _auth.currentUser!.uid),
-          );
-        },
-      ),
+    return FirebaseAnimatedList(
+      sort: (a, b) {
+        return a.value['createdAt'] > b.value['createdAt'] ? -1 : 1;
+      },
+      query: _chats,
+      reverse: true,
+      itemBuilder: (BuildContext context, DataSnapshot snapshot,
+          Animation<double> animation, int index) {
+        final msg = NewDmMessage.fromMap(snapshot.value);
+        return MessageTile(
+          message: msg.text,
+          sendByMe: (msg.senderId == _auth.currentUser!.uid),
+        );
+      },
     );
   }
 
@@ -103,42 +98,58 @@ class _DmChatScreenState extends State<DmChatScreen> {
           ),
         ),
       ),
-      body: Container(
-        child: Stack(
+      body: SafeArea(
+        child: Column(
           children: [
-            chatMessages(),
+            Expanded(
+                child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  )),
+              child: chatMessages(),
+            )),
             Container(
-              padding: EdgeInsets.only(
-                  bottom: size.height * 0.02,
-                  left: size.width * 0.01,
-                  right: size.width * 0.01),
-              alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
+              color: kPrimaryColor,
+              padding: EdgeInsets.all(8),
               child: Row(
                 children: [
                   Expanded(
                       child: TextField(
-                    controller: _textEditingController,
-                    //style: simpleTextStyle(),
+                    autocorrect: true,
+                    enableSuggestions: true,
                     decoration: InputDecoration(
-                        hintText: "Message ...",
-                        hintStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 16,
-                        ),
+                        contentPadding: EdgeInsets.all(20.0),
+                        hintText: 'Send message',
                         border: OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(25.0),
-                          borderSide: BorderSide(color: Colors.brown),
+                          borderSide: BorderSide(width: 0),
+                          gapPadding: 10,
+                          borderRadius: BorderRadius.circular(25),
                         )),
                   )),
-                  IconButton(
-                      onPressed: () {
-                        _addMessage();
-                      },
-                      icon: Icon(Icons.send))
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _addMessage();
+                      print("Debugger");
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue,
+                      ),
+                      child: Icon(Icons.send, color: Colors.white),
+                    ),
+                  )
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
