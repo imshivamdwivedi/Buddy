@@ -75,14 +75,29 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         children: [
           Column(
             children: [
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.height * 0.04,
-                child: userModel.userImg == ''
-                    ? NamedProfileAvatar().profileAvatar(
-                        userModel.firstName.substring(0, 1),
-                      )
-                    : Image.network(userModel.userImg),
-              )
+              // CircleAvatar(
+              //   radius: MediaQuery.of(context).size.height * 0.04,
+              // child: userModel.userImg == ''
+              //     ? NamedProfileAvatar().profileAvatar(
+              //         userModel.firstName.substring(0, 1),
+              //       )
+              //     : Image.network(userModel.userImg),
+              // )
+              ClipRRect(
+                borderRadius: BorderRadius.circular(40),
+                child: Container(
+                  child: userModel.userImg == ''
+                      ? NamedProfileAvatar().profileAvatar(
+                          userModel.firstName.substring(0, 1),
+                        )
+                      : Image.network(
+                          userModel.userImg,
+                          height: 80.0,
+                          width: 80.0,
+                          fit: BoxFit.cover,
+                        ),
+                ),
+              ),
             ],
           ),
           Padding(
@@ -126,7 +141,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                       ),
                       _buildChip("4.5"),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.26,
+                        width: MediaQuery.of(context).size.width * 0.2,
                       ),
                       roundButton(
                           'Request',
