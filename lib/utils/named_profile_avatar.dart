@@ -17,13 +17,14 @@ class NamedProfileAvatar {
     Colors.deepOrange,
   ];
 
-  Widget profileAvatar(String s) {
+  Widget profileAvatar(String s, double hw) {
+    int index = ((s.toUpperCase().codeUnits[0] - 65) / 2).floor();
     return Container(
-      height: 80.0,
-      width: 80.0,
+      height: hw,
+      width: hw,
       child: CircleAvatar(
         backgroundColor:
-            _colors[((s.toUpperCase().codeUnitAt(0) - 65) / 2).floor()],
+            (index > -1 && index < 13) ? _colors[index] : Colors.grey,
         child: Text(
           s.toUpperCase(),
           style: TextStyle(
