@@ -92,14 +92,21 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                           ),
                                           Align(
                                             alignment: Alignment.topRight,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              child: Container(
-                                                color: Colors.white,
-                                                child: Icon(
-                                                  Icons.cancel,
-                                                  color: Colors.red,
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _userList.removeAt(index);
+                                                });
+                                              },
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  child: Icon(
+                                                    Icons.cancel,
+                                                    color: Colors.red,
+                                                  ),
                                                 ),
                                               ),
                                             ),

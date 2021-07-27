@@ -12,6 +12,8 @@ import 'package:buddy/user/screens/connection%20screen/search_connection_screen.
 import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
@@ -22,7 +24,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'chat/group/screens/create_community_screen.dart';
 
 Map<int, Color> colorCodes = {
@@ -47,7 +48,7 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(MyApp());
+  runApp(Phoenix(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -112,7 +113,7 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseAuth.instance.idTokenChanges(),
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, userSnapshot) {
         if (userSnapshot.hasData) {
           Navigator.of(context).maybePop();
