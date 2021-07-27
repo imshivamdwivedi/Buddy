@@ -2,11 +2,13 @@ class FriendsModel {
   String fid;
   String uid;
   String name;
+  String userImg;
 
   FriendsModel({
     required this.fid,
     required this.uid,
     this.name = '',
+    this.userImg = '',
   });
 
   factory FriendsModel.fromMap(Map map) {

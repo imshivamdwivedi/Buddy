@@ -75,21 +75,12 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         children: [
           Column(
             children: [
-              // CircleAvatar(
-              //   radius: MediaQuery.of(context).size.height * 0.04,
-              // child: userModel.userImg == ''
-              //     ? NamedProfileAvatar().profileAvatar(
-              //         userModel.firstName.substring(0, 1),
-              //       )
-              //     : Image.network(userModel.userImg),
-              // )
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: Container(
                   child: userModel.userImg == ''
                       ? NamedProfileAvatar().profileAvatar(
-                          userModel.firstName.substring(0, 1),
-                        )
+                          userModel.firstName.substring(0, 1), 80.0)
                       : Image.network(
                           userModel.userImg,
                           height: 80.0,

@@ -219,7 +219,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         Provider.of<UserProvider>(context)
                                             .getUserName
                                             .substring(0, 1),
-                                      )
+                                        80.0)
                                     : Image.network(
                                         Provider.of<UserProvider>(context)
                                             .getUserImg,

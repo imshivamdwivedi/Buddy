@@ -3,6 +3,7 @@ class NotificationModel {
   String type;
   String title;
   String name;
+  String nameImg;
   String nameId;
   String uid;
   String eventId;
@@ -13,6 +14,7 @@ class NotificationModel {
     required this.type,
     required this.title,
     required this.name,
+    required this.nameImg,
     required this.nameId,
     required this.uid,
     required this.eventId,
@@ -25,6 +27,7 @@ class NotificationModel {
       type: map['type'],
       title: map['title'],
       name: map['name'],
+      nameImg: map['nameImg'],
       nameId: map['nameId'],
       uid: map['uid'],
       eventId: map['eventId'],
@@ -37,6 +40,7 @@ class NotificationModel {
         'type': type,
         'title': title,
         'name': name,
+        'nameImg': nameImg,
         'nameId': nameId,
         'uid': uid,
         'eventId': eventId,

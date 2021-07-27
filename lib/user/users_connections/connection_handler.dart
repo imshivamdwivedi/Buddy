@@ -1,11 +1,13 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ConnectionHandler {
   final _auth = FirebaseAuth.instance;
@@ -26,6 +28,7 @@ class ConnectionHandler {
       type: 'REQ',
       title: '',
       name: myName,
+      nameImg: Provider.of<UserProvider>(context).getUserImg,
       nameId: _auth.currentUser!.uid,
       uid: targetId,
       eventId: '',

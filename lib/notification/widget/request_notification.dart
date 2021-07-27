@@ -3,6 +3,7 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/friends_model.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -30,10 +31,20 @@ class _RequestNotificationState extends State<RequestNotification> {
             children: [
               Expanded(
                 child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(
-                        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      child: widget.notificationModel.nameImg == ''
+                          ? NamedProfileAvatar().profileAvatar(
+                              widget.notificationModel.name.substring(0, 1),
+                              40.0)
+                          : Image.network(
+                              widget.notificationModel.nameImg,
+                              height: 40.0,
+                              width: 40.0,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
                   ),
                   title: Text(
                     widget.notificationModel.name,
@@ -139,6 +150,7 @@ class _RequestNotificationState extends State<RequestNotification> {
             name: widget.notificationModel.name,
             title: '#NAME started following you !',
             nameId: widget.notificationModel.nameId,
+            nameImg: '',
             uid: '',
             eventId: '',
             createdAt: DateTimeStamp().getDate(),
