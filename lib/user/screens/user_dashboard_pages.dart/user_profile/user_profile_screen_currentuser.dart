@@ -75,7 +75,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future uploadFile(File _file) async {
-    final userImg = Provider.of<UserProvider>(context).getUserImg;
+    final userImg =
+        Provider.of<UserProvider>(context, listen: false).getUserImg;
 
     if (userImg != '') {
       //---( Delete Previous Image )---//

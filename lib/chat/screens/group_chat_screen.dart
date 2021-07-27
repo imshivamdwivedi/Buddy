@@ -123,6 +123,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                 children: [
                   Expanded(
                       child: TextField(
+                    controller: _textEditingController,
                     autocorrect: true,
                     enableSuggestions: true,
                     decoration: InputDecoration(

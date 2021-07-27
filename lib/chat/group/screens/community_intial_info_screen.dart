@@ -96,6 +96,7 @@ class _CommunityIntialInfoCreateScreenState
                   SizedBox(width: size.width * 0.01),
                   Expanded(
                     child: TextField(
+                      controller: _chNameController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
