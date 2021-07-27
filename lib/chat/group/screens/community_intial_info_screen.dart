@@ -157,7 +157,9 @@ class _CommunityIntialInfoCreateScreenState
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text(widget.users[index].name)
+                                    Text(widget.users[index].name
+                                        .split(" ")
+                                        .first)
                                   ],
                                 ));
                           }),

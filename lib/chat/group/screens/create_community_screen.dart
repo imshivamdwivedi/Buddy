@@ -26,6 +26,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create Community',
@@ -64,8 +65,11 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                 itemCount: _userList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 5),
                                       width: 85,
-                                      child: Column(
+                                      child: Stack(
+                                        alignment: Alignment.topRight,
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
@@ -77,16 +81,29 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                                     spreadRadius: 1)
                                               ],
                                             ),
-                                            child: CircleAvatar(
-                                              radius: 30,
-                                              backgroundImage: AssetImage(
-                                                  'assets/images/elon.jpg'),
+                                            child: Container(
+                                              // margin: EdgeInsets.all(5),
+                                              child: CircleAvatar(
+                                                radius: 30,
+                                                backgroundImage: AssetImage(
+                                                    'assets/images/elon.jpg'),
+                                              ),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(_userList[index].name),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: Container(
+                                                color: Colors.white,
+                                                child: Icon(
+                                                  Icons.cancel,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ));
                                 }),
@@ -116,6 +133,9 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                     child: Row(
                                       children: [
                                         Container(
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: 5,
+                                          ),
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             boxShadow: [
@@ -131,10 +151,13 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                                 'assets/images/elon.jpg'),
                                           ),
                                         ),
-                                        SizedBox(
-                                          height: 5,
+                                        SizedBox(width: size.width * 0.05),
+                                        Text(
+                                          friends[index].name,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
                                         ),
-                                        Text(friends[index].name),
                                       ],
                                     )),
                               );
