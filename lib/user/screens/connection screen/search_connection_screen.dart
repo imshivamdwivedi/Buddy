@@ -1,4 +1,3 @@
-import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -77,8 +76,10 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             children: [
               CircleAvatar(
                 radius: MediaQuery.of(context).size.height * 0.04,
-                backgroundImage: NetworkImage(
-                    "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                backgroundImage: userModel.userImg == ''
+                    ? NetworkImage(
+                        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg")
+                    : NetworkImage(userModel.userImg),
               )
             ],
           ),
@@ -129,7 +130,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                           'Request',
                           user,
                           Provider.of<UserProvider>(context, listen: false)
-                              .getUserName())
+                              .getUserName)
                     ],
                   ),
                 ),

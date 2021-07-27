@@ -55,8 +55,8 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   Widget build(BuildContext context) {
     if (init) {
       final tempData = Provider.of<UserProvider>(context);
-      _creatorName = tempData.getUserName();
-      _creatorClg = tempData.getUserCollege();
+      _creatorName = tempData.getUserName;
+      _creatorClg = tempData.getUserCollege;
       init = false;
     }
     return Scaffold(

@@ -108,7 +108,7 @@ class _UserChatListState extends State<UserChatList> {
           .child(_chid);
       _chRecord1.child('chid').set(_chid);
       _chRecord1.child('user').set(_auth.currentUser!.uid);
-      _chRecord1.child('name').set(tempNameProvider.getUserName());
+      _chRecord1.child('name').set(tempNameProvider.getUserName);
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => DmChatScreen(

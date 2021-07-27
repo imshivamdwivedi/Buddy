@@ -115,6 +115,7 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.idTokenChanges(),
       builder: (context, userSnapshot) {
         if (userSnapshot.hasData) {
+          Navigator.of(context).maybePop();
           return UserDashBoard();
         } else {
           return SignIn();
