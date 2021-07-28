@@ -11,12 +11,14 @@ import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_support/file_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -176,6 +178,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     super.dispose();
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   theImage = Image.network(
+  //     Provider.of<UserProvider>(context).getUserImg,
+  //     width: 80.0,
+  //     height: 80.0,
+  //     fit: BoxFit.cover,
+  //   );
+  //   precacheImage(theImage.image, context);
+  // }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -234,21 +248,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     spreadRadius: 1)
                               ],
                             ),
-                            child:
-                                Provider.of<UserProvider>(context).getUserImg ==
-                                        ''
-                                    ? NamedProfileAvatar().profileAvatar(
-                                        Provider.of<UserProvider>(context)
-                                            .getUserName
-                                            .substring(0, 1),
-                                        80.0)
-                                    : Image.network(
-                                        Provider.of<UserProvider>(context)
-                                            .getUserImg,
-                                        width: 80.0,
-                                        height: 80.0,
-                                        fit: BoxFit.cover,
-                                      ),
+                            child: Provider.of<UserProvider>(context)
+                                        .getUserImg ==
+                                    ''
+                                ? NamedProfileAvatar().profileAvatar(
+                                    Provider.of<UserProvider>(context)
+                                        .getUserName
+                                        .substring(0, 1),
+                                    80.0)
+                                : CachedNetworkImage(
+                                    width: 80.0,
+                                    height: 80.0,
+                                    fit: BoxFit.cover,
+                                    imageUrl: Provider.of<UserProvider>(context)
+                                        .getUserImg,
+                                    placeholder: (context, url) {
+                                      return Center(
+                                          child: new SpinKitWave(
+                                        type: SpinKitWaveType.start,
+                                        size: 20,
+                                        color: Colors.black87,
+                                      ));
+                                    },
+                                  ),
                           ),
                         ),
                       ),

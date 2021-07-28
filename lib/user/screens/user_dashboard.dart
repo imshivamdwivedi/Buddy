@@ -10,10 +10,12 @@ import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 
 class UserDashBoard extends StatefulWidget {
@@ -55,13 +57,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
   //   //   },
   //   // );
   // }
-  @override
-  void initState() {
-    Provider.of<ChatSearchProvider>(context, listen: false);
-    Provider.of<UserProvider>(context, listen: false);
-    Provider.of<ChatListProvider>(context, listen: false);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +71,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
         if (!snapshot.value[_user.uid]['profile']) {
           Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
           return;
+        } else {
+          if (snapshot.value[_user.uid]['userImg'] != '') {
+            DefaultCacheManager()
+                .downloadFile(snapshot.value[_user.uid]['userImg'])
+                .then((_) {
+              print('Caching Image Here !');
+            });
+          }
         }
       });
       if (Provider.of<ScreenHelperProvider>(context, listen: false)
@@ -84,6 +87,9 @@ class _UserDashBoardState extends State<UserDashBoard> {
         currentTab = 1;
         currentScreen = UserCalender();
       }
+      Provider.of<ChatSearchProvider>(context, listen: false);
+      Provider.of<UserProvider>(context, listen: false);
+      Provider.of<ChatListProvider>(context, listen: false);
       init = false;
     }
     return Scaffold(
