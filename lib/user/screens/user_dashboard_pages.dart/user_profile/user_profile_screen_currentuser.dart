@@ -72,19 +72,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         CropAspectRatioPreset.original,
         CropAspectRatioPreset.square
       ],
-      // compressQuality: 100,
+      //compressQuality: 100,
       compressFormat: ImageCompressFormat.jpg,
       androidUiSettings: androidUiSettingsLoked(),
     );
     setState(() {
-      if (pickedFile != null) {
+      if (cropedImage != null) {
         Navigator.pop(context);
-        showDialog(
-            barrierDismissible: false,
+        if ((cropedImage.lengthSync() / 1024) < 256) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => new CustomLoader().buildLoader(context));
+          uploadFile(File(cropedImage.path));
+        } else {
+          CustomSnackbar().showFloatingFlushbar(
             context: context,
-            builder: (context) => new CustomLoader().buildLoader(context));
-        uploadFile(File(cropedImage!.path));
+            message: 'Image size must be less then 1 MB',
+            color: Colors.red,
+          );
+        }
       } else {
+        Navigator.pop(context);
         print('No image selected.');
       }
     });
@@ -177,18 +186,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _bioController.dispose();
     super.dispose();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   theImage = Image.network(
-  //     Provider.of<UserProvider>(context).getUserImg,
-  //     width: 80.0,
-  //     height: 80.0,
-  //     fit: BoxFit.cover,
-  //   );
-  //   precacheImage(theImage.image, context);
-  // }
 
   @override
   Widget build(BuildContext context) {
