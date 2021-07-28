@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:buddy/chat/models/chat_list_model.dart';
+import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/cupertino.dart';
 class ChatListProvider with ChangeNotifier {
   List<ChatListModel> _chatList = [];
   final _auth = FirebaseAuth.instance;
-  final _chatListDB = FirebaseDatabase.instance.reference();
+  final _chatListDB = FirebaseDatabase.instance.reference().child('Channels');
+  final _communityDB = FirebaseDatabase.instance.reference().child('Chats');
+  final _userDB = FirebaseDatabase.instance.reference().child('Users');
   late StreamSubscription<Event> _chatListStream;
 
   List<ChatListModel> get allChatList {
@@ -19,19 +22,61 @@ class ChatListProvider with ChangeNotifier {
   }
 
   _fetchChatList() {
-    _chatListStream = _chatListDB
-        .child('Channels')
-        .child(_auth.currentUser!.uid)
-        .onValue
-        .listen((event) {
+    _chatListStream =
+        _chatListDB.child(_auth.currentUser!.uid).onValue.listen((event) {
       if (event.snapshot.value == null) {
         _chatList.clear();
         notifyListeners();
       } else {
         final _allChatListMap = Map<String, dynamic>.from(event.snapshot.value);
-        _chatList = _allChatListMap.values
-            .map((e) => ChatListModel.fromMap(Map<String, dynamic>.from(e)))
-            .toList();
+        _chatList = _allChatListMap.values.map((e) {
+          //---( Updating Name and Images )---//
+          final _chatData = ChatListModel.fromMap(Map<String, dynamic>.from(e));
+          if (_chatData.user == _auth.currentUser!.uid) {
+            //---( Chats are of Community )---//\
+            _communityDB
+                .child(_chatData.chid)
+                .once()
+                .then((DataSnapshot snapshot) {
+              final map = Map<String, dynamic>.from(snapshot.value);
+              if (_chatData.name != map['chName']) {
+                _chatListDB
+                    .child(_auth.currentUser!.uid)
+                    .child(_chatData.chid)
+                    .child('name')
+                    .set(map['chName']);
+              }
+              if (_chatData.nameImg != map['chImg']) {
+                _chatListDB
+                    .child(_auth.currentUser!.uid)
+                    .child(_chatData.chid)
+                    .child('nameImg')
+                    .set(map['chImg']);
+              }
+            });
+          } else {
+            //---( Chats are of Direct Messages )---//
+            _userDB.child(_chatData.user).once().then((DataSnapshot snapshot) {
+              final userModel = UserModel.fromMap(snapshot.value);
+              if (userModel.firstName + " " + userModel.lastName !=
+                  _chatData.name) {
+                _chatListDB
+                    .child(_auth.currentUser!.uid)
+                    .child(_chatData.chid)
+                    .child('name')
+                    .set(userModel.firstName + " " + userModel.lastName);
+              }
+              if (userModel.userImg != _chatData.nameImg) {
+                _chatListDB
+                    .child(_auth.currentUser!.uid)
+                    .child(_chatData.chid)
+                    .child('nameImg')
+                    .set(userModel.userImg);
+              }
+            });
+          }
+          return _chatData;
+        }).toList();
         notifyListeners();
       }
     });

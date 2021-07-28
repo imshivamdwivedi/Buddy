@@ -7,14 +7,16 @@ class FriendsModel {
   FriendsModel({
     required this.fid,
     required this.uid,
-    this.name = '',
-    this.userImg = '',
+    required this.name,
+    required this.userImg,
   });
 
   factory FriendsModel.fromMap(Map map) {
     return FriendsModel(
       fid: map['fid'],
       uid: map['uid'],
+      name: map['name'],
+      userImg: map['userImg'],
     );
   }
 
@@ -22,6 +24,8 @@ class FriendsModel {
     return {
       'fid': fid,
       'uid': uid,
+      'name': name,
+      'userImg': userImg,
     };
   }
 }

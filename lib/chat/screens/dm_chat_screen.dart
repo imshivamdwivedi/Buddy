@@ -70,13 +70,11 @@ class _DmChatScreenState extends State<DmChatScreen> {
       _chats = _chats.child('Chats').child(widget.chatRoomId).child('ChatRoom');
     });
     final _userDb = FirebaseDatabase.instance.reference().child('Users');
-    _userDb.orderByChild('id').equalTo(widget.userId).once().then((value) {
-      Map map = value.value;
-      map.values.forEach((element) {
-        final user = UserModel.fromMap(element);
-        setState(() {
-          userName = user.firstName + " " + user.lastName;
-        });
+    _userDb.child(widget.userId).once().then((value) {
+      Map map = Map<String, dynamic>.from(value.value);
+      final user = UserModel.fromMap(map);
+      setState(() {
+        userName = user.firstName + " " + user.lastName;
       });
     });
   }

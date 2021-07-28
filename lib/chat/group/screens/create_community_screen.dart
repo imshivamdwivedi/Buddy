@@ -1,7 +1,8 @@
 import 'package:buddy/chat/group/screens/community_intial_info_screen.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/notification/model/friends_model.dart';
+import 'package:buddy/chat/models/friends_model.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -83,10 +84,28 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                             ),
                                             child: Container(
                                               // margin: EdgeInsets.all(5),
-                                              child: CircleAvatar(
-                                                radius: 30,
-                                                backgroundImage: AssetImage(
-                                                    'assets/images/elon.jpg'),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                child: Container(
+                                                  child: _userList[index]
+                                                              .userImg ==
+                                                          ''
+                                                      ? NamedProfileAvatar()
+                                                          .profileAvatar(
+                                                              _userList[index]
+                                                                  .name
+                                                                  .substring(
+                                                                      0, 1),
+                                                              60.0)
+                                                      : Image.network(
+                                                          _userList[index]
+                                                              .userImg,
+                                                          height: 60.0,
+                                                          width: 60.0,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -152,10 +171,25 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                                                   spreadRadius: 1)
                                             ],
                                           ),
-                                          child: CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage: AssetImage(
-                                                'assets/images/elon.jpg'),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            child: Container(
+                                              child: friends[index].userImg ==
+                                                      ''
+                                                  ? NamedProfileAvatar()
+                                                      .profileAvatar(
+                                                          friends[index]
+                                                              .name
+                                                              .substring(0, 1),
+                                                          60.0)
+                                                  : Image.network(
+                                                      friends[index].userImg,
+                                                      height: 60.0,
+                                                      width: 60.0,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: size.width * 0.05),

@@ -1,11 +1,13 @@
 class ChatListModel {
   String chid;
   String name;
+  String nameImg;
   String user;
 
   ChatListModel({
     required this.chid,
     required this.name,
+    required this.nameImg,
     required this.user,
   });
 
@@ -13,6 +15,7 @@ class ChatListModel {
     return ChatListModel(
       chid: map['chid'],
       name: map['name'],
+      nameImg: map['nameImg'],
       user: map['user'],
     );
   }
@@ -21,6 +24,7 @@ class ChatListModel {
     return {
       'chid': chid,
       'name': name,
+      'nameImg': nameImg,
       'user': user,
     };
   }

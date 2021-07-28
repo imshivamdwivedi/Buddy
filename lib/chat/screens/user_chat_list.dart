@@ -1,4 +1,5 @@
 import 'package:buddy/chat/group/screens/create_community_screen.dart';
+import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/choice.dart';
@@ -6,9 +7,9 @@ import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/chat/screens/group_chat_screen.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/notification/model/friends_model.dart';
-import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -25,37 +26,6 @@ class UserChatList extends StatefulWidget {
 
 class _UserChatListState extends State<UserChatList> {
   final _auth = FirebaseAuth.instance;
-  @override
-  void initState() {
-    super.initState();
-    _loadFriends();
-  }
-
-  void _loadFriends() async {
-    List<FriendsModel> myFriendList = [];
-    final user = _auth.currentUser;
-    final _friendsDB =
-        FirebaseDatabase.instance.reference().child('Friends').child(user!.uid);
-    await _friendsDB.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          final model = FriendsModel.fromMap(element);
-          final _userDb = FirebaseDatabase.instance.reference().child('Users');
-          _userDb.orderByChild('id').equalTo(model.uid).once().then((value) {
-            Map map = value.value;
-            map.values.forEach((element) {
-              final user = UserModel.fromMap(element);
-              model.name = user.firstName + " " + user.lastName;
-            });
-          });
-          myFriendList.add(model);
-        });
-      }
-    });
-    Provider.of<ChatSearchProvider>(context, listen: false)
-        .setFriendsList(myFriendList);
-  }
 
   void _createNewDmChannel(FriendsModel model) async {
     //---( Checking if Channel Already Exist )---//
@@ -98,18 +68,26 @@ class _UserChatListState extends State<UserChatList> {
           .child('Channels')
           .child(_auth.currentUser!.uid)
           .child(_chid);
-      _chRecord.child('chid').set(_chid);
-      _chRecord.child('user').set(model.uid);
-      _chRecord.child('name').set(model.name);
+      final _channel = ChatListModel(
+        chid: _chid,
+        name: model.name,
+        nameImg: model.userImg,
+        user: model.uid,
+      );
+      _chRecord.set(_channel.toMap());
 
       final _chRecord1 = FirebaseDatabase.instance
           .reference()
           .child('Channels')
           .child(model.uid)
           .child(_chid);
-      _chRecord1.child('chid').set(_chid);
-      _chRecord1.child('user').set(_auth.currentUser!.uid);
-      _chRecord1.child('name').set(tempNameProvider.getUserName);
+      final _channel1 = ChatListModel(
+        chid: _chid,
+        name: tempNameProvider.getUserName,
+        nameImg: tempNameProvider.getUserImg,
+        user: _auth.currentUser!.uid,
+      );
+      _chRecord1.set(_channel1.toMap());
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => DmChatScreen(
@@ -269,10 +247,19 @@ class _UserChatListState extends State<UserChatList> {
                                 }
                               },
                               tileColor: kPrimaryLightColor,
-                              leading: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-                                radius: 20,
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  child: _chatTile.nameImg == ''
+                                      ? NamedProfileAvatar().profileAvatar(
+                                          _chatTile.name.substring(0, 1), 40.0)
+                                      : Image.network(
+                                          _chatTile.nameImg,
+                                          height: 40.0,
+                                          width: 40.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
                               ),
                               title: Text(
                                 _chatTile.name,

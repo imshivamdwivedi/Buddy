@@ -1,6 +1,8 @@
+import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/notification/model/friends_model.dart';
+import 'package:buddy/chat/models/friends_model.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,12 @@ class _CommunityIntialInfoCreateScreenState
 
   void _createCommunity() {
     final String chName = _chNameController.text;
+
+    if (_chNameController.text.isEmpty) {
+      //---( Null Check )---//
+
+      return;
+    }
     var users = _auth.currentUser!.uid;
     final admins = _auth.currentUser!.uid;
 
@@ -38,6 +46,7 @@ class _CommunityIntialInfoCreateScreenState
       users: users,
       admins: admins,
       chName: chName,
+      chImg: '',
       createdAt: DateTime.now().toString(),
     );
     _comDb.child(_chid).set(_newGroupChannel.toMap());
@@ -48,9 +57,13 @@ class _CommunityIntialInfoCreateScreenState
 
     usersAll.forEach((element) {
       final _chOne = _chDb.child(element).child(_chid);
-      _chOne.child('chid').set(_chid);
-      _chOne.child('user').set(element);
-      _chOne.child('name').set(chName);
+      final _chPayload = ChatListModel(
+        chid: _chid,
+        name: chName,
+        nameImg: '',
+        user: element,
+      );
+      _chOne.set(_chPayload.toMap());
     });
 
     Navigator.pop(context);
@@ -149,10 +162,23 @@ class _CommunityIntialInfoCreateScreenState
                                               spreadRadius: 1)
                                         ],
                                       ),
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage: AssetImage(
-                                            'assets/images/elon.jpg'),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Container(
+                                          child: widget.users[index].userImg ==
+                                                  ''
+                                              ? NamedProfileAvatar()
+                                                  .profileAvatar(
+                                                      widget.users[index].name
+                                                          .substring(0, 1),
+                                                      60.0)
+                                              : Image.network(
+                                                  widget.users[index].userImg,
+                                                  height: 60.0,
+                                                  width: 60.0,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(

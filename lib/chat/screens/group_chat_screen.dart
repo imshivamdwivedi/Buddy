@@ -75,13 +75,11 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         .reference()
         .child('Channels')
         .child(_auth.currentUser!.uid);
-    _chDb.orderByChild('chid').equalTo(widget.chatRoomId).once().then((value) {
-      Map map = value.value;
-      map.values.forEach((element) {
-        final chNameBody = ChatListModel.fromMap(element);
-        setState(() {
-          _chName = chNameBody.name;
-        });
+    _chDb.child(widget.chatRoomId).once().then((value) {
+      Map map = Map<String, dynamic>.from(value.value);
+      final chNameBody = ChatListModel.fromMap(map);
+      setState(() {
+        _chName = chNameBody.name;
       });
     });
   }

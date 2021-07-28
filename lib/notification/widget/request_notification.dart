@@ -1,12 +1,14 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/notification/model/friends_model.dart';
+import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/notification/model/notification_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RequestNotification extends StatefulWidget {
   final NotificationModel notificationModel;
@@ -101,6 +103,7 @@ class _RequestNotificationState extends State<RequestNotification> {
             color: Colors.red,
           );
         } else if (text == 'Confirm') {
+          final userCurrent = Provider.of<UserProvider>(context, listen: false);
           //---( Accepting Request )---//
           final _acceptDB =
               FirebaseDatabase.instance.reference().child('Friends');
@@ -111,6 +114,8 @@ class _RequestNotificationState extends State<RequestNotification> {
           final friendPayload = FriendsModel(
             fid: _fid,
             uid: _auth.currentUser!.uid,
+            name: userCurrent.getUserName,
+            userImg: userCurrent.getUserImg,
           );
           _acceptDB
               .child(widget.notificationModel.nameId)
@@ -120,6 +125,8 @@ class _RequestNotificationState extends State<RequestNotification> {
           final myPayload = FriendsModel(
             fid: _fid,
             uid: widget.notificationModel.nameId,
+            name: widget.notificationModel.name,
+            userImg: widget.notificationModel.nameImg,
           );
           _acceptDB
               .child(_auth.currentUser!.uid)

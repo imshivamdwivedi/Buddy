@@ -4,6 +4,7 @@ class GroupChannel {
   String users;
   String admins;
   String chName;
+  String chImg;
   String createdAt;
 
   GroupChannel({
@@ -12,6 +13,7 @@ class GroupChannel {
     required this.users,
     required this.admins,
     required this.chName,
+    required this.chImg,
     required this.createdAt,
   });
 
@@ -22,6 +24,7 @@ class GroupChannel {
       users: map['users'],
       admins: map['admins'],
       chName: map['chName'],
+      chImg: map['chImg'],
       createdAt: map['createdAt'],
     );
   }
@@ -33,6 +36,7 @@ class GroupChannel {
       'users': users,
       'admins': admins,
       'chName': chName,
+      'chImg': chImg,
       'createdAt': createdAt,
     };
   }

@@ -1,16 +1,14 @@
-import 'package:buddy/chat/screens/dm_chat_screen.dart';
+import 'package:buddy/chat/models/chat_list_provider.dart';
+import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
-import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/home.dart';
 import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
-import 'package:buddy/user/screens/user_genre.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,6 +55,13 @@ class _UserDashBoardState extends State<UserDashBoard> {
   //   //   },
   //   // );
   // }
+  @override
+  void initState() {
+    Provider.of<ChatSearchProvider>(context, listen: false);
+    Provider.of<UserProvider>(context, listen: false);
+    Provider.of<ChatListProvider>(context, listen: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
