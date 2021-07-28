@@ -1,12 +1,14 @@
 import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/dm_message_model.dart';
-import 'package:buddy/chat/widgets/chat_message_widget.dart';
+import 'package:buddy/chat/models/group_message_name_provider.dart';
+import 'package:buddy/chat/widgets/group_chat_message_widget%20copy.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class GroupChatScreen extends StatefulWidget {
   final String chatRoomId;
@@ -22,6 +24,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   var _chName = '';
 
   Widget chatMessages() {
+    final userNames = Provider.of<GroupMessageProviderName>(context).allNames;
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       child: FirebaseAnimatedList(
@@ -33,7 +36,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         itemBuilder: (BuildContext context, DataSnapshot snapshot,
             Animation<double> animation, int index) {
           final msg = NewDmMessage.fromMap(snapshot.value);
-          return MessageTile(
+          return GroupMessageTile(
+            sendBy: userNames[msg.senderId].toString().split(' ').first,
             message: msg.text,
             sendByMe: (msg.senderId == _auth.currentUser!.uid),
           );
@@ -67,7 +71,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   void initState() {
-    super.initState();
+    Provider.of<GroupMessageProviderName>(context, listen: false)
+        .fetchGroupName(widget.chatRoomId);
     setState(() {
       _chats = _chats.child('Chats').child(widget.chatRoomId).child('ChatRoom');
     });
@@ -82,6 +87,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         _chName = chNameBody.name;
       });
     });
+    super.initState();
   }
 
   @override

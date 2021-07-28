@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class MessageTile extends StatelessWidget {
+class DmMessageTile extends StatelessWidget {
   final String message;
   final bool sendByMe;
 
-  MessageTile({required this.message, required this.sendByMe});
+  DmMessageTile({required this.message, required this.sendByMe});
 
   @override
   Widget build(BuildContext context) {

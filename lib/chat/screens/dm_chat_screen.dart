@@ -1,5 +1,5 @@
 import 'package:buddy/chat/models/dm_message_model.dart';
-import 'package:buddy/chat/widgets/chat_message_widget.dart';
+import 'package:buddy/chat/widgets/dm_chat_message_widget.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
@@ -32,7 +32,7 @@ class _DmChatScreenState extends State<DmChatScreen> {
       itemBuilder: (BuildContext context, DataSnapshot snapshot,
           Animation<double> animation, int index) {
         final msg = NewDmMessage.fromMap(snapshot.value);
-        return MessageTile(
+        return DmMessageTile(
           message: msg.text,
           sendByMe: (msg.senderId == _auth.currentUser!.uid),
         );
