@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static const routeName = "/user-profile";
@@ -60,6 +61,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future getImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
+    File? cropedImage = await ImageCropper.cropImage(
+      sourcePath: pickedFile!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.ratio16x9,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.square
+      ],
+      compressQuality: 25,
+      compressFormat: ImageCompressFormat.jpg,
+      androidUiSettings: androidUiSettingsLoked(),
+    );
     setState(() {
       if (pickedFile != null) {
         Navigator.pop(context);
@@ -67,13 +81,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             barrierDismissible: false,
             context: context,
             builder: (context) => new CustomLoader().buildLoader(context));
-        uploadFile(File(pickedFile.path));
+        uploadFile(File(cropedImage!.path));
       } else {
         print('No image selected.');
       }
     });
   }
 
+  AndroidUiSettings androidUiSettingsLoked() => AndroidUiSettings(
+        toolbarTitle: 'Crop Image',
+        toolbarColor: Colors.purple,
+        toolbarWidgetColor: Colors.white,
+        hideBottomControls: true,
+        lockAspectRatio: false,
+      );
   Future uploadFile(File _file) async {
     final userImg =
         Provider.of<UserProvider>(context, listen: false).getUserImg;
