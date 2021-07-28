@@ -35,9 +35,9 @@ class EventViewingScreen extends StatelessWidget {
                 "Event Details",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               )),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               buildDateTime(event),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Text(
@@ -50,7 +50,7 @@ class EventViewingScreen extends StatelessWidget {
                   Text(
                     event.title,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                   ),
                 ],
@@ -87,7 +87,7 @@ class EventViewingScreen extends StatelessWidget {
         Expanded(
           child: Text(
             head,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
         Expanded(
@@ -97,13 +97,16 @@ class EventViewingScreen extends StatelessWidget {
               Text(
                 Utils.toDate(date),
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
+              ),
+              SizedBox(
+                width: 10,
               ),
               Text(
                 Utils.toTime(date),
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
             ],

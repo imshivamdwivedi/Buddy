@@ -62,7 +62,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final picker = ImagePicker();
 
   Future getImage(ImageSource source) async {
-    final pickedFile = await picker.getImage(source: source);
+    final pickedFile = await picker.getImage(source: source, imageQuality: 25);
     File? cropedImage = await ImageCropper.cropImage(
       sourcePath: pickedFile!.path,
       aspectRatioPresets: [
@@ -72,7 +72,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         CropAspectRatioPreset.original,
         CropAspectRatioPreset.square
       ],
-      compressQuality: 25,
+      // compressQuality: 100,
       compressFormat: ImageCompressFormat.jpg,
       androidUiSettings: androidUiSettingsLoked(),
     );
