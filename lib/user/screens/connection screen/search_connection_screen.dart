@@ -4,8 +4,10 @@ import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/users_connections/connection_handler.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class SearchConnectionScreen extends StatefulWidget {
@@ -81,11 +83,25 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                   child: userModel.userImg == ''
                       ? NamedProfileAvatar().profileAvatar(
                           userModel.firstName.substring(0, 1), 80.0)
-                      : Image.network(
-                          userModel.userImg,
-                          height: 80.0,
+                      : CachedNetworkImage(
                           width: 80.0,
+                          height: 80.0,
                           fit: BoxFit.cover,
+                          imageUrl: userModel.userImg,
+                          placeholder: (context, url) {
+                            return Container(
+                              color: Colors.grey,
+                              child: Center(
+                                  child: new SpinKitWave(
+                                type: SpinKitWaveType.start,
+                                size: 20,
+                                color: Colors.black87,
+                              )),
+                            );
+                          },
+                          errorWidget: (context, url, error) =>
+                              NamedProfileAvatar().profileAvatar(
+                                  userModel.firstName.substring(0, 1), 80.0),
                         ),
                 ),
               ),

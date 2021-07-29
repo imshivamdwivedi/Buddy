@@ -15,7 +15,11 @@ class GroupMessageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-          top: 4, bottom: 4, left: sendByMe ? 0 : 10, right: sendByMe ? 10 : 0),
+        top: 4,
+        bottom: 4,
+        // left: sendByMe ? 0 : 10,
+        // right: sendByMe ? 10 : 0,
+      ),
       alignment: sendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin:
