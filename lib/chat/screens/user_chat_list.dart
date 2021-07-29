@@ -283,13 +283,41 @@ class _UserChatListState extends State<UserChatList> {
                                         Text(
                                           _chatTile.lastMsg,
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: _chatTile.msgPen > 0
+                                                  ? 13
+                                                  : 12,
                                               color: Colors.grey[700],
                                               fontWeight: _chatTile.msgPen > 0
                                                   ? FontWeight.bold
                                                   : FontWeight.normal),
                                         ),
                                       ],
+                                    )
+                                  : null,
+                              trailing: _chatTile.msgPen > 0
+                                  ? Container(
+                                      height: 20,
+                                      width: 20,
+                                      padding: EdgeInsets.all(2.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Colors.red,
+                                      ),
+                                      constraints: BoxConstraints(
+                                        minWidth: 20,
+                                        minHeight: 20,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          _chatTile.msgPen.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
                                     )
                                   : null,
                             ),

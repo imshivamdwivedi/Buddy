@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 class ChatListProvider with ChangeNotifier {
   List<ChatListModel> _chatList = [];
-  int _msgCount = 0;
+  int _indmsgCount = 0;
   var isFirstTime = true;
   final _auth = FirebaseAuth.instance;
   final _chatListDB = FirebaseDatabase.instance.reference().child('Channels');
@@ -28,18 +28,18 @@ class ChatListProvider with ChangeNotifier {
   }
 
   int get totalMsgCount {
-    return _msgCount;
+    return _indmsgCount;
   }
 
   _fetchChatList() {
     _chatListStream =
         _chatListDB.child(_auth.currentUser!.uid).onValue.listen((event) {
       if (event.snapshot.value == null) {
-        _msgCount = 0;
+        _indmsgCount = 0;
         _chatList.clear();
         notifyListeners();
       } else {
-        _msgCount = 0;
+        _indmsgCount = 0;
         final _allChatListMap = Map<String, dynamic>.from(event.snapshot.value);
         _chatList = _allChatListMap.values.map((e) {
           //---( Updating Name and Images )---//
@@ -93,7 +93,9 @@ class ChatListProvider with ChangeNotifier {
             }
             isFirstTime = false;
           }
-          _msgCount += _chatData.msgPen;
+          if (_chatData.msgPen > 0) {
+            _indmsgCount++;
+          }
           return _chatData;
         }).toList();
         notifyListeners();

@@ -50,10 +50,22 @@ class DmMessageTile extends StatelessWidget {
                       fontWeight: FontWeight.w300)),
             ),
             if (sendByMe && isRead)
-              Icon(
-                Icons.check,
-                color: Colors.black87,
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text('Seen'),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  // Icon(
+                  //   Icons.check,
+                  //   color: Colors.black87,
+                  // ),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                ],
+              )
           ],
         ),
       ),

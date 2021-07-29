@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class DmChatScreen extends StatefulWidget {
   final String chatRoomId;
@@ -46,12 +47,22 @@ class _DmChatScreenState extends State<DmChatScreen> {
   }
 
   Widget chatMessages() {
+    String msgId = '';
     return FirebaseAnimatedList(
       sort: (a, b) {
         return a.value['createdAt'] > b.value['createdAt'] ? -1 : 1;
       },
       query: _chats,
       reverse: true,
+      defaultChild: Container(
+        width: 60,
+        height: 60,
+        child: new SpinKitWave(
+          type: SpinKitWaveType.start,
+          size: 40,
+          color: Colors.black87,
+        ),
+      ),
       itemBuilder: (BuildContext context, DataSnapshot snapshot,
           Animation<double> animation, int index) {
         final msg = NewDmMessage.fromMap(snapshot.value);
@@ -60,7 +71,7 @@ class _DmChatScreenState extends State<DmChatScreen> {
           _updateCount(msg.msgId);
         }
         return DmMessageTile(
-          isRead: msg.isRead,
+          isRead: false,
           message: msg.text,
           sendByMe: (msg.senderId == _auth.currentUser!.uid),
         );
