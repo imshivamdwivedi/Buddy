@@ -71,6 +71,9 @@ class _DmChatScreenState extends State<DmChatScreen> {
   void _addMessage() async {
     if (_textEditingController.text.isNotEmpty) {
       final _textMsg = _textEditingController.text;
+      setState(() {
+        _textEditingController.text = "";
+      });
       final _msgDb = FirebaseDatabase.instance
           .reference()
           .child('Chats')
@@ -98,9 +101,16 @@ class _DmChatScreenState extends State<DmChatScreen> {
             .child('msgPen')
             .set(snapshot.value['msgPen'] + 1);
       });
-      setState(() {
-        _textEditingController.text = "";
-      });
+      await _chHisUpdate
+          .child(widget.userId)
+          .child(widget.chatRoomId)
+          .child('lastMsg')
+          .set(_textMsg);
+      await _chHisUpdate
+          .child(_auth.currentUser!.uid)
+          .child(widget.chatRoomId)
+          .child('lastMsg')
+          .set(_textMsg);
     }
   }
 

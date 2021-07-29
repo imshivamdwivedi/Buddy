@@ -4,6 +4,7 @@ class ChatListModel {
   String nameImg;
   String user;
   int msgPen;
+  String lastMsg;
 
   ChatListModel({
     required this.chid,
@@ -11,6 +12,7 @@ class ChatListModel {
     required this.nameImg,
     required this.user,
     required this.msgPen,
+    required this.lastMsg,
   });
 
   factory ChatListModel.fromMap(Map map) {
@@ -20,6 +22,7 @@ class ChatListModel {
       nameImg: map['nameImg'],
       user: map['user'],
       msgPen: map['msgPen'],
+      lastMsg: map['lastMsg'],
     );
   }
 
@@ -30,6 +33,7 @@ class ChatListModel {
       'nameImg': nameImg,
       'user': user,
       'msgPen': msgPen,
+      'lastMsg': lastMsg,
     };
   }
 }

@@ -74,6 +74,7 @@ class _UserChatListState extends State<UserChatList> {
         nameImg: model.userImg,
         user: model.uid,
         msgPen: 0,
+        lastMsg: '',
       );
       await _chRecord.set(_channel.toMap());
 
@@ -88,6 +89,7 @@ class _UserChatListState extends State<UserChatList> {
         nameImg: tempNameProvider.getUserImg,
         user: _auth.currentUser!.uid,
         msgPen: 0,
+        lastMsg: '',
       );
       await _chRecord1.set(_channel1.toMap());
 
@@ -266,8 +268,30 @@ class _UserChatListState extends State<UserChatList> {
                               title: Text(
                                 _chatTile.name,
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.grey[700]),
+                                    fontSize: 14, color: Colors.black87),
                               ),
+                              subtitle: _chatTile.lastMsg != ''
+                                  ? Row(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 12,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          _chatTile.lastMsg,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[700],
+                                              fontWeight: _chatTile.msgPen > 0
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal),
+                                        ),
+                                      ],
+                                    )
+                                  : null,
                             ),
                           );
                         },
