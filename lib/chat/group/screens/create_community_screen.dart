@@ -59,7 +59,7 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                       children: [
                         Flexible(
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.width * 0.3,
+                            height: MediaQuery.of(context).size.width * 0.2,
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
@@ -138,75 +138,85 @@ class _CreateCommunityScreenState extends State<CreateCommunityScreen> {
                       ],
                     )
                   : Center(child: Text("Add participant")),
-              Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: Consumer<ChatSearchProvider>(
-                      builder: (context, value, child) {
-                        final friends = value.allFriends;
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: friends.length,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              return InkWell(
-                                onTap: () {
-                                  _addUserToList(friends[index]);
-                                },
-                                child: Container(
-                                    width: 85,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 5,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 5,
-                                                  color: Colors.grey,
-                                                  spreadRadius: 1)
-                                            ],
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            child: Container(
-                                              child: friends[index].userImg ==
-                                                      ''
-                                                  ? NamedProfileAvatar()
-                                                      .profileAvatar(
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                child: Container(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.75,
+                        child: Consumer<ChatSearchProvider>(
+                          builder: (context, value, child) {
+                            final friends = value.allFriends;
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: friends.length,
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return InkWell(
+                                    onTap: () {
+                                      _addUserToList(friends[index]);
+                                    },
+                                    child: Container(
+                                        width: 85,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: 5,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 5,
+                                                      color: Colors.grey,
+                                                      spreadRadius: 1)
+                                                ],
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                child: Container(
+                                                  child: friends[index]
+                                                              .userImg ==
+                                                          ''
+                                                      ? NamedProfileAvatar()
+                                                          .profileAvatar(
+                                                              friends[index]
+                                                                  .name
+                                                                  .substring(
+                                                                      0, 1),
+                                                              60.0)
+                                                      : Image.network(
                                                           friends[index]
-                                                              .name
-                                                              .substring(0, 1),
-                                                          60.0)
-                                                  : Image.network(
-                                                      friends[index].userImg,
-                                                      height: 60.0,
-                                                      width: 60.0,
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                                              .userImg,
+                                                          height: 60.0,
+                                                          width: 60.0,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        SizedBox(width: size.width * 0.05),
-                                        Text(
-                                          friends[index].name,
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              );
-                            });
-                      },
-                    ),
+                                            SizedBox(width: size.width * 0.05),
+                                            Text(
+                                              friends[index].name,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  );
+                                });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),

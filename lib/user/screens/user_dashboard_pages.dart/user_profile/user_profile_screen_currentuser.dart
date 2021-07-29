@@ -606,29 +606,22 @@ class BottomSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: new Icon(Icons.settings),
-            title: new Text('Setting'),
+            leading: new Icon(Icons.group),
+            title: new Text('Connections'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: new Icon(Icons.calendar_today),
-            title: new Text('Events'),
+            leading: new Icon(Icons.brightness_medium),
+            title: new Text('Theme'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: new Icon(Icons.videocam),
-            title: new Text('Video'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: new Icon(Icons.share),
-            title: new Text('Share'),
+            leading: new Icon(Icons.hdr_strong),
+            title: new Text('Interest'),
             onTap: () {
               Navigator.pop(context);
             },

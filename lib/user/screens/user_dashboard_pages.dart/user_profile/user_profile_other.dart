@@ -333,29 +333,29 @@ class BottomSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: new Icon(Icons.settings),
-            title: new Text('Setting'),
+            leading: new Icon(Icons.block),
+            title: new Text('Block'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: new Icon(Icons.calendar_today),
-            title: new Text('Events'),
+            leading: new Icon(Icons.report),
+            title: new Text('Report'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: new Icon(Icons.videocam),
-            title: new Text('Video'),
+            leading: new Icon(Icons.copy),
+            title: new Text('Copy Profile URL'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
             leading: new Icon(Icons.share),
-            title: new Text('Share'),
+            title: new Text('Share this Profile'),
             onTap: () {
               Navigator.pop(context);
             },

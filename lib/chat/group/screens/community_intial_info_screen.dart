@@ -151,59 +151,63 @@ class _CommunityIntialInfoCreateScreenState
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
+          margin: EdgeInsets.only(top: size.height * 0.01),
           child: Column(
             children: [
-              Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _buildPopupDialogImage(context),
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(40.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 5,
-                                  color: Colors.grey,
-                                  spreadRadius: 1)
-                            ],
+              Container(
+                margin: EdgeInsets.only(
+                    right: size.width * 0.1, left: size.width * 0.05),
+                child: Row(
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _buildPopupDialogImage(context),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 5,
+                                    color: Colors.grey,
+                                    spreadRadius: 1)
+                              ],
+                            ),
+                            child: _image == null
+                                ? Image.asset(
+                                    'assets/icons/camera.jpg',
+                                    width: 50.0,
+                                    height: 50.0,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    _image!,
+                                    width: 50.0,
+                                    height: 50.0,
+                                    fit: BoxFit.fill,
+                                  ),
                           ),
-                          child: _image == null
-                              ? Image.asset(
-                                  'assets/icons/camera.jpg',
-                                  width: 110.0,
-                                  height: 110.0,
-                                  fit: BoxFit.fill,
-                                )
-                              : Image.file(
-                                  _image!,
-                                  width: 110.0,
-                                  height: 110.0,
-                                  fit: BoxFit.fill,
-                                ),
-                        ),
-                      )),
-                  SizedBox(width: size.width * 0.01),
-                  Expanded(
-                    child: TextField(
-                      controller: _chNameController,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                        )),
+                    SizedBox(width: size.width * 0.08),
+                    Expanded(
+                      child: TextField(
+                        controller: _chNameController,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -217,67 +221,78 @@ class _CommunityIntialInfoCreateScreenState
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Row(
-                children: [
-                  Flexible(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            childAspectRatio: 1.8 / 2,
-                            crossAxisSpacing: 0,
-                            mainAxisSpacing: 5,
-                          ),
-                          shrinkWrap: true,
-                          itemCount: widget.users.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                                margin: EdgeInsets.symmetric(vertical: 5),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 5,
-                                              color: Colors.grey,
-                                              spreadRadius: 1)
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(30),
-                                        child: Container(
-                                          child: widget.users[index].userImg ==
-                                                  ''
-                                              ? NamedProfileAvatar()
-                                                  .profileAvatar(
-                                                      widget.users[index].name
-                                                          .substring(0, 1),
-                                                      60.0)
-                                              : Image.network(
-                                                  widget.users[index].userImg,
-                                                  height: 60.0,
-                                                  width: 60.0,
-                                                  fit: BoxFit.cover,
-                                                ),
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                child: Container(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                childAspectRatio: 1.8 / 2,
+                                crossAxisSpacing: 0,
+                                mainAxisSpacing: 5,
+                              ),
+                              shrinkWrap: true,
+                              itemCount: widget.users.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                    margin: EdgeInsets.symmetric(vertical: 5),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 5,
+                                                  color: Colors.grey,
+                                                  spreadRadius: 1)
+                                            ],
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            child: Container(
+                                              child: widget.users[index]
+                                                          .userImg ==
+                                                      ''
+                                                  ? NamedProfileAvatar()
+                                                      .profileAvatar(
+                                                          widget
+                                                              .users[index].name
+                                                              .substring(0, 1),
+                                                          60.0)
+                                                  : Image.network(
+                                                      widget
+                                                          .users[index].userImg,
+                                                      height: 60.0,
+                                                      width: 60.0,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(widget.users[index].name
-                                        .split(" ")
-                                        .first)
-                                  ],
-                                ));
-                          }),
-                    ),
-                  )
-                ],
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(widget.users[index].name
+                                            .split(" ")
+                                            .first)
+                                      ],
+                                    ));
+                              }),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
