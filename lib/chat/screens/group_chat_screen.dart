@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class GroupChatScreen extends StatefulWidget {
@@ -33,6 +34,15 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         },
         query: _chats,
         reverse: true,
+        defaultChild: Container(
+          width: 60,
+          height: 60,
+          child: new SpinKitWave(
+            type: SpinKitWaveType.start,
+            size: 40,
+            color: Colors.black87,
+          ),
+        ),
         itemBuilder: (BuildContext context, DataSnapshot snapshot,
             Animation<double> animation, int index) {
           final msg = NewDmMessage.fromMap(snapshot.value);

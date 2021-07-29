@@ -283,7 +283,9 @@ class _UserChatListState extends State<UserChatList> {
                                         Text(
                                           _chatTile.lastMsg,
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: _chatTile.msgPen > 0
+                                                  ? 13
+                                                  : 12,
                                               color: Colors.grey[700],
                                               fontWeight: _chatTile.msgPen > 0
                                                   ? FontWeight.bold
