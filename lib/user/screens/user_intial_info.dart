@@ -171,7 +171,7 @@ class _UserIntialInfoState extends State<UserIntialInfo> {
               ),
               RoundedInputField(
                 icon: Icons.school,
-                text: "College Name",
+                text: "College",
                 val: false,
                 controller: _collegeController,
               ),

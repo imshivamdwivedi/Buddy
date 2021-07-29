@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/chat/models/friends_model.dart';
+import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CommunityIntialInfoCreateScreen extends StatefulWidget {
   final List<FriendsModel> users;
@@ -20,6 +26,55 @@ class _CommunityIntialInfoCreateScreenState
     extends State<CommunityIntialInfoCreateScreen> {
   final _auth = FirebaseAuth.instance;
   final TextEditingController _chNameController = new TextEditingController();
+
+  File? _image = null;
+  final picker = ImagePicker();
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source, imageQuality: 25);
+    File? cropedImage = await ImageCropper.cropImage(
+      sourcePath: pickedFile!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.ratio16x9,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.square
+      ],
+      //compressQuality: 100,
+      compressFormat: ImageCompressFormat.jpg,
+      androidUiSettings: androidUiSettingsLoked(),
+    );
+    setState(() {
+      if (cropedImage != null) {
+        Navigator.pop(context);
+        if ((cropedImage.lengthSync() / 1024) < 256) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => new CustomLoader().buildLoader(context));
+          _image = File(cropedImage.path);
+        } else {
+          CustomSnackbar().showFloatingFlushbar(
+            context: context,
+            message: 'Image size must be less then 1 MB',
+            color: Colors.red,
+          );
+        }
+      } else {
+        Navigator.pop(context);
+        print('No image selected.');
+      }
+    });
+  }
+
+  AndroidUiSettings androidUiSettingsLoked() => AndroidUiSettings(
+        toolbarTitle: 'Crop Image',
+        toolbarColor: Colors.purple,
+        toolbarWidgetColor: Colors.white,
+        hideBottomControls: true,
+        lockAspectRatio: false,
+      );
 
   void _createCommunity() {
     final String chName = _chNameController.text;
@@ -100,13 +155,41 @@ class _CommunityIntialInfoCreateScreenState
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey[100],
-                    radius: 30,
-                    backgroundImage: AssetImage(
-                      'assets/icons/camera.png',
-                    ),
-                  ),
+                  InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              _buildPopupDialogImage(context),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 5,
+                                  color: Colors.grey,
+                                  spreadRadius: 1)
+                            ],
+                          ),
+                          child: _image == null
+                              ? Image.asset(
+                                  'assets/icons/camera.jpg',
+                                  width: 110.0,
+                                  height: 110.0,
+                                  fit: BoxFit.fill,
+                                )
+                              : Image.file(
+                                  _image!,
+                                  width: 110.0,
+                                  height: 110.0,
+                                  fit: BoxFit.fill,
+                                ),
+                        ),
+                      )),
                   SizedBox(width: size.width * 0.01),
                   Expanded(
                     child: TextField(
@@ -198,6 +281,31 @@ class _CommunityIntialInfoCreateScreenState
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPopupDialogImage(BuildContext context) {
+    return new AlertDialog(
+      title: const Text('Add a Photo'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          InkWell(
+              onTap: () {
+                getImage(ImageSource.camera);
+              },
+              child: Text("Take photo")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(
+              onTap: () {
+                getImage(ImageSource.gallery);
+              },
+              child: Text("Choose from gallery")),
+        ],
       ),
     );
   }
