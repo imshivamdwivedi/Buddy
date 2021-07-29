@@ -1,5 +1,6 @@
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
+import 'package:buddy/chat/screens/group_detail_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -218,7 +219,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = UserProfileScreen();
+                        currentScreen = GroupDetailScreen();
                         currentTab = 3;
                       });
                     },
