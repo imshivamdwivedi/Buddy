@@ -2,6 +2,7 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/user/users_connections/connection_handler.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -117,10 +118,21 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                   child: Row(
                     // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        userModel.firstName + " " + userModel.lastName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OtherUserProfileScreen(
+                                  userId: userModel.id,
+                                ),
+                              ));
+                        },
+                        child: Text(
+                          userModel.firstName + " " + userModel.lastName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],

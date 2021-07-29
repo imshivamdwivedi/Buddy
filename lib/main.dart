@@ -12,6 +12,7 @@ import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';

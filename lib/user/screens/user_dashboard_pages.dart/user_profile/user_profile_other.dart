@@ -1,21 +1,23 @@
 import 'dart:ui';
-
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/social_icons.dart';
-
 import 'package:buddy/constants.dart';
-
+import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
-
+import 'package:buddy/utils/named_profile_avatar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class OtherUserProfileScreen extends StatefulWidget {
-  static const routeName = "/other-user-profile";
-  const OtherUserProfileScreen({Key? key}) : super(key: key);
+  final userId;
+  const OtherUserProfileScreen({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   _OtherUserProfileScreenState createState() => _OtherUserProfileScreenState();
@@ -23,6 +25,8 @@ class OtherUserProfileScreen extends StatefulWidget {
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   static const kListHeight = 150.0;
+  final _userDB = FirebaseDatabase.instance.reference().child('Users');
+  UserModel _userModel = new UserModel(profile: true);
 
   Widget _buildChip(
     String label,
@@ -54,6 +58,20 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    _loadUserData();
+    super.initState();
+  }
+
+  _loadUserData() async {
+    await _userDB.child(widget.userId).once().then((DataSnapshot snapshot) {
+      setState(() {
+        _userModel = UserModel.fromMap(snapshot.value);
+      });
+    });
   }
 
   @override
@@ -106,21 +124,28 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                   spreadRadius: 1)
                             ],
                           ),
-                          child: Provider.of<UserProvider>(context)
-                                      .getUserImg ==
-                                  ''
-                              ? Image.asset(
-                                  'assets/images/elon.jpg',
-                                  width: 80.0,
-                                  height: 80.0,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.network(
-                                  Provider.of<UserProvider>(context).getUserImg,
-                                  width: 80.0,
-                                  height: 80.0,
-                                  fit: BoxFit.cover,
-                                ),
+                          child: CachedNetworkImage(
+                            width: 80.0,
+                            height: 80.0,
+                            fit: BoxFit.cover,
+                            imageUrl: _userModel.userImg,
+                            placeholder: (context, url) {
+                              return Center(
+                                  child: new SpinKitWave(
+                                type: SpinKitWaveType.start,
+                                size: 20,
+                                color: Colors.black87,
+                              ));
+                            },
+                            errorWidget: (context, url, error) {
+                              return Center(
+                                  child: new SpinKitWave(
+                                type: SpinKitWaveType.start,
+                                size: 20,
+                                color: Colors.black87,
+                              ));
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -134,7 +159,9 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           child: Row(
                             children: [
                               Text(
-                                Provider.of<UserProvider>(context).getUserName,
+                                _userModel.firstName +
+                                    ' ' +
+                                    _userModel.lastName,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
@@ -155,8 +182,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                           child: Row(
                             children: [
                               Text(
-                                Provider.of<UserProvider>(context)
-                                    .getUserCollege,
+                                _userModel.collegeName,
                               ),
                             ],
                           ),
@@ -181,7 +207,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     children: [
                       Flexible(
                           child: Text(
-                        "Wait to watch me fall, Cause I'm not going down easily ",
+                        _userModel.userBio,
                       )),
                     ],
                   ),
