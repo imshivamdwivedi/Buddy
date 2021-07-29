@@ -46,6 +46,10 @@ class UserProvider with ChangeNotifier {
     return _userModel.userImg;
   }
 
+  String get getUserBio {
+    return _userModel.userBio;
+  }
+
   @override
   void dispose() {
     _userStream.cancel();

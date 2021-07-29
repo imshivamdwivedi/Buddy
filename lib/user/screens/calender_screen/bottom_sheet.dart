@@ -39,6 +39,15 @@ class _ModalBootomState extends State<ModalBootom> {
           height: MediaQuery.of(context).size.height * 0.5,
           child: SfCalendar(
             view: CalendarView.schedule,
+            scheduleViewSettings: ScheduleViewSettings(
+              monthHeaderSettings: MonthHeaderSettings(
+                height: MediaQuery.of(context).size.height * 0.2,
+                textAlign: TextAlign.center,
+                backgroundColor: kPrimaryColor,
+                monthTextStyle: TextStyle(color: Colors.black, fontSize: 24),
+              ),
+              // hideEmptyScheduleWeek: true,
+            ),
             dataSource: EventDataSource(provider.events),
             initialDisplayDate: provider.selectedDate,
             appointmentBuilder: appointmentBuilder,

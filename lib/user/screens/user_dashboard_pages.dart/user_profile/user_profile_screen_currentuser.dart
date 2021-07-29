@@ -33,13 +33,6 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   UploadTask? task;
-  List<Community> communityList = [
-    Community(id: "e1", name: "Love to Build"),
-    Community(id: "e2", name: "Udemy"),
-    Community(id: "e3", name: "JS lovers"),
-    Community(id: "e4", name: "Java Guys"),
-    Community(id: "e5", name: "Python"),
-  ];
 
   static const kListHeight = 150.0;
 
@@ -177,6 +170,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _refUser.child('lastName').set(_secondName);
 
     Navigator.of(context).pop("Name updated successfully");
+  }
+
+  void _AddBio() {
+    final _firstName = _bioController.text;
+
+    final _uid = _auth.currentUser!.uid;
+    final _refUser = _firebaseDatabase.reference().child('Users').child(_uid);
+
+    _refUser.child('userBio').set(_firstName);
+
+    Navigator.of(context).pop("Bio added successfully");
   }
 
   @override
@@ -352,25 +356,50 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: Row(
                     children: [
                       Flexible(
-                        child: InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  _buildPopupDialogBioChange(context),
-                            );
-                          },
-                          child: Text(
-                            "Wait to watch me fall, Cause I'am not going down easily ",
-                          ),
-                        ),
+                        child: Provider.of<UserProvider>(context)
+                                .getUserBio
+                                .isEmpty
+                            ? TextButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        _buildPopupDialogBioChange(context),
+                                  ).then((value) =>
+                                      CustomSnackbar().showFloatingFlushbar(
+                                        context: context,
+                                        message: value,
+                                        color: Colors.green,
+                                      ));
+                                },
+                                child: Text('Add Bio +'))
+                            : InkWell(
+                                onTap: () {
+                                  _bioController.text =
+                                      Provider.of<UserProvider>(context,
+                                              listen: false)
+                                          .getUserBio;
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        _buildPopupDialogBioChange(context),
+                                  ).then((value) =>
+                                      CustomSnackbar().showFloatingFlushbar(
+                                        context: context,
+                                        message: value,
+                                        color: Colors.green,
+                                      ));
+                                },
+                                child: Text(Provider.of<UserProvider>(context)
+                                    .getUserBio),
+                              ),
                       ),
                     ],
                   ),
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 10),
+                margin: EdgeInsets.only(top: 5),
                 child: Row(
                   children: [
                     Container(
@@ -497,7 +526,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     "Update",
                     style: TextStyle(color: Colors.black),
                   ),
-                  () {},
+                  _AddBio,
                   ''),
             ],
           ),
