@@ -60,7 +60,7 @@ class _UserChatListState extends State<UserChatList> {
         type: 'DM',
         users: _auth.currentUser!.uid + "+" + model.uid,
       );
-      _channelDb.child(_chid).set(newChannel.toMap());
+      await _channelDb.child(_chid).set(newChannel.toMap());
 
       //---( Creating Channel History )---//
       final _chRecord = FirebaseDatabase.instance
@@ -73,8 +73,10 @@ class _UserChatListState extends State<UserChatList> {
         name: model.name,
         nameImg: model.userImg,
         user: model.uid,
+        msgPen: 0,
+        lastMsg: '',
       );
-      _chRecord.set(_channel.toMap());
+      await _chRecord.set(_channel.toMap());
 
       final _chRecord1 = FirebaseDatabase.instance
           .reference()
@@ -86,8 +88,10 @@ class _UserChatListState extends State<UserChatList> {
         name: tempNameProvider.getUserName,
         nameImg: tempNameProvider.getUserImg,
         user: _auth.currentUser!.uid,
+        msgPen: 0,
+        lastMsg: '',
       );
-      _chRecord1.set(_channel1.toMap());
+      await _chRecord1.set(_channel1.toMap());
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => DmChatScreen(
@@ -166,7 +170,7 @@ class _UserChatListState extends State<UserChatList> {
                 );
               },
               noItemsFoundBuilder: (context) => Container(
-                height: 100,
+                height: 80,
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -264,8 +268,30 @@ class _UserChatListState extends State<UserChatList> {
                               title: Text(
                                 _chatTile.name,
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.grey[700]),
+                                    fontSize: 14, color: Colors.black87),
                               ),
+                              subtitle: _chatTile.lastMsg != ''
+                                  ? Row(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 12,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          _chatTile.lastMsg,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[700],
+                                              fontWeight: _chatTile.msgPen > 0
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal),
+                                        ),
+                                      ],
+                                    )
+                                  : null,
                             ),
                           );
                         },

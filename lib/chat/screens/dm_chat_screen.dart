@@ -18,9 +18,32 @@ class DmChatScreen extends StatefulWidget {
 
 class _DmChatScreenState extends State<DmChatScreen> {
   final _auth = FirebaseAuth.instance;
+  final _chatDB = FirebaseDatabase.instance.reference().child('Chats');
   TextEditingController _textEditingController = new TextEditingController();
   DatabaseReference _chats = FirebaseDatabase.instance.reference();
   String userName = '';
+
+  void _updateCount(String msgId) async {
+    await _chatDB
+        .child(widget.chatRoomId)
+        .child('ChatRoom')
+        .child(msgId)
+        .child('isRead')
+        .set(true);
+    final _chHisUpdate =
+        FirebaseDatabase.instance.reference().child('Channels');
+    await _chHisUpdate
+        .child(_auth.currentUser!.uid)
+        .child(widget.chatRoomId)
+        .once()
+        .then((DataSnapshot snapshot) async {
+      await _chHisUpdate
+          .child(_auth.currentUser!.uid)
+          .child(widget.chatRoomId)
+          .child('msgPen')
+          .set(0);
+    });
+  }
 
   Widget chatMessages() {
     return FirebaseAnimatedList(
@@ -32,7 +55,12 @@ class _DmChatScreenState extends State<DmChatScreen> {
       itemBuilder: (BuildContext context, DataSnapshot snapshot,
           Animation<double> animation, int index) {
         final msg = NewDmMessage.fromMap(snapshot.value);
+        if (msg.senderId != _auth.currentUser!.uid && msg.isRead == false) {
+          //---( Message is of Another One )---//
+          _updateCount(msg.msgId);
+        }
         return DmMessageTile(
+          isRead: msg.isRead,
           message: msg.text,
           sendByMe: (msg.senderId == _auth.currentUser!.uid),
         );
@@ -40,9 +68,12 @@ class _DmChatScreenState extends State<DmChatScreen> {
     );
   }
 
-  void _addMessage() {
+  void _addMessage() async {
     if (_textEditingController.text.isNotEmpty) {
       final _textMsg = _textEditingController.text;
+      setState(() {
+        _textEditingController.text = "";
+      });
       final _msgDb = FirebaseDatabase.instance
           .reference()
           .child('Chats')
@@ -56,10 +87,30 @@ class _DmChatScreenState extends State<DmChatScreen> {
         isRead: false,
         createdAt: DateTimeStamp().getDate(),
       );
-      _msgDb.child(_msgKey).set(_newMessage.toMap());
-      setState(() {
-        _textEditingController.text = "";
+      await _msgDb.child(_msgKey).set(_newMessage.toMap());
+      final _chHisUpdate =
+          FirebaseDatabase.instance.reference().child('Channels');
+      _chHisUpdate
+          .child(widget.userId)
+          .child(widget.chatRoomId)
+          .once()
+          .then((DataSnapshot snapshot) async {
+        await _chHisUpdate
+            .child(widget.userId)
+            .child(widget.chatRoomId)
+            .child('msgPen')
+            .set(snapshot.value['msgPen'] + 1);
       });
+      await _chHisUpdate
+          .child(widget.userId)
+          .child(widget.chatRoomId)
+          .child('lastMsg')
+          .set(_textMsg);
+      await _chHisUpdate
+          .child(_auth.currentUser!.uid)
+          .child(widget.chatRoomId)
+          .child('lastMsg')
+          .set(_textMsg);
     }
   }
 

@@ -117,6 +117,8 @@ class _CommunityIntialInfoCreateScreenState
         name: chName,
         nameImg: '',
         user: element,
+        msgPen: 0,
+        lastMsg: '',
       );
       _chOne.set(_chPayload.toMap());
     });

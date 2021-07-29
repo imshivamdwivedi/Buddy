@@ -7,6 +7,7 @@ import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
+import 'package:buddy/user/widgets/badge.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -130,31 +131,39 @@ class _UserHomeState extends State<UserHome> {
                       SizedBox(
                         width: size.width * 0.03,
                       ),
-                      IconButton(
-                        onPressed: () {
-                          // showDialog(
-                          //   barrierDismissible: false,
-                          //   context: context,
-                          //   builder: (context) =>
-                          //       new CustomLoader().buildLoader(context),
-                          // );
+                      Consumer<ChatListProvider>(
+                        builder: (context, value, child) =>
+                            value.totalMsgCount != 0
+                                ? Badge(
+                                    child: child!,
+                                    value: value.totalMsgCount.toString())
+                                : child!,
+                        child: IconButton(
+                          onPressed: () {
+                            // showDialog(
+                            //   barrierDismissible: false,
+                            //   context: context,
+                            //   builder: (context) =>
+                            //       new CustomLoader().buildLoader(context),
+                            // );
 
-                          Navigator.of(context)
-                              .pushNamed(UserChatList.routeName);
+                            Navigator.of(context)
+                                .pushNamed(UserChatList.routeName);
 
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ChangeNotifierProvider(
-                          //       create: (ctx) => ChatListProvider(),
-                          //       child: UserChatList(),
-                          //     ),
-                          //   ),
-                          // );
-                        },
-                        icon: Icon(
-                          Icons.message,
-                          size: size.height * 0.05,
-                          color: Colors.black87,
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ChangeNotifierProvider(
+                            //       create: (ctx) => ChatListProvider(),
+                            //       child: UserChatList(),
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                          icon: Icon(
+                            Icons.message,
+                            size: size.height * 0.05,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
                     ],
