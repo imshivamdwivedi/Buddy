@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/models/community.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
@@ -19,9 +19,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static const routeName = "/user-profile";

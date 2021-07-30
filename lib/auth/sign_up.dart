@@ -1,7 +1,7 @@
 import 'package:buddy/auth/verify.dart';
 import 'package:buddy/components/custom_snackbar.dart';
-import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +61,7 @@ class _SignUpState extends State<SignUp> {
       );
       return;
     }
-    //---( Password and email Pattern )---//
+    //H//---( Password and email Pattern )---//
     try {
       await _auth.createUserWithEmailAndPassword(
           email: _email, password: _pass);
@@ -74,7 +74,7 @@ class _SignUpState extends State<SignUp> {
 
       print(msg);
       print(error.code);
-      //----( Error Code Output )-----//
+      //H//----( Error Code Output )-----//
       switch (error.code) {
         case 'invalid-email':
           msg = 'Please provide a valid email!';
@@ -96,7 +96,7 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  //----( Password Pattern Matcher )-----//
+  //H//----( Password Pattern Matcher )-----//
   bool validateStructure(String value) {
     String pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
