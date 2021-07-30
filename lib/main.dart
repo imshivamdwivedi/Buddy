@@ -4,28 +4,28 @@ import 'package:buddy/auth/verify.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/group_message_name_provider.dart';
+import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
+import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:provider/provider.dart';
-import 'package:buddy/chat/screens/user_chat_list.dart';
-import 'package:buddy/onboarder/onboarder_widget.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
-import 'package:buddy/user/screens/user_intial_info.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:buddy/user/screens/user_genre.dart';
+import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:provider/provider.dart';
+
 import 'chat/group/screens/create_community_screen.dart';
 
 Map<int, Color> colorCodes = {
