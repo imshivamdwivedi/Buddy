@@ -215,7 +215,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     });
               },
               icon: Icon(
-                Icons.view_headline,
+                Icons.format_list_bulleted,
                 color: Colors.black87,
               )),
         ],

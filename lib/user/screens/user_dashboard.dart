@@ -219,7 +219,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = UserProfileScreen();
+                        currentScreen = GroupDetailScreen();
                         currentTab = 3;
                       });
                     },
