@@ -1,6 +1,6 @@
+import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/date_time_stamp.dart';

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:buddy/constants.dart';
-
 import 'package:flutter/material.dart';
 
 class GroupDetailScreen extends StatefulWidget {

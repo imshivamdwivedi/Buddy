@@ -2,19 +2,28 @@ import 'package:buddy/user/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 
 class HomeSearchProvider with ChangeNotifier {
-  final List<HomeSearchHelper> allUsers = [];
+  final List<HomeSearchHelper> allUsersList = [];
+  List<HomeSearchHelper> filteredUsersList = [];
 
   List<HomeSearchHelper> get suggestedUsers {
-    return [...allUsers];
+    return [...filteredUsersList];
   }
 
   void setAllUsers(List<HomeSearchHelper> users) {
-    allUsers.clear();
-    allUsers.addAll(users);
+    allUsersList.clear();
+    allUsersList.addAll(users);
     notifyListeners();
+  }
+
+  void updateQuery(String query) {
+    if (query == '') {
+      filteredUsersList = [...allUsersList];
+      notifyListeners();
+    }
   }
 }
 
+//H://---( Here Model Class )---//
 class HomeSearchHelper with ChangeNotifier {
   UserModel userModel;
   bool isPending;

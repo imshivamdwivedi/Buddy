@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:buddy/chat/models/chat_list_model.dart';
+import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';

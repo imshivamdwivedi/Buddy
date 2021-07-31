@@ -50,6 +50,14 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      Provider.of<HomeSearchProvider>(context, listen: false).updateQuery('');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     //final Size size = MediaQuery.of(context).size;
     final userData = Provider.of<HomeSearchProvider>(context);
@@ -59,6 +67,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
           title: TextField(
+            onChanged: (value) => print('VALUE    =>   $value'),
             autofocus: true,
             decoration: InputDecoration(
               focusColor: Colors.black87,

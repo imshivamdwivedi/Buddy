@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';

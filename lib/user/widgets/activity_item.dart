@@ -1,6 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:intl/intl.dart';
 
 class ActivityItem extends StatefulWidget {

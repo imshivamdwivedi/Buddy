@@ -1,7 +1,7 @@
 import 'package:buddy/chat/group/screens/community_intial_info_screen.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
-import 'package:buddy/constants.dart';
 import 'package:buddy/chat/models/friends_model.dart';
+import 'package:buddy/constants.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
