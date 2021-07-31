@@ -30,7 +30,7 @@ import 'chat/group/screens/create_community_screen.dart';
 
 Map<int, Color> colorCodes = {
   50: Color.fromRGBO(0, 0, 0, .1),
-  100: Color.fromRGBO(0, 0, 0, .2),
+  100: Color.fromRGBO(0, 0, 0, 0.2),
   200: Color.fromRGBO(0, 0, 0, .3),
   300: Color.fromRGBO(0, 0, 0, .4),
   400: Color.fromRGBO(0, 0, 0, .5),

@@ -1,3 +1,4 @@
+import 'package:buddy/chat/models/choice.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -23,45 +24,78 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
   final _auth = FirebaseAuth.instance;
   final _searchController = TextEditingController();
 
+  List<Choice> choices = [
+    Choice(
+        'Buddies',
+        Container(
+          child: Center(child: Text("DMS")),
+        )),
+    Choice(
+        'Communities',
+        Container(
+          child: Center(
+            child: Text("Groups"),
+          ),
+        )),
+    Choice(
+        'Events',
+        Container(
+          child: Center(
+            child: Text("Groups"),
+          ),
+        )),
+  ];
+
   @override
   Widget build(BuildContext context) {
     //final Size size = MediaQuery.of(context).size;
     final userData = Provider.of<HomeSearchProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: TextField(
-              autofocus: true,
-              decoration: InputDecoration(
-                focusColor: Colors.black87,
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search Buddy',
-              ),
+    return DefaultTabController(
+      length: choices.length,
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
+          title: TextField(
+            autofocus: true,
+            decoration: InputDecoration(
+              focusColor: Colors.black87,
+
+              hintText: 'Search Buddy',
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                value: userData.suggestedUsers[index],
-                child: Consumer<HomeSearchHelper>(
-                  builder: (_, user, child) => userCard(user.userModel, user),
+          backgroundColor: kPrimaryColor,
+          // centerTitle: true,
+          bottom: TabBar(
+            indicatorColor: Colors.grey,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            isScrollable: true,
+            tabs: choices.map((Choice choice) {
+              return Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Tab(
+                  text: choice.title,
                 ),
-              ),
-              itemCount: userData.suggestedUsers.length,
-            ),
+              );
+            }).toList(),
           ),
-        ],
+        ),
+        body: Column(
+          children: [
+
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                  value: userData.suggestedUsers[index],
+                  child: Consumer<HomeSearchHelper>(
+                    builder: (_, user, child) => userCard(user.userModel, user),
+                  ),
+                ),
+                itemCount: userData.suggestedUsers.length,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
