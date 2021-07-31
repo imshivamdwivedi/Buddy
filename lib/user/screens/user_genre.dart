@@ -5,10 +5,11 @@ import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/social_icons.dart';
-import 'package:flutter/material.dart';
+import '../../constants.dart';
 
 class UserGenre extends StatefulWidget {
   static const routeName = '/user-genre';
@@ -29,18 +30,22 @@ class _UserGenreState extends State<UserGenre> {
     if (finalList.isEmpty) {
       CustomSnackbar().showFloatingFlushbar(
         context: context,
-        message: 'Please choose a genre!',
+        message: 'Please choose a genre !',
         color: Colors.red,
       );
       return;
     }
-    //---( Saving Data to user Profile )---//
+    //H://---( Saving Data to user Profile )---//
+    final _userName = Provider.of<UserGenreProvider>(context, listen: false)
+        .userName
+        .replaceAll(' ', '')
+        .toLowerCase();
     String finVal = '';
     for (int i = 0; i < finalList.length; i++) {
       if (i == 0) {
         finVal += finalList[i].id;
       } else {
-        finVal += '+' + finalList[i].id;
+        finVal += splitCode + finalList[i].id;
       }
     }
     final _user = _auth.currentUser;
@@ -51,6 +56,15 @@ class _UserGenreState extends State<UserGenre> {
         .child('userGenre');
     _refUser.set(null);
     await _refUser.set(finVal);
+
+    //H://---( Saving Searchable Tag )---//
+    final _refUserTag = _firebaseDatabase
+        .reference()
+        .child('Users')
+        .child(_user.uid)
+        .child('searchTag');
+    _refUserTag.set(null);
+    await _refUserTag.set(_userName + splitCode + finVal);
 
     //---( Updating Firebase Database )---//
     finalList.forEach((element) async {

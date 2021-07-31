@@ -1,4 +1,3 @@
-import 'package:buddy/chat/group/screens/community_intial_info_screen.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
@@ -8,7 +7,6 @@ import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
 import 'package:buddy/user/widgets/badge.dart';
-import 'package:buddy/utils/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -36,10 +34,11 @@ class _UserHomeState extends State<UserHome> {
   void _updateSearch(BuildContext context) async {
     final _user = _auth.currentUser;
     final List<String> friendsId = [];
-    friendsId.add(_user!.uid);
     final List<String> requestsId = [];
-    final _friendsDB =
-        FirebaseDatabase.instance.reference().child('Friends').child(_user.uid);
+    final _friendsDB = FirebaseDatabase.instance
+        .reference()
+        .child('Friends')
+        .child(_user!.uid);
     await _friendsDB.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         Map map = snapshot.value;
@@ -66,10 +65,13 @@ class _UserHomeState extends State<UserHome> {
       if (snapshot.value != null) {
         Map map = snapshot.value;
         map.values.forEach((element) {
-          if (!friendsId.contains(element['id'])) {
+          if (element['id'] != _user.uid) {
             final userM = UserModel.fromMap(element);
             final homeU = HomeSearchHelper(
-                userModel: userM, isFriend: requestsId.contains(userM.id));
+              userModel: userM,
+              isPending: requestsId.contains(userM.id),
+              isFriend: friendsId.contains(userM.id),
+            );
             allUsersList.add(homeU);
           }
         });

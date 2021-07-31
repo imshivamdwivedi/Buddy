@@ -8,6 +8,8 @@ class UserModel {
   String id;
   String userImg;
   String userBio;
+  String userGenre;
+  String searchTag;
   bool profile;
 
   UserModel({
@@ -20,6 +22,8 @@ class UserModel {
     this.id = '',
     this.userBio = '',
     this.userImg = '',
+    this.userGenre = '',
+    this.searchTag = '',
     required this.profile,
   });
 
@@ -34,6 +38,8 @@ class UserModel {
       id: map['id'],
       userImg: map['userImg'],
       userBio: map['userBio'],
+      userGenre: map['userGenre'],
+      searchTag: map['searchTag'],
       profile: map['profile'],
     );
   }
@@ -48,6 +54,8 @@ class UserModel {
         'id': id,
         'userImg': userImg,
         'userBio': userBio,
+        'userGenre': userGenre,
+        'searchTag': searchTag,
         'profile': profile,
       };
 }

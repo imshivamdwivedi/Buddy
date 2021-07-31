@@ -13,29 +13,21 @@ class HomeSearchProvider with ChangeNotifier {
     allUsers.addAll(users);
     notifyListeners();
   }
-  // void addUser(HomeSearchHelper model) {
-  //   allUsers.add(model);
-  //   notifyListeners();
-  // }
-
-  // void updateUser(HomeSearchHelper model) {
-  //   final index = allUsers.indexWhere((element) => element.id == model.id);
-  //   allUsers[index] = model;
-  //   notifyListeners();
-  // }
 }
 
 class HomeSearchHelper with ChangeNotifier {
   UserModel userModel;
+  bool isPending;
   bool isFriend;
 
   HomeSearchHelper({
     required this.userModel,
+    this.isPending = false,
     this.isFriend = false,
   });
 
   void toggleFriend() {
-    isFriend = true;
+    isPending = true;
     notifyListeners();
   }
 }
