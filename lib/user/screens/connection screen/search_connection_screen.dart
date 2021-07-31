@@ -67,7 +67,9 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
           title: TextField(
-            onChanged: (value) => print('VALUE    =>   $value'),
+            onChanged: (value) =>
+                Provider.of<HomeSearchProvider>(context, listen: false)
+                    .updateQuery(value),
             autofocus: true,
             decoration: InputDecoration(
               focusColor: Colors.black87,
@@ -160,7 +162,6 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 2),
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       InkWell(
                         onTap: () {
