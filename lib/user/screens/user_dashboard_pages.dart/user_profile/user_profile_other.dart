@@ -1,16 +1,15 @@
 import 'dart:ui';
+
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
-import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
 class OtherUserProfileScreen extends StatefulWidget {
   final userId;
@@ -124,28 +123,28 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                   spreadRadius: 1)
                             ],
                           ),
-                          child: CachedNetworkImage(
-                            width: 80.0,
-                            height: 80.0,
-                            fit: BoxFit.cover,
-                            imageUrl: _userModel.userImg,
-                            placeholder: (context, url) {
-                              return Center(
-                                  child: new SpinKitWave(
-                                type: SpinKitWaveType.start,
-                                size: 20,
-                                color: Colors.black87,
-                              ));
-                            },
-                            errorWidget: (context, url, error) {
-                              return Center(
-                                  child: new SpinKitWave(
-                                type: SpinKitWaveType.start,
-                                size: 20,
-                                color: Colors.black87,
-                              ));
-                            },
-                          ),
+                          child: _userModel.userImg == ''
+                              ? NamedProfileAvatar().profileAvatar(
+                                  _userModel.firstName.substring(0, 1), 80.0)
+                              : CachedNetworkImage(
+                                  width: 80.0,
+                                  height: 80.0,
+                                  fit: BoxFit.cover,
+                                  imageUrl: _userModel.userImg,
+                                  placeholder: (context, url) {
+                                    return Center(
+                                        child: new SpinKitWave(
+                                      type: SpinKitWaveType.start,
+                                      size: 20,
+                                      color: Colors.black87,
+                                    ));
+                                  },
+                                  errorWidget: (context, url, error) {
+                                    return NamedProfileAvatar().profileAvatar(
+                                        _userModel.firstName.substring(0, 1),
+                                        80.0);
+                                  },
+                                ),
                         ),
                       ),
                     ],
