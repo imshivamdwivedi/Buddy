@@ -85,59 +85,66 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         if (userData.allTags.isNotEmpty && userData.allTags[0] != '')
           Container(
             height: 40,
-            child: Row(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: userData.allTags.length,
-                  itemBuilder: (ctx, index) => Center(
-                      child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Card(
-                        color: kPrimaryColor,
-                        elevation: 5,
-                        margin: EdgeInsets.all(5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 6,
-                              ),
-                              Text(userData.allTags[index]),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  var prevText = _chipController.text;
-                                  prevText = prevText
-                                      .replaceAll(userData.allTags[index], '')
-                                      .trim();
-                                  _chipController.clearComposing();
-                                  _chipController.text = prevText;
-                                  Provider.of<HomeSearchProvider>(context,
-                                          listen: false)
-                                      .removeTag(index);
-                                },
-                                child: Icon(Icons.close),
-                              ),
-                            ],
+            child: Expanded(
+              child: Row(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: userData.allTags.length,
+                    itemBuilder: (ctx, index) => Center(
+                        child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Card(
+                          color: kPrimaryColor,
+                          elevation: 5,
+                          margin: EdgeInsets.all(5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 6,
+                                ),
+                                Text(userData.allTags[index]),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    var prevText = _chipController.text.trim();
+                                    prevText = prevText
+                                        .replaceFirst(
+                                            userData.allTags[index], '')
+                                        .trim();
+                                    prevText = prevText.replaceAll('  ', ' ');
+                                    _chipController.clearComposing();
+                                    _chipController.text = prevText;
+                                    _chipController.selection =
+                                        TextSelection.collapsed(
+                                            offset: prevText.length);
+                                    Provider.of<HomeSearchProvider>(context,
+                                            listen: false)
+                                        .updateQuery(prevText);
+                                  },
+                                  child: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                    ],
-                  )),
-                ),
-              ],
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    )),
+                  ),
+                ],
+              ),
             ),
           ),
         Container(

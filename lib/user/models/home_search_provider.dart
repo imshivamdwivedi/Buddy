@@ -14,11 +14,6 @@ class HomeSearchProvider with ChangeNotifier {
     return [...tags];
   }
 
-  void removeTag(int index) {
-    tags.removeAt(index);
-    notifyListeners();
-  }
-
   void setAllUsers(List<HomeSearchHelper> users) {
     allUsersList.clear();
     allUsersList.addAll(users);
