@@ -36,6 +36,7 @@ class HomeSearchProvider with ChangeNotifier {
   }
 
   void addToFilteredList(HomeSearchHelper model) {
+    //TODO: Update Counters System Filters Applicable
     if (!filteredUsersList.contains(model)) {
       filteredUsersList.add(model);
     }
