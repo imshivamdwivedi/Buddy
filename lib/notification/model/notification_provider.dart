@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:buddy/notification/model/notification_model.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';

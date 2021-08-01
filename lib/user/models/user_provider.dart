@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -48,6 +49,10 @@ class UserProvider with ChangeNotifier {
 
   String get getUserBio {
     return _userModel.userBio;
+  }
+
+  String get getUserGenre {
+    return _userModel.userGenre;
   }
 
   @override

@@ -49,7 +49,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future getImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source, imageQuality: 25);
-    File? cropedImage = await ImageCropper.cropImage(
+    File? croppedImage = await ImageCropper.cropImage(
       sourcePath: pickedFile!.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.ratio16x9,
@@ -63,14 +63,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       androidUiSettings: androidUiSettingsLoked(),
     );
     setState(() {
-      if (cropedImage != null) {
+      if (croppedImage != null) {
         Navigator.pop(context);
-        if ((cropedImage.lengthSync() / 1024) < 256) {
+        if ((croppedImage.lengthSync() / 1024) < 256) {
           showDialog(
               barrierDismissible: false,
               context: context,
               builder: (context) => new CustomLoader().buildLoader(context));
-          uploadFile(File(cropedImage.path));
+          uploadFile(File(croppedImage.path));
         } else {
           CustomSnackbar().showFloatingFlushbar(
             context: context,
@@ -98,8 +98,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     if (userImg != '') {
       //---( Delete Previous Image )---//
-      final storageRefrence = FirebaseStorage.instance.refFromURL(userImg);
-      await storageRefrence.delete();
+      final storageReference = FirebaseStorage.instance.refFromURL(userImg);
+      await storageReference.delete();
     }
 
     final fileName = FileSupport().getFileNameWithoutExtension(_file);
@@ -152,20 +152,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  void _updateName() {
+  void _updateName() async {
     final _firstName = _firstNameController.text;
     final _secondName = _secondNameController.text;
+    final _fullName = _firstName + _secondName;
+    final _allGenre =
+        Provider.of<UserProvider>(context, listen: false).getUserGenre;
+
+    if (_firstName.isEmpty || _secondName.isEmpty) {
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Name field can not be Empty',
+        color: Colors.red,
+      );
+      return;
+    }
 
     final _uid = _auth.currentUser!.uid;
     final _refUser = _firebaseDatabase.reference().child('Users').child(_uid);
 
-    _refUser.child('firstName').set(_firstName);
-    _refUser.child('lastName').set(_secondName);
+    await _refUser.child('firstName').set(_firstName);
+    await _refUser.child('lastName').set(_secondName);
 
-    Navigator.of(context).pop("Name updated successfully");
+    //H://---( Updating User Search Tag )---//
+    final _refUserTag =
+        _firebaseDatabase.reference().child('Users').child(_uid);
+
+    await _refUserTag
+        .child('searchTag')
+        .set(_fullName.toLowerCase() + splitCode + _allGenre);
+
+    Navigator.of(context).pop('Name updated Successfully');
   }
 
-  void _AddBio() {
+  void _addBio() {
     final _firstName = _bioController.text;
 
     final _uid = _auth.currentUser!.uid;
@@ -519,7 +539,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     "Update",
                     style: TextStyle(color: Colors.black),
                   ),
-                  _AddBio,
+                  _addBio,
                   ''),
             ],
           ),
