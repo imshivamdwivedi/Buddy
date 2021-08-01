@@ -30,6 +30,8 @@ class ConnectionHandler {
       name: myName,
       nameImg: Provider.of<UserProvider>(context, listen: false).getUserImg,
       nameId: _auth.currentUser!.uid,
+      collegeName:
+          Provider.of<UserProvider>(context, listen: false).getUserCollege,
       uid: targetId,
       eventId: '',
       createdAt: DateTimeStamp().getDate(),

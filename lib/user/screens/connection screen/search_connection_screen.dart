@@ -93,20 +93,24 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             }).toList(),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: userData.suggestedUsers.length,
-                itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                  value: userData.suggestedUsers[index],
-                  child: Consumer<HomeSearchHelper>(
-                    builder: (_, user, child) => userCard(user.userModel, user),
+        body: Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: userData.suggestedUsers.length,
+                  itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                    value: userData.suggestedUsers[index],
+                    child: Consumer<HomeSearchHelper>(
+                      builder: (_, user, child) =>
+                          userCard(user.userModel, user),
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

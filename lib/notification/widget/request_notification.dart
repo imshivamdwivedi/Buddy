@@ -113,6 +113,7 @@ class _RequestNotificationState extends State<RequestNotification> {
           //---( Accepting Request at Target Side )---//
           final friendPayload = FriendsModel(
             fid: _fid,
+            collegeName: userCurrent.getUserCollege,
             uid: _auth.currentUser!.uid,
             name: userCurrent.getUserName,
             userImg: userCurrent.getUserImg,
@@ -124,6 +125,7 @@ class _RequestNotificationState extends State<RequestNotification> {
           //---( Accepting Request at Sender Side )---//
           final myPayload = FriendsModel(
             fid: _fid,
+            collegeName: widget.notificationModel.collegeName,
             uid: widget.notificationModel.nameId,
             name: widget.notificationModel.name,
             userImg: widget.notificationModel.nameImg,
@@ -157,6 +159,7 @@ class _RequestNotificationState extends State<RequestNotification> {
             name: widget.notificationModel.name,
             title: '#NAME started following you !',
             nameId: widget.notificationModel.nameId,
+            collegeName: widget.notificationModel.collegeName,
             nameImg: '',
             uid: '',
             eventId: '',
