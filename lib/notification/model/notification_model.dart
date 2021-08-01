@@ -6,10 +6,12 @@ class NotificationModel {
   String nameImg;
   String nameId;
   String uid;
+  String collegeName;
   String eventId;
   int createdAt;
 
   NotificationModel({
+    required this.collegeName,
     required this.id,
     required this.type,
     required this.title,
@@ -23,6 +25,7 @@ class NotificationModel {
 
   factory NotificationModel.fromMap(Map map) {
     return NotificationModel(
+      collegeName: map['collegeName'],
       id: map['id'],
       type: map['type'],
       title: map['title'],
@@ -44,6 +47,7 @@ class NotificationModel {
         'nameId': nameId,
         'uid': uid,
         'eventId': eventId,
+        'collegeName': collegeName,
         'createdAt': createdAt,
       };
 }

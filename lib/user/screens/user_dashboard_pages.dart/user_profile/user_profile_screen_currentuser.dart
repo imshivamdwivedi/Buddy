@@ -8,6 +8,7 @@ import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_provider.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/connection_view_screen.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -36,15 +37,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   static const kListHeight = 150.0;
 
-  // Widget _buildHorizontalList() => SizedBox(
-  //       height: kListHeight,
-  //       child: ListView.builder(
-  //         scrollDirection: Axis.horizontal,
-  //         itemCount: 20,
-  //         itemBuilder: (_, index) =>
-  //             CTile(heading: 'Hip Hop', subheading: '623 Beats'),
-  //       ),
-  //     );
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _secondNameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
@@ -629,7 +622,10 @@ class BottomSheet extends StatelessWidget {
             leading: new Icon(Icons.group),
             title: new Text('Connections'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserConnectionViewScreen()),
+              );
             },
           ),
           ListTile(
