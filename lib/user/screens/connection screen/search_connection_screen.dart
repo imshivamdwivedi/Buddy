@@ -72,7 +72,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             isScrollable: true,
             tabs: choices.map((Choice choice) {
               return Padding(
-                padding: EdgeInsets.only(left: 5, right: 5),
+                padding: EdgeInsets.only(left: 15, right: 15),
                 child: Tab(
                   text: choice.title,
                 ),
@@ -80,21 +80,24 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             }).toList(),
           ),
         ),
-        body: Column(
-          children: [
+        body: Container(
+          margin: EdgeInsets.only(top:10),
+          child: Column(
+            children: [
 
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                  value: userData.suggestedUsers[index],
-                  child: Consumer<HomeSearchHelper>(
-                    builder: (_, user, child) => userCard(user.userModel, user),
+              Expanded(
+                child: ListView.builder(
+                  itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                    value: userData.suggestedUsers[index],
+                    child: Consumer<HomeSearchHelper>(
+                      builder: (_, user, child) => userCard(user.userModel, user),
+                    ),
                   ),
+                  itemCount: userData.suggestedUsers.length,
                 ),
-                itemCount: userData.suggestedUsers.length,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
