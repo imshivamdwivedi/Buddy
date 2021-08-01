@@ -1,5 +1,4 @@
 import 'package:buddy/chat/models/chat_list_model.dart';
-import 'package:buddy/chat/models/choice.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
@@ -26,47 +25,17 @@ class SearchConnectionScreen extends StatefulWidget {
 
 class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
   final _auth = FirebaseAuth.instance;
-
-  List<Choice> choices = [
-    Choice(
-        'Buddies',
-        Container(
-          child: Center(child: Text("DMS")),
-        )),
-    Choice(
-        'Communities',
-        Container(
-          child: Center(
-            child: Text("Groups"),
-          ),
-        )),
-    Choice(
-        'Events',
-        Container(
-          child: Center(
-            child: Text("Groups"),
-          ),
-        )),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      Provider.of<HomeSearchProvider>(context, listen: false).updateQuery('');
-    });
-  }
+  final _chipController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    //final Size size = MediaQuery.of(context).size;
-    final userData = Provider.of<HomeSearchProvider>(context);
     return DefaultTabController(
-      length: choices.length,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
           title: TextField(
+            controller: _chipController,
             onChanged: (value) =>
                 Provider.of<HomeSearchProvider>(context, listen: false)
                     .updateQuery(value),
@@ -83,38 +52,119 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
             isScrollable: true,
-            tabs: choices.map((Choice choice) {
-              return Padding(
-                padding: EdgeInsets.only(left: 15, right: 15),
-                child: Tab(
-                  text: choice.title,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: userData.suggestedUsers.length,
-                  itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-                    value: userData.suggestedUsers[index],
-                    child: Consumer<HomeSearchHelper>(
-                      builder: (_, user, child) =>
-                          userCard(user.userModel, user),
-                    ),
-                  ),
-                ),
+            tabs: [
+              Tab(
+                text: 'Buddies',
+              ),
+              Tab(
+                text: 'Communities',
+              ),
+              Tab(
+                text: 'Events',
               )
             ],
           ),
         ),
+        body: TabBarView(
+          children: [
+            buildBuddiesList(context),
+            Text('Community Dhund Lo'),
+            Text('Events Dhund Lo'),
+          ],
+        ),
       ),
     );
   }
+
+  //H://---( Buddies List Widget )---//
+  Widget buildBuddiesList(BuildContext context) {
+    final userData = Provider.of<HomeSearchProvider>(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        if (userData.allTags.isNotEmpty && userData.allTags[0] != '')
+          Container(
+            height: 40,
+            child: Expanded(
+              child: Row(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: userData.allTags.length,
+                    itemBuilder: (ctx, index) => Center(
+                        child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Card(
+                          color: kPrimaryColor,
+                          elevation: 5,
+                          margin: EdgeInsets.all(5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 6,
+                                ),
+                                Text(userData.allTags[index]),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    var prevText = _chipController.text.trim();
+                                    prevText = prevText
+                                        .replaceFirst(
+                                            userData.allTags[index], '')
+                                        .trim();
+                                    prevText = prevText.replaceAll('  ', ' ');
+                                    _chipController.clearComposing();
+                                    _chipController.text = prevText;
+                                    _chipController.selection =
+                                        TextSelection.collapsed(
+                                            offset: prevText.length);
+                                    Provider.of<HomeSearchProvider>(context,
+                                            listen: false)
+                                        .updateQuery(prevText);
+                                  },
+                                  child: Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    )),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        Container(
+          child: Expanded(
+            child: ListView.builder(
+              itemCount: userData.suggestedUsers.length,
+              itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                value: userData.suggestedUsers[index],
+                child: Consumer<HomeSearchHelper>(
+                  builder: (_, user, child) => userCard(user.userModel, user),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  //H://---( Communities List Widget )---//
 
   Widget userCard(UserModel userModel, HomeSearchHelper user) {
     return Card(
@@ -207,7 +257,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
                       SizedBox(
                         width: 10,
                       ),
-                      _buildChip("4.5"),
+                      _buildChip('4.5', Icons.star),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.2,
                       ),
@@ -229,6 +279,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
 
   Widget _buildChip(
     String label,
+    IconData iconData,
   ) {
     return Container(
       width: label.length * 14,
@@ -250,7 +301,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             Padding(padding: const EdgeInsets.symmetric(horizontal: 1.0)),
             InkWell(
               child: Icon(
-                Icons.star,
+                iconData,
                 color: Colors.amber,
                 size: 18,
               ),
