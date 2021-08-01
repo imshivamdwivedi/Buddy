@@ -37,7 +37,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   static const kListHeight = 150.0;
 
-
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _secondNameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
@@ -624,7 +623,8 @@ class BottomSheet extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UserConnectionViewScreen()),
+                MaterialPageRoute(
+                    builder: (context) => UserConnectionViewScreen()),
               );
             },
           ),

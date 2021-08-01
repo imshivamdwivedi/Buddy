@@ -3,56 +3,43 @@ import 'package:flutter/material.dart';
 
 class HomeSearchProvider with ChangeNotifier {
   final List<HomeSearchHelper> allUsersList = [];
-  List<HomeSearchHelper> filteredUsersList = [];
+  List<HomeSearchHelper> filteredList = [];
 
   List<HomeSearchHelper> get suggestedUsers {
-    return [...filteredUsersList];
+    return [...filteredList];
   }
 
   void setAllUsers(List<HomeSearchHelper> users) {
     allUsersList.clear();
     allUsersList.addAll(users);
+    filteredList.clear();
+    filteredList.addAll(users);
     notifyListeners();
   }
 
   void updateQuery(String query) {
-    filteredUsersList.clear();
+    filteredList = allUsersList;
     final filters = query.trim().split(' ');
-    if (query == '') {
-      filteredUsersList = [...allUsersList];
-      notifyListeners();
-      return;
-    }
 
     filters.forEach((filter) {
-      allUsersList.forEach((element) {
-        if (element.userModel.searchTag.contains(filter)) {
-          addToFilteredList(element);
-        }
-      });
+      final newFilter = filteredList
+          .where((element) => element.userModel.searchTag.contains(filter))
+          .toList();
+      filteredList = newFilter;
     });
 
     notifyListeners();
-  }
-
-  void addToFilteredList(HomeSearchHelper model) {
-    //TODO: Update Counters System Filters Applicable
-    if (!filteredUsersList.contains(model)) {
-      filteredUsersList.add(model);
-    }
   }
 }
 
 //H://---( Here Model Class )---//
 class HomeSearchHelper with ChangeNotifier {
   UserModel userModel;
-  //int count;
   bool isPending;
   bool isFriend;
 
   HomeSearchHelper({
     required this.userModel,
-    //this.count = 0,
     this.isPending = false,
     this.isFriend = false,
   });
@@ -61,8 +48,4 @@ class HomeSearchHelper with ChangeNotifier {
     isPending = true;
     notifyListeners();
   }
-
-  // void updateCount(int newCount) {
-  //   count = newCount;
-  // }
 }
