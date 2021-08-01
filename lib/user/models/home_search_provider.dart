@@ -4,9 +4,19 @@ import 'package:flutter/material.dart';
 class HomeSearchProvider with ChangeNotifier {
   final List<HomeSearchHelper> allUsersList = [];
   List<HomeSearchHelper> filteredList = [];
+  List<String> tags = [];
 
   List<HomeSearchHelper> get suggestedUsers {
     return [...filteredList];
+  }
+
+  List<String> get allTags {
+    return [...tags];
+  }
+
+  void removeTag(int index) {
+    tags.removeAt(index);
+    notifyListeners();
   }
 
   void setAllUsers(List<HomeSearchHelper> users) {
@@ -18,8 +28,10 @@ class HomeSearchProvider with ChangeNotifier {
   }
 
   void updateQuery(String query) {
+    tags.clear();
     filteredList = allUsersList;
     final filters = query.trim().split(' ');
+    tags = filters;
 
     filters.forEach((filter) {
       final newFilter = filteredList

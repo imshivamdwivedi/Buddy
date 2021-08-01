@@ -25,16 +25,17 @@ class SearchConnectionScreen extends StatefulWidget {
 
 class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
   final _auth = FirebaseAuth.instance;
+  final _chipController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    //final Size size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
           title: TextField(
+            controller: _chipController,
             onChanged: (value) =>
                 Provider.of<HomeSearchProvider>(context, listen: false)
                     .updateQuery(value),
@@ -79,14 +80,75 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
   Widget buildBuddiesList(BuildContext context) {
     final userData = Provider.of<HomeSearchProvider>(context);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: userData.suggestedUsers.length,
-            itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-              value: userData.suggestedUsers[index],
-              child: Consumer<HomeSearchHelper>(
-                builder: (_, user, child) => userCard(user.userModel, user),
+        if (userData.allTags.isNotEmpty && userData.allTags[0] != '')
+          Container(
+            height: 40,
+            child: Row(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: userData.allTags.length,
+                  itemBuilder: (ctx, index) => Center(
+                      child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Card(
+                        color: kPrimaryColor,
+                        elevation: 5,
+                        margin: EdgeInsets.all(5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(userData.allTags[index]),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  var prevText = _chipController.text;
+                                  prevText = prevText
+                                      .replaceAll(userData.allTags[index], '')
+                                      .trim();
+                                  _chipController.clearComposing();
+                                  _chipController.text = prevText;
+                                  Provider.of<HomeSearchProvider>(context,
+                                          listen: false)
+                                      .removeTag(index);
+                                },
+                                child: Icon(Icons.close),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ],
+                  )),
+                ),
+              ],
+            ),
+          ),
+        Container(
+          child: Expanded(
+            child: ListView.builder(
+              itemCount: userData.suggestedUsers.length,
+              itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+                value: userData.suggestedUsers[index],
+                child: Consumer<HomeSearchHelper>(
+                  builder: (_, user, child) => userCard(user.userModel, user),
+                ),
               ),
             ),
           ),
