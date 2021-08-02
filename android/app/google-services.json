@@ -23,14 +23,6 @@
           }
         },
         {
-          "client_id": "234716677617-ve9dbnpbao6d0mvrqf88e24os9jc7air.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.buddy",
-            "certificate_hash": "ddd88a6c56efb89350cfab84c94a466429527019"
-          }
-        },
-        {
           "client_id": "234716677617-a18sggeenm85kms1eoe09gbvsh7l6s4u.apps.googleusercontent.com",
           "client_type": 3
         }

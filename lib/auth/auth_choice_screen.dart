@@ -1,6 +1,7 @@
-import 'package:buddy/auth/sign_up.dart';
+import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -47,10 +48,16 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
       );
 
       try {
-        await _auth.signInWithCredential(credential);
+        final UserCredential _userCred =
+            await _auth.signInWithCredential(credential);
         print('Signed User Up Using Google !');
-        _saveUserData(_auth.currentUser!.email.toString());
-        Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
+        //---( Check Here if user Already Exists )---//
+        if (_userCred.additionalUserInfo!.isNewUser) {
+          _saveUserData(_auth.currentUser!.email.toString());
+          Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
+        } else {
+          Navigator.of(context).pushReplacementNamed(UserDashBoard.routeName);
+        }
         //return 'signin#done';
       } on FirebaseAuthException catch (_) {
         var msg = 'An error Occured, Please try again!';
@@ -121,7 +128,7 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                           primary: Colors.black.withOpacity(0.5),
                           padding: EdgeInsets.all(15)),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(SignUp.routeName);
+                        Navigator.of(context).pushNamed(SignIn.routeName);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

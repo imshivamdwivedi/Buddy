@@ -69,15 +69,17 @@ class _SignUpState extends State<SignUp> {
       _saveUserData(_email);
       Navigator.of(context).pushNamed(VerifyEmail.routeName);
       //return 'signin#done';
-    } on PlatformException catch (error) {
+    } on FirebaseAuthException catch (error) {
       var msg = 'An error Occured, Please try again!';
-
       print(msg);
       print(error.code);
       //H//----( Error Code Output )-----//
       switch (error.code) {
         case 'invalid-email':
           msg = 'Please provide a valid email!';
+          break;
+        case 'email-already-in-use':
+          msg = 'This email is Already in use !';
           break;
         default:
           msg = 'An error Occured, Please try again!';
@@ -117,44 +119,44 @@ class _SignUpState extends State<SignUp> {
     await _refUser.set(userModel.toMap());
   }
 
-  void _signinUserByGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+  // void _signinUserByGoogle() async {
+  //   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
+  //   final GoogleSignInAccount? googleSignInAccount =
+  //       await googleSignIn.signIn();
 
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
+  //   if (googleSignInAccount != null) {
+  //     final GoogleSignInAuthentication googleSignInAuthentication =
+  //         await googleSignInAccount.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
+  //     final AuthCredential credential = GoogleAuthProvider.credential(
+  //       accessToken: googleSignInAuthentication.accessToken,
+  //       idToken: googleSignInAuthentication.idToken,
+  //     );
 
-      try {
-        await _auth.signInWithCredential(credential);
-        print('Signed User Up Using Google !');
-        _saveUserData(_auth.currentUser!.email.toString());
-        Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
-        //return 'signin#done';
-      } on FirebaseAuthException catch (_) {
-        var msg = 'An error Occured, Please try again!';
-        print(msg);
-        CustomSnackbar().showFloatingFlushbar(
-          context: context,
-          message: msg,
-          color: Colors.red,
-        );
-        //return msg;
-        return;
-      } catch (e) {
-        print(e);
-        //return 'signin#error';
-        return;
-      }
-    }
-  }
+  //     try {
+  //       await _auth.signInWithCredential(credential);
+  //       print('Signed User Up Using Google !');
+  //       _saveUserData(_auth.currentUser!.email.toString());
+  //       Navigator.of(context).pushReplacementNamed(UserIntialInfo.routeName);
+  //       //return 'signin#done';
+  //     } on FirebaseAuthException catch (_) {
+  //       var msg = 'An error Occured, Please try again!';
+  //       print(msg);
+  //       CustomSnackbar().showFloatingFlushbar(
+  //         context: context,
+  //         message: msg,
+  //         color: Colors.red,
+  //       );
+  //       //return msg;
+  //       return;
+  //     } catch (e) {
+  //       print(e);
+  //       //return 'signin#error';
+  //       return;
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

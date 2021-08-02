@@ -471,7 +471,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text('${index}')
+                                    Text('$index')
                                   ],
                                 ));
                           }),

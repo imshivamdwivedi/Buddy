@@ -1,3 +1,4 @@
+import 'package:buddy/auth/auth_choice_screen.dart';
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/auth/verify.dart';
@@ -108,6 +109,7 @@ class MyApp extends StatelessWidget {
           SearchScreen.routeName: (cts) => SearchScreen(),
           SearchConnectionScreen.routeName: (ctx) => SearchConnectionScreen(),
           CreateCommunityScreen.routeName: (ctx) => CreateCommunityScreen(),
+          AuthChoiceScreen.routeName: (ctx) => AuthChoiceScreen(),
         },
       ),
     );
@@ -124,7 +126,7 @@ class AuthWrapper extends StatelessWidget {
           Navigator.of(context).maybePop();
           return UserDashBoard();
         } else {
-          return SignIn();
+          return AuthChoiceScreen();
         }
       },
     );
