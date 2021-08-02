@@ -2,7 +2,6 @@ import 'package:buddy/chat/group/screens/create_community_screen.dart';
 import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
-import 'package:buddy/chat/models/choice.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
@@ -124,25 +123,30 @@ class _UserChatListState extends State<UserChatList> {
             Navigator.of(context).pushNamed(CreateCommunityScreen.routeName);
           },
         ),
-        appBar: TabBar(
-          isScrollable: false,
-          indicatorColor: Colors.black,
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey,
-          tabs: [
-            Container(
-              width: yourWidth,
-              child: Tab(
-                text: 'Chats',
-              ),
+        appBar: PreferredSize(
+          child: SafeArea(
+            child: TabBar(
+              isScrollable: false,
+              indicatorColor: Colors.black,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Container(
+                  width: yourWidth,
+                  child: Tab(
+                    text: 'Chats',
+                  ),
+                ),
+                Container(
+                  width: yourWidth,
+                  child: Tab(
+                    text: 'Communities',
+                  ),
+                ),
+              ],
             ),
-            Container(
-              width: yourWidth,
-              child: Tab(
-                text: 'Communities',
-              ),
-            ),
-          ],
+          ),
+          preferredSize: Size.fromHeight(kToolbarHeight),
         ),
         body: Column(children: [
           Container(

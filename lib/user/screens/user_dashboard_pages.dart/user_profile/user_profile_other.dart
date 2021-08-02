@@ -23,9 +23,8 @@ class OtherUserProfileScreen extends StatefulWidget {
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
-  static const kListHeight = 150.0;
   final _userDB = FirebaseDatabase.instance.reference().child('Users');
-  UserModel _userModel = new UserModel(profile: true);
+  UserModel _userModel = UserModel(profile: true);
 
   Widget _buildChip(
     String label,
@@ -124,8 +123,24 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                             ],
                           ),
                           child: _userModel.userImg == ''
-                              ? NamedProfileAvatar().profileAvatar(
-                                  _userModel.firstName.substring(0, 1), 80.0)
+                              ? _userModel.firstName == ''
+                                  ? Container(
+                                      height: 80.0,
+                                      width: 80.0,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.grey[600],
+                                        child: Center(
+                                          child: new SpinKitWave(
+                                            type: SpinKitWaveType.start,
+                                            size: 20,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : NamedProfileAvatar().profileAvatar(
+                                      _userModel.firstName.substring(0, 1),
+                                      80.0)
                               : CachedNetworkImage(
                                   width: 80.0,
                                   height: 80.0,
@@ -133,16 +148,18 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                   imageUrl: _userModel.userImg,
                                   placeholder: (context, url) {
                                     return Center(
-                                        child: new SpinKitWave(
-                                      type: SpinKitWaveType.start,
-                                      size: 20,
-                                      color: Colors.black87,
-                                    ));
+                                      child: new SpinKitWave(
+                                        type: SpinKitWaveType.start,
+                                        size: 20,
+                                        color: Colors.black87,
+                                      ),
+                                    );
                                   },
                                   errorWidget: (context, url, error) {
                                     return NamedProfileAvatar().profileAvatar(
-                                        _userModel.firstName.substring(0, 1),
-                                        80.0);
+                                      _userModel.firstName.substring(0, 1),
+                                      80.0,
+                                    );
                                   },
                                 ),
                         ),

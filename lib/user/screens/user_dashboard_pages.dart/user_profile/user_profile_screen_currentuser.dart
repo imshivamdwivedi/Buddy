@@ -619,6 +619,7 @@ class BottomSheet extends StatelessWidget {
             leading: new Icon(Icons.group),
             title: new Text('Connections'),
             onTap: () {
+              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(
