@@ -1,3 +1,4 @@
+import 'package:buddy/auth/phone_auth.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';

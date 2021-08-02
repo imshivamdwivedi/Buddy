@@ -8,9 +8,11 @@ class RoundedInputField extends StatelessWidget {
   final bool val;
   final double sizeRatio;
   final TextEditingController controller;
+  final TextInputType textInputType;
 
   RoundedInputField({
     this.icon = Icons.person,
+    this.textInputType = TextInputType.emailAddress,
     this.sizeRatio = 0.8,
     required this.text,
     this.val = false,
@@ -21,6 +23,7 @@ class RoundedInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextField(
+        keyboardType: textInputType,
         controller: controller,
         obscureText: val,
         cursorColor: Colors.black,

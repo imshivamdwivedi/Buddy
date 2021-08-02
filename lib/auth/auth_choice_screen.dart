@@ -1,3 +1,4 @@
+import 'package:buddy/auth/phone_auth.dart';
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/user/models/user_model.dart';
@@ -156,7 +157,9 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                       style: ElevatedButton.styleFrom(
                           primary: Colors.black.withOpacity(0.5),
                           padding: EdgeInsets.all(15)),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(PhoneAuth.routeName);
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
