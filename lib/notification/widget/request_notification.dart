@@ -2,6 +2,7 @@ import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/notification_model.dart';
+import 'package:buddy/user/models/follower_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -111,6 +112,54 @@ class _RequestNotificationState extends State<RequestNotification> {
           );
         } else if (text == 'Confirm') {
           final userCurrent = Provider.of<UserProvider>(context, listen: false);
+          final _followDB =
+              FirebaseDatabase.instance.reference().child('Following');
+
+          //---( Making Follower Model Also --> For Acceptor after Checking )---//
+          _followDB
+              .child(_auth.currentUser!.uid)
+              .orderByChild('uid')
+              .equalTo(widget.notificationModel.nameId)
+              .once()
+              .then((DataSnapshot snapshot) {
+            if (snapshot.value == null) {
+              final _foid1 = _followDB.child(_auth.currentUser!.uid).push().key;
+              final _followModel1 = FollowerModel(
+                name: widget.notificationModel.nameId,
+                foid: _foid1,
+                uid: widget.notificationModel.nameId,
+                userImg: widget.notificationModel.nameImg,
+              );
+              _followDB
+                  .child(_auth.currentUser!.uid)
+                  .child(_foid1)
+                  .set(_followModel1.toMap());
+            }
+          });
+
+          //---( Making Follower Model Also --> For Sender after Checking )---//
+          _followDB
+              .child(widget.notificationModel.nameId)
+              .orderByChild('uid')
+              .equalTo(_auth.currentUser!.uid)
+              .once()
+              .then((DataSnapshot snapshot) {
+            if (snapshot.value == null) {
+              final _foid2 =
+                  _followDB.child(widget.notificationModel.nameId).push().key;
+              final _followModel2 = FollowerModel(
+                name: userCurrent.getUserName,
+                foid: _foid2,
+                uid: userCurrent.getUserId,
+                userImg: userCurrent.getUserImg,
+              );
+              _followDB
+                  .child(widget.notificationModel.nameId)
+                  .child(_foid2)
+                  .set(_followModel2.toMap());
+            }
+          });
+
           //---( Accepting Request )---//
           final _acceptDB =
               FirebaseDatabase.instance.reference().child('Friends');
@@ -124,6 +173,7 @@ class _RequestNotificationState extends State<RequestNotification> {
             uid: _auth.currentUser!.uid,
             name: userCurrent.getUserName,
             userImg: userCurrent.getUserImg,
+            isFollowing: true,
           );
           _acceptDB
               .child(widget.notificationModel.nameId)
@@ -136,6 +186,7 @@ class _RequestNotificationState extends State<RequestNotification> {
             uid: widget.notificationModel.nameId,
             name: widget.notificationModel.name,
             userImg: widget.notificationModel.nameImg,
+            isFollowing: true,
           );
           _acceptDB
               .child(_auth.currentUser!.uid)
