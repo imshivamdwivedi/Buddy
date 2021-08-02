@@ -146,7 +146,13 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.3),
+                                                  0.1),
+                                          roundButton('Message'),
+                                          SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.02),
                                           roundButton('Following')
                                         ],
                                       ),
