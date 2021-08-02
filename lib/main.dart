@@ -1,4 +1,5 @@
 import 'package:buddy/auth/auth_choice_screen.dart';
+import 'package:buddy/auth/phone_auth.dart';
 import 'package:buddy/auth/sign_in.dart';
 import 'package:buddy/auth/sign_up.dart';
 import 'package:buddy/auth/verify.dart';
@@ -99,6 +100,7 @@ class MyApp extends StatelessWidget {
           '/': (ctx) => AuthWrapper(),
           SignIn.routeName: (ctx) => SignIn(),
           SignUp.routeName: (ctx) => SignUp(),
+          PhoneAuth.routeName: (ctx) => PhoneAuth(),
           VerifyEmail.routeName: (ctx) => VerifyEmail(),
           UserGenre.routeName: (ctx) => UserGenre(),
           UserIntialInfo.routeName: (ctx) => UserIntialInfo(),
