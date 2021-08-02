@@ -23,12 +23,51 @@ class SearchConnectionScreen extends StatefulWidget {
   _SearchConnectionScreenState createState() => _SearchConnectionScreenState();
 }
 
-class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
+class _SearchConnectionScreenState extends State<SearchConnectionScreen>
+    with TickerProviderStateMixin {
   final _auth = FirebaseAuth.instance;
+  String appSearchTitle = 'Buddies';
   final _chipController = TextEditingController();
+  late TabController _appTitleController;
+
+  @override
+  void initState() {
+    super.initState();
+    _appTitleController = new TabController(length: 3, vsync: this);
+    _appTitleController.addListener(_textTitleChanger);
+  }
+
+  void _textTitleChanger() {
+    switch (_appTitleController.index) {
+      case 0:
+        setState(() {
+          appSearchTitle = 'Buddies';
+        });
+        break;
+      case 1:
+        setState(() {
+          appSearchTitle = 'Communities';
+        });
+        break;
+      case 2:
+        setState(() {
+          appSearchTitle = 'Events';
+        });
+        break;
+      default:
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _appTitleController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double yourWidth = width / 3;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -42,30 +81,41 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
             autofocus: true,
             decoration: InputDecoration(
               focusColor: Colors.black87,
-              hintText: 'Search Buddy',
+              hintText: 'Search $appSearchTitle',
             ),
           ),
           backgroundColor: kPrimaryColor,
           // centerTitle: true,
           bottom: TabBar(
+            controller: _appTitleController,
             indicatorColor: Colors.grey,
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
-            isScrollable: true,
+            isScrollable: false,
             tabs: [
-              Tab(
-                text: 'Buddies',
+              Container(
+                width: yourWidth,
+                child: Tab(
+                  text: 'Buddies',
+                ),
               ),
-              Tab(
-                text: 'Communities',
+              Container(
+                width: yourWidth,
+                child: Tab(
+                  text: 'Communities',
+                ),
               ),
-              Tab(
-                text: 'Events',
-              )
+              Container(
+                width: yourWidth,
+                child: Tab(
+                  text: 'Events',
+                ),
+              ),
             ],
           ),
         ),
         body: TabBarView(
+          controller: _appTitleController,
           children: [
             buildBuddiesList(context),
             Text('Community Dhund Lo'),
@@ -85,66 +135,63 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen> {
         if (userData.allTags.isNotEmpty && userData.allTags[0] != '')
           Container(
             height: 40,
-            child: Expanded(
-              child: Row(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: userData.allTags.length,
-                    itemBuilder: (ctx, index) => Center(
-                        child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Card(
-                          color: kPrimaryColor,
-                          elevation: 5,
-                          margin: EdgeInsets.all(5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Container(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 6,
-                                ),
-                                Text(userData.allTags[index]),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    var prevText = _chipController.text.trim();
-                                    prevText = prevText
-                                        .replaceFirst(
-                                            userData.allTags[index], '')
-                                        .trim();
-                                    prevText = prevText.replaceAll('  ', ' ');
-                                    _chipController.clearComposing();
-                                    _chipController.text = prevText;
-                                    _chipController.selection =
-                                        TextSelection.collapsed(
-                                            offset: prevText.length);
-                                    Provider.of<HomeSearchProvider>(context,
-                                            listen: false)
-                                        .updateQuery(prevText);
-                                  },
-                                  child: Icon(Icons.close),
-                                ),
-                              ],
-                            ),
+            child: Row(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: userData.allTags.length,
+                  itemBuilder: (ctx, index) => Center(
+                      child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Card(
+                        color: kPrimaryColor,
+                        elevation: 5,
+                        margin: EdgeInsets.all(5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(userData.allTags[index]),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  var prevText = _chipController.text.trim();
+                                  prevText = prevText
+                                      .replaceFirst(userData.allTags[index], '')
+                                      .trim();
+                                  prevText = prevText.replaceAll('  ', ' ');
+                                  _chipController.clearComposing();
+                                  _chipController.text = prevText;
+                                  _chipController.selection =
+                                      TextSelection.collapsed(
+                                          offset: prevText.length);
+                                  Provider.of<HomeSearchProvider>(context,
+                                          listen: false)
+                                      .updateQuery(prevText);
+                                },
+                                child: Icon(Icons.close),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                      ],
-                    )),
-                  ),
-                ],
-              ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ],
+                  )),
+                ),
+              ],
             ),
           ),
         Container(

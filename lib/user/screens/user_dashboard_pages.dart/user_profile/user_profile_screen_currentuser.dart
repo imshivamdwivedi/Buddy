@@ -35,8 +35,6 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   UploadTask? task;
 
-  static const kListHeight = 150.0;
-
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _secondNameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
@@ -192,7 +190,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     _refUser.child('userBio').set(_firstName);
 
-    Navigator.of(context).pop("Bio added successfully");
+    Navigator.of(context).pop('Bio added successfully');
   }
 
   @override

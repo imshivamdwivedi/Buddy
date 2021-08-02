@@ -1,8 +1,15 @@
+import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
+import 'package:buddy/chat/models/dm_channel_model.dart';
+import 'package:buddy/chat/models/friends_model.dart';
+import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -17,6 +24,7 @@ class UserConnectionViewScreen extends StatefulWidget {
 }
 
 class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     final userConnections = Provider.of<ChatSearchProvider>(context).allFriends;
@@ -147,13 +155,15 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
                                                       .size
                                                       .width *
                                                   0.1),
-                                          roundButton('Message'),
+                                          roundButton('Message',
+                                              userConnections[index]),
                                           SizedBox(
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
                                                   0.02),
-                                          roundButton('Following')
+                                          roundButton('Following',
+                                              userConnections[index]),
                                         ],
                                       ),
                                     ),
@@ -189,7 +199,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
     );
   }
 
-  Widget roundButton(String text) {
+  Widget roundButton(String text, FriendsModel model) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
           primary: Colors.black87,
@@ -200,7 +210,11 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         text,
         style: TextStyle(color: Colors.white),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (text == 'Message') {
+          _createNewDmChannel(model);
+        }
+      },
     );
   }
 
@@ -236,5 +250,84 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         ),
       ),
     );
+  }
+
+  void _createNewDmChannel(FriendsModel model) async {
+    //---( Checking if Channel Already Exist )---//
+    bool _isNewChannel = true;
+    String chidPrev = '';
+    final _checkDb = FirebaseDatabase.instance
+        .reference()
+        .child('Channels')
+        .child(_auth.currentUser!.uid);
+    await _checkDb
+        .orderByChild('user')
+        .equalTo(model.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        _isNewChannel = false;
+        print(_isNewChannel);
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          chidPrev = element['chid'];
+        });
+      }
+    });
+    if (_isNewChannel) {
+      final tempNameProvider =
+          Provider.of<UserProvider>(context, listen: false);
+      //---( Creating New Channel )---//
+      final _channelDb = FirebaseDatabase.instance.reference().child('Chats');
+      final _chid = _channelDb.push().key;
+      final newChannel = DmChannel(
+        chid: _chid,
+        type: 'DM',
+        users: _auth.currentUser!.uid + "+" + model.uid,
+      );
+      await _channelDb.child(_chid).set(newChannel.toMap());
+
+      //---( Creating Channel History )---//
+      final _chRecord = FirebaseDatabase.instance
+          .reference()
+          .child('Channels')
+          .child(_auth.currentUser!.uid)
+          .child(_chid);
+      final _channel = ChatListModel(
+        chid: _chid,
+        name: model.name,
+        nameImg: model.userImg,
+        user: model.uid,
+        msgPen: 0,
+        lastMsg: '',
+      );
+      await _chRecord.set(_channel.toMap());
+
+      final _chRecord1 = FirebaseDatabase.instance
+          .reference()
+          .child('Channels')
+          .child(model.uid)
+          .child(_chid);
+      final _channel1 = ChatListModel(
+        chid: _chid,
+        name: tempNameProvider.getUserName,
+        nameImg: tempNameProvider.getUserImg,
+        user: _auth.currentUser!.uid,
+        msgPen: 0,
+        lastMsg: '',
+      );
+      await _chRecord1.set(_channel1.toMap());
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => DmChatScreen(
+                chatRoomId: _chid,
+                userId: model.uid,
+              )));
+    } else {
+      //---( Opening Previous Channel )---//
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) =>
+              DmChatScreen(chatRoomId: chidPrev, userId: model.uid)));
+    }
   }
 }
