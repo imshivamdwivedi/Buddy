@@ -22,6 +22,8 @@ class ConnectionHandler {
         .child('Requests')
         .child(_auth.currentUser!.uid);
     final String _rid = _refReq.push().key;
+    final _otherDB =
+        _firebaseDatabase.reference().child('Requests').child(targetId);
 
     final notPayload = NotificationModel(
       id: _rid,
@@ -38,8 +40,15 @@ class ConnectionHandler {
     );
 
     await _refReq.child(_rid).set(notPayload.toMap());
+
+    //---( Saving Request at My Side )---//
     await _userDB.child(_rid).child('uid').set(targetId);
     await _userDB.child(_rid).child('rid').set(_rid);
+
+    //---( Saving Request at Other Side )---//
+    await _otherDB.child(_rid).child('uid').set(_auth.currentUser!.uid);
+    await _otherDB.child(_rid).child('rid').set(_rid);
+
     //---( Confirming )---//
     user.toggleFriend();
     CustomSnackbar().showFloatingFlushbar(

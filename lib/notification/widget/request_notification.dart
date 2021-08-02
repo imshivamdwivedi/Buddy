@@ -90,6 +90,13 @@ class _RequestNotificationState extends State<RequestNotification> {
               .child('Notification')
               .child(_auth.currentUser!.uid);
           _deleteDB.child(widget.notificationModel.id).set(null);
+
+          final _deleteReqDB = FirebaseDatabase.instance
+              .reference()
+              .child('Requests')
+              .child(_auth.currentUser!.uid);
+          _deleteReqDB.child(widget.notificationModel.id).set(null);
+
           //---( From Sender Side )---//
           final _clearDB = FirebaseDatabase.instance
               .reference()
@@ -140,6 +147,13 @@ class _RequestNotificationState extends State<RequestNotification> {
               .child('Notification')
               .child(_auth.currentUser!.uid);
           _deleteDB.child(widget.notificationModel.id).set(null);
+
+          final _deleteReqDB = FirebaseDatabase.instance
+              .reference()
+              .child('Requests')
+              .child(_auth.currentUser!.uid);
+          _deleteReqDB.child(widget.notificationModel.id).set(null);
+
           //---( From Sender Side )---//
           final _clearDB = FirebaseDatabase.instance
               .reference()
