@@ -106,24 +106,12 @@ class _UserChatListState extends State<UserChatList> {
     }
   }
 
-  List<Choice> choices = [
-    Choice(
-        'Chats',
-        Container(
-          child: Center(child: Text("DMS")),
-        )),
-    Choice(
-        'Communities',
-        Container(
-          child: Center(
-            child: Text("Groups"),
-          ),
-        )),
-  ];
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double yourWidth = width / 2;
     return DefaultTabController(
-      length: choices.length,
+      length: 2,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         floatingActionButton: FloatingActionButton(
@@ -136,18 +124,25 @@ class _UserChatListState extends State<UserChatList> {
             Navigator.of(context).pushNamed(CreateCommunityScreen.routeName);
           },
         ),
-        appBar: new TabBar(
+        appBar: TabBar(
+          isScrollable: false,
           indicatorColor: Colors.black,
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
-          tabs: choices.map((Choice choice) {
-            return Container(
-              margin: EdgeInsets.only(top: 50),
+          tabs: [
+            Container(
+              width: yourWidth,
               child: Tab(
-                text: choice.title,
+                text: 'Chats',
               ),
-            );
-          }).toList(),
+            ),
+            Container(
+              width: yourWidth,
+              child: Tab(
+                text: 'Communities',
+              ),
+            ),
+          ],
         ),
         body: Column(children: [
           Container(

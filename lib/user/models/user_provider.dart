@@ -55,6 +55,10 @@ class UserProvider with ChangeNotifier {
     return _userModel.userGenre;
   }
 
+  String get getUserId {
+    return _userModel.id;
+  }
+
   @override
   void dispose() {
     _userStream.cancel();

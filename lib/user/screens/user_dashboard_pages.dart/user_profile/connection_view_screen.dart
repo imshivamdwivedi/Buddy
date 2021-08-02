@@ -4,6 +4,7 @@ import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/follower_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -49,131 +50,120 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         ),
         userConnections.length > 0
             ? SliverList(
-                delegate: SliverChildBuilderDelegate(
-                    (context, index) => Card(
-                          color: kPrimaryColor,
-                          elevation: 5,
-                          margin: EdgeInsets.all(5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: Container(
-                                      child: userConnections[index].userImg ==
-                                              ''
-                                          ? NamedProfileAvatar().profileAvatar(
-                                              userConnections[index]
-                                                  .name
-                                                  .substring(0, 1),
-                                              80.0)
-                                          : CachedNetworkImage(
-                                              width: 80.0,
-                                              height: 80.0,
-                                              fit: BoxFit.cover,
-                                              imageUrl: userConnections[index]
-                                                  .userImg,
-                                              placeholder: (context, url) {
-                                                return Container(
-                                                  color: Colors.grey,
-                                                  child: Center(
-                                                      child: new SpinKitWave(
-                                                    type: SpinKitWaveType.start,
-                                                    size: 20,
-                                                    color: Colors.black87,
-                                                  )),
-                                                );
-                                              },
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  NamedProfileAvatar()
-                                                      .profileAvatar(
-                                                          userConnections[index]
-                                                              .name
-                                                              .substring(0, 1),
-                                                          80.0),
-                                            ),
-                                    ),
-                                  ),
-                                ],
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final model = userConnections[index];
+                  return Card(
+                    color: kPrimaryColor,
+                    elevation: 5,
+                    margin: EdgeInsets.all(5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(40),
+                              child: Container(
+                                child: model.userImg == ''
+                                    ? NamedProfileAvatar().profileAvatar(
+                                        model.name.substring(0, 1), 80.0)
+                                    : CachedNetworkImage(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                        imageUrl: model.userImg,
+                                        placeholder: (context, url) {
+                                          return Container(
+                                            color: Colors.grey,
+                                            child: Center(
+                                                child: new SpinKitWave(
+                                              type: SpinKitWaveType.start,
+                                              size: 20,
+                                              color: Colors.black87,
+                                            )),
+                                          );
+                                        },
+                                        errorWidget: (context, url, error) =>
+                                            NamedProfileAvatar().profileAvatar(
+                                                model.name.substring(0, 1),
+                                                80.0),
+                                      ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 2),
+                                child: Row(
                                   children: [
-                                    Container(
-                                      margin: EdgeInsets.symmetric(vertical: 2),
-                                      child: Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OtherUserProfileScreen(
-                                                      userId:
-                                                          userConnections[index]
-                                                              .uid,
-                                                    ),
-                                                  ));
-                                            },
-                                            child: Text(
-                                              userConnections[index].name,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OtherUserProfileScreen(
+                                                userId: model.uid,
                                               ),
-                                            ),
-                                          ),
-                                        ],
+                                            ));
+                                      },
+                                      child: Text(
+                                        model.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(vertical: 2),
-                                      child: Row(
-                                        // mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text(userConnections[index]
-                                              .collegeName),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                        vertical: 2,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          _buildChip("4.5"),
-                                          SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1),
-                                          roundButton('Message',
-                                              userConnections[index]),
-                                          SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.02),
-                                          roundButton('Following',
-                                              userConnections[index]),
-                                        ],
-                                      ),
-                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 2),
+                                child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(model.collegeName),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 2,
+                                ),
+                                child: Row(
+                                  children: [
+                                    _buildChip("4.5"),
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1),
+                                    roundButton('Message', model),
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.02),
+                                    roundButton(
+                                        model.isFollowing
+                                            ? 'Following'
+                                            : 'Follow',
+                                        model),
                                   ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                    childCount: userConnections.length),
+                      ],
+                    ),
+                  );
+                }, childCount: userConnections.length),
               )
             : SliverToBoxAdapter(
                 child: Center(
@@ -202,17 +192,22 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
   Widget roundButton(String text, FriendsModel model) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          primary: Colors.black87,
+          primary: text == 'Following' ? Colors.white : Colors.black87,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
           )),
       child: Text(
         text,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(
+            color: text == 'Following' ? Colors.black87 : Colors.white),
       ),
       onPressed: () {
         if (text == 'Message') {
           _createNewDmChannel(model);
+        } else if (text == 'Following') {
+          _unFollowUser(model);
+        } else if (text == 'Follow') {
+          _followUser(model);
         }
       },
     );
@@ -329,5 +324,56 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
           builder: (ctx) =>
               DmChatScreen(chatRoomId: chidPrev, userId: model.uid)));
     }
+  }
+
+  void _unFollowUser(FriendsModel model) {
+    //---( Unfollowing from main tree )---//
+    final _unfollowDB =
+        FirebaseDatabase.instance.reference().child('Following');
+    _unfollowDB
+        .child(_auth.currentUser!.uid)
+        .orderByChild('uid')
+        .equalTo(model.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final followModel = FollowerModel.fromMap(element);
+          _unfollowDB
+              .child(_auth.currentUser!.uid)
+              .child(followModel.foid)
+              .set(null);
+        });
+      }
+    });
+    //---( Unfollowing from Friends Tree )---//
+    final _unfollowConnection = FirebaseDatabase.instance
+        .reference()
+        .child('Friends')
+        .child(_auth.currentUser!.uid);
+    _unfollowConnection.child(model.fid).child('isFollowing').set(false);
+  }
+
+  void _followUser(FriendsModel model) {
+    //---( Following from main tree )---//
+    final _followDB = FirebaseDatabase.instance
+        .reference()
+        .child('Following')
+        .child(_auth.currentUser!.uid);
+    final _foid = _followDB.push().key;
+    final followModel = FollowerModel(
+      name: model.name,
+      foid: _foid,
+      uid: model.uid,
+      userImg: model.userImg,
+    );
+    _followDB.child(_foid).set(followModel.toMap());
+    //---( Following from Friends Tree )---//
+    final _unfollowConnection = FirebaseDatabase.instance
+        .reference()
+        .child('Friends')
+        .child(_auth.currentUser!.uid);
+    _unfollowConnection.child(model.fid).child('isFollowing').set(true);
   }
 }
