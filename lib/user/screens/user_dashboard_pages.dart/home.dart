@@ -3,7 +3,6 @@ import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
-import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
 import 'package:buddy/user/widgets/badge.dart';
@@ -32,53 +31,7 @@ class _UserHomeState extends State<UserHome> {
   }
 
   void _updateSearch(BuildContext context) async {
-    final _user = _auth.currentUser;
-    final List<String> friendsId = [];
-    final List<String> requestsId = [];
-    final _friendsDB = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_user!.uid);
-    await _friendsDB.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          friendsId.add(element['uid']);
-        });
-      }
-    });
-    final _requestDB = FirebaseDatabase.instance
-        .reference()
-        .child('Requests')
-        .child(_user.uid);
-    await _requestDB.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          requestsId.add(element['uid']);
-        });
-      }
-    });
-    final List<HomeSearchHelper> allUsersList = [];
-    final _searchDB = FirebaseDatabase.instance.reference().child('Users');
-    await _searchDB.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          if (element['id'] != _user.uid) {
-            final userM = UserModel.fromMap(element);
-            final homeU = HomeSearchHelper(
-              userModel: userM,
-              isPending: requestsId.contains(userM.id),
-              isFriend: friendsId.contains(userM.id),
-            );
-            allUsersList.add(homeU);
-          }
-        });
-      }
-    });
-    Provider.of<HomeSearchProvider>(context, listen: false)
-        .setAllUsers(allUsersList);
+    Provider.of<HomeSearchProvider>(context);
   }
 
   @override
@@ -86,110 +39,111 @@ class _UserHomeState extends State<UserHome> {
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-        appBar: PreferredSize(
-          child: SafeArea(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: size.width * 0.01),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        child: SearchBar(
-                          text: 'Search buddies',
-                          icon: Icons.search,
-                          val: true,
-                          func: () {
-                            Navigator.of(context)
-                                .pushNamed(SearchConnectionScreen.routeName)
-                                .then((_) {
-                              _updateSearch(context);
-                            });
-                          },
+      appBar: PreferredSize(
+        child: SafeArea(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                      child: SearchBar(
+                        text: 'Search buddies',
+                        icon: Icons.search,
+                        val: true,
+                        func: () {
+                          Navigator.of(context)
+                              .pushNamed(SearchConnectionScreen.routeName)
+                              .then((_) {
+                            _updateSearch(context);
+                          });
+                        },
+                      ),
+                    ),
+                    // IconButton(
+                    //   onPressed: () {
+                    // Navigator.of(context)
+                    //     .pushNamed(SearchConnectionScreen.routeName)
+                    //     .then((_) {
+                    //   _updateSearch(context);
+                    // });
+                    //   },
+                    //   icon: Icon(
+                    //     Icons.search,
+                    //     color: Colors.black87,
+                    //   ),
+                    // ),
+                    SizedBox(
+                      width: size.width * 0.03,
+                    ),
+                    Consumer<ChatListProvider>(
+                      builder: (context, value, child) =>
+                          value.totalMsgCount != 0
+                              ? Badge(
+                                  child: child!,
+                                  value: value.totalMsgCount.toString())
+                              : child!,
+                      child: IconButton(
+                        onPressed: () {
+                          // showDialog(
+                          //   barrierDismissible: false,
+                          //   context: context,
+                          //   builder: (context) =>
+                          //       new CustomLoader().buildLoader(context),
+                          // );
+
+                          Navigator.of(context)
+                              .pushNamed(UserChatList.routeName);
+
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => ChangeNotifierProvider(
+                          //       create: (ctx) => ChatListProvider(),
+                          //       child: UserChatList(),
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                        icon: Icon(
+                          Icons.message,
+                          size: size.height * 0.05,
+                          color: Colors.black87,
                         ),
                       ),
-                      // IconButton(
-                      //   onPressed: () {
-                      // Navigator.of(context)
-                      //     .pushNamed(SearchConnectionScreen.routeName)
-                      //     .then((_) {
-                      //   _updateSearch(context);
-                      // });
-                      //   },
-                      //   icon: Icon(
-                      //     Icons.search,
-                      //     color: Colors.black87,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        width: size.width * 0.03,
-                      ),
-                      Consumer<ChatListProvider>(
-                        builder: (context, value, child) =>
-                            value.totalMsgCount != 0
-                                ? Badge(
-                                    child: child!,
-                                    value: value.totalMsgCount.toString())
-                                : child!,
-                        child: IconButton(
-                          onPressed: () {
-                            // showDialog(
-                            //   barrierDismissible: false,
-                            //   context: context,
-                            //   builder: (context) =>
-                            //       new CustomLoader().buildLoader(context),
-                            // );
-
-                            Navigator.of(context)
-                                .pushNamed(UserChatList.routeName);
-
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ChangeNotifierProvider(
-                            //       create: (ctx) => ChatListProvider(),
-                            //       child: UserChatList(),
-                            //     ),
-                            //   ),
-                            // );
-                          },
-                          icon: Icon(
-                            Icons.message,
-                            size: size.height * 0.05,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-                ],
-              ),
+                    ),
+                  ],
+                )),
+              ],
             ),
           ),
-          preferredSize: Size.fromHeight(kToolbarHeight + size.height * 0.01),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height -
-                    kToolbarHeight +
-                    size.height * 0.01 -
-                    kBottomNavigationBarHeight,
-                child: FirebaseAnimatedList(
-                  query: _refAct,
-                  itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                      Animation<double> animation, int index) {
-                    Map data = snapshot.value;
-                    return ActivityItem(
-                      dataModel: ActivityModel.fromMap(data),
-                    );
-                  },
-                ),
+        preferredSize: Size.fromHeight(kToolbarHeight + size.height * 0.01),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height -
+                  kToolbarHeight +
+                  size.height * 0.01 -
+                  kBottomNavigationBarHeight,
+              child: FirebaseAnimatedList(
+                query: _refAct,
+                itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                    Animation<double> animation, int index) {
+                  Map data = snapshot.value;
+                  return ActivityItem(
+                    dataModel: ActivityModel.fromMap(data),
+                  );
+                },
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

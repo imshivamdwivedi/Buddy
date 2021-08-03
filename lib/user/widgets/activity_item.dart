@@ -93,7 +93,7 @@ class _ActivityItemState extends State<ActivityItem> {
                           child: Row(
                             children: [
                               Text(
-                                widget.dataModel.creatorName,
+                                widget.dataModel.title,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
