@@ -184,7 +184,6 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _foid1 =
                   _followerDB.child(_auth.currentUser!.uid).push().key;
               final _followModel1 = FollowerModel(
-                collegeName: userCurrent.getUserCollege,
                 name: widget.notificationModel.name,
                 foid: _foid1,
                 collegeName: widget.notificationModel.collegeName,
