@@ -9,6 +9,8 @@ import 'package:buddy/chat/models/group_message_name_provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
+import 'package:buddy/user/models/follower_provider.dart';
+import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -86,6 +88,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => GroupMessageProviderName(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => FollowerProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => FollowingProvider(),
         ),
       ],
       child: MaterialApp(

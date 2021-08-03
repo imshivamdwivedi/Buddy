@@ -652,9 +652,29 @@ class BottomSheet extends StatelessWidget {
             leading: new Icon(Icons.logout),
             title: new Text('Logout'),
             onTap: () {
-              Navigator.pop(context);
-              Phoenix.rebirth(context);
-              FirebaseAuth.instance.signOut();
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text('Are you sure you want to Logout !'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('No'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Phoenix.rebirth(context);
+                        FirebaseAuth.instance.signOut();
+                      },
+                      child: Text('Yes'),
+                    ),
+                  ],
+                  elevation: 16.0,
+                ),
+              );
             },
           ),
         ],

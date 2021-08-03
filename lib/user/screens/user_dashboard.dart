@@ -1,9 +1,10 @@
-import 'package:buddy/auth/phone_auth.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
+import 'package:buddy/user/models/follower_provider.dart';
+import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/calender.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
@@ -90,9 +91,11 @@ class _UserDashBoardState extends State<UserDashBoard> {
         currentTab = 1;
         currentScreen = UserCalender();
       }
-      Provider.of<ChatSearchProvider>(context, listen: false);
       Provider.of<UserProvider>(context, listen: false);
+      Provider.of<ChatSearchProvider>(context, listen: false);
       Provider.of<ChatListProvider>(context, listen: false);
+      Provider.of<FollowerProvider>(context, listen: false);
+      Provider.of<FollowingProvider>(context, listen: false);
       init = false;
     }
     return Scaffold(

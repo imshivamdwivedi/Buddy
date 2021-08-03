@@ -205,7 +205,27 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         if (text == 'Message') {
           _createNewDmChannel(model);
         } else if (text == 'Following') {
-          _unFollowUser(model);
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Are you sure you want to unfollow ${model.name} !'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _unFollowUser(model);
+                  },
+                  child: Text('Yes'),
+                ),
+              ],
+              elevation: 16.0,
+            ),
+          );
         } else if (text == 'Follow') {
           _followUser(model);
         }
@@ -370,6 +390,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         .child('Friends')
         .child(_auth.currentUser!.uid);
     _unfollowConnection.child(model.fid).child('isFollowing').set(false);
+    Navigator.of(context).pop();
   }
 
   void _followUser(FriendsModel model) {
