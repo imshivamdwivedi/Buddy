@@ -119,11 +119,27 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
           children: [
             buildBuddiesList(context),
             Text('Community Dhund Lo'),
-            Text('Events Dhund Lo'),
+            buildEventList(context),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildEventList(BuildContext context) {
+    return Container(
+        // child: Expanded(
+        //   child: ListView.builder(
+        //     itemCount: userData.suggestedUsers.length,
+        //     itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
+        //       value: userData.suggestedUsers[index],
+        //       child: Consumer<HomeSearchHelper>(
+        //         builder: (_, user, child) => userCard(user.userModel, user),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        );
   }
 
   //H://---( Buddies List Widget )---//

@@ -2,7 +2,6 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/notification/widget/message_notification.dart';
 import 'package:buddy/notification/widget/request_notification.dart';
-import 'package:buddy/user/screens/connection%20screen/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,9 +50,10 @@ class _UserNotificationState extends State<UserNotification> {
           } else {
             return Column(
               children: [
-                // EventCard(),
                 Container(
-                  height: 600,
+                  height: MediaQuery.of(context).size.height -
+                      kToolbarHeight -
+                      kBottomNavigationBarHeight,
                   child: ListView.builder(
                     itemCount: value.allNotifications.length,
                     itemBuilder: (ctx, index) {
