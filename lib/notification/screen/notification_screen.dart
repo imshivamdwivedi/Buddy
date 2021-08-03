@@ -2,6 +2,7 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/notification/widget/message_notification.dart';
 import 'package:buddy/notification/widget/request_notification.dart';
+import 'package:buddy/user/screens/connection%20screen/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,7 @@ class _UserNotificationState extends State<UserNotification> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                EventCard(),
                 Image.asset(
                   "assets/images/nonewnot.png",
                   height: MediaQuery.of(context).size.height * 0.5,
@@ -47,22 +49,28 @@ class _UserNotificationState extends State<UserNotification> {
               ],
             );
           } else {
-            return Container(
-              height: 600,
-              child: ListView.builder(
-                itemCount: value.allNotifications.length,
-                itemBuilder: (ctx, index) {
-                  final notification = value.allNotifications[index];
-                  if (notification.type == 'REQT') {
-                    return SimpleNotification(notification.title
-                        .replaceAll('#NAME', notification.name));
-                  } else if (notification.type == 'REQ') {
-                    return RequestNotification(notificationModel: notification);
-                  } else {
-                    return SimpleNotification(notification.title);
-                  }
-                },
-              ),
+            return Column(
+              children: [
+                EventCard(),
+                Container(
+                  height: 600,
+                  child: ListView.builder(
+                    itemCount: value.allNotifications.length,
+                    itemBuilder: (ctx, index) {
+                      final notification = value.allNotifications[index];
+                      if (notification.type == 'REQT') {
+                        return SimpleNotification(notification.title
+                            .replaceAll('#NAME', notification.name));
+                      } else if (notification.type == 'REQ') {
+                        return RequestNotification(
+                            notificationModel: notification);
+                      } else {
+                        return SimpleNotification(notification.title);
+                      }
+                    },
+                  ),
+                ),
+              ],
             );
           }
         },

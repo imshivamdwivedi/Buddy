@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class ProfileFloatingButton extends StatelessWidget {
   final Color color;
   final IconData icon;
+  final Color iconColor;
 
-  ProfileFloatingButton({required this.color, required this.icon});
+  ProfileFloatingButton(
+      {required this.color, required this.icon, this.iconColor = Colors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class ProfileFloatingButton extends StatelessWidget {
       onPressed: () {},
       child: Icon(
         icon,
-        color: Colors.black87,
+        color: iconColor,
         size: 20.0,
       ),
       constraints: BoxConstraints.tightFor(

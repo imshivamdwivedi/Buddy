@@ -84,24 +84,17 @@ class _UserHomeState extends State<UserHome> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-                vertical: MediaQuery.of(context).size.height * 0.02,
-                horizontal: MediaQuery.of(context).size.width * 0.01),
-            padding: EdgeInsets.all(10),
+        appBar: PreferredSize(
+          child: SafeArea(
             child: Container(
-              margin: EdgeInsets.symmetric(
-                vertical: size.height * 0.02,
-              ),
+              margin: EdgeInsets.symmetric(horizontal: size.width * 0.01),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                       child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Container(
                         child: SearchBar(
@@ -174,21 +167,29 @@ class _UserHomeState extends State<UserHome> {
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.75,
-            child: FirebaseAnimatedList(
-              query: _refAct,
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int index) {
-                Map data = snapshot.value;
-                return ActivityItem(
-                  dataModel: ActivityModel.fromMap(data),
-                );
-              },
-            ),
+          preferredSize: Size.fromHeight(kToolbarHeight + size.height * 0.01),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height -
+                    kToolbarHeight +
+                    size.height * 0.01 -
+                    kBottomNavigationBarHeight,
+                child: FirebaseAnimatedList(
+                  query: _refAct,
+                  itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                      Animation<double> animation, int index) {
+                    Map data = snapshot.value;
+                    return ActivityItem(
+                      dataModel: ActivityModel.fromMap(data),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
