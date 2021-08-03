@@ -130,6 +130,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel1 = FollowerModel(
                 name: widget.notificationModel.name,
                 foid: _foid1,
+                collegeName: widget.notificationModel.collegeName,
                 uid: widget.notificationModel.nameId,
                 userImg: widget.notificationModel.nameImg,
               );
@@ -144,6 +145,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel2 = FollowerModel(
                 name: userCurrent.getUserName,
                 foid: _foid2,
+                collegeName: userCurrent.getUserCollege,
                 uid: userCurrent.getUserId,
                 userImg: userCurrent.getUserImg,
               );
@@ -169,6 +171,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel2 = FollowerModel(
                 name: userCurrent.getUserName,
                 foid: _foid2,
+                collegeName: userCurrent.getUserCollege,
                 uid: userCurrent.getUserId,
                 userImg: userCurrent.getUserImg,
               );
@@ -183,6 +186,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel1 = FollowerModel(
                 name: widget.notificationModel.name,
                 foid: _foid1,
+                collegeName: widget.notificationModel.collegeName,
                 uid: widget.notificationModel.nameId,
                 userImg: widget.notificationModel.nameImg,
               );
