@@ -327,7 +327,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
   }
 
   void _unFollowUser(FriendsModel model) {
-    //---( Unfollowing from main tree )---//
+    //---( Unfollowing from Following tree )---//
     final _unfollowDB =
         FirebaseDatabase.instance.reference().child('Following');
     _unfollowDB
@@ -347,6 +347,23 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         });
       }
     });
+    //---( Unfollowing from Followers tree )---//
+    final _unfollowFDB =
+        FirebaseDatabase.instance.reference().child('Followers');
+    _unfollowFDB
+        .child(model.uid)
+        .orderByChild('uid')
+        .equalTo(_auth.currentUser!.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final followModel = FollowerModel.fromMap(element);
+          _unfollowFDB.child(model.uid).child(followModel.foid).set(null);
+        });
+      }
+    });
     //---( Unfollowing from Friends Tree )---//
     final _unfollowConnection = FirebaseDatabase.instance
         .reference()
@@ -356,7 +373,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
   }
 
   void _followUser(FriendsModel model) {
-    //---( Following from main tree )---//
+    //---( Following from Following tree )---//
     final _followDB = FirebaseDatabase.instance
         .reference()
         .child('Following')
@@ -369,6 +386,20 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
       userImg: model.userImg,
     );
     _followDB.child(_foid).set(followModel.toMap());
+    //---( Following from Followers tree )---//
+    final userCurrent = Provider.of<UserProvider>(context, listen: false);
+    final _followFDB = FirebaseDatabase.instance
+        .reference()
+        .child('Followers')
+        .child(model.uid);
+    final _ffoid = _followFDB.push().key;
+    final followFModel = FollowerModel(
+      name: userCurrent.getUserName,
+      foid: _ffoid,
+      uid: userCurrent.getUserId,
+      userImg: userCurrent.getUserImg,
+    );
+    _followFDB.child(_ffoid).set(followFModel.toMap());
     //---( Following from Friends Tree )---//
     final _unfollowConnection = FirebaseDatabase.instance
         .reference()

@@ -112,51 +112,84 @@ class _RequestNotificationState extends State<RequestNotification> {
           );
         } else if (text == 'Confirm') {
           final userCurrent = Provider.of<UserProvider>(context, listen: false);
-          final _followDB =
+          final _followingDB =
               FirebaseDatabase.instance.reference().child('Following');
+          final _followerDB =
+              FirebaseDatabase.instance.reference().child('Followers');
 
           //---( Making Follower Model Also --> For Acceptor after Checking )---//
-          _followDB
+          _followingDB
               .child(_auth.currentUser!.uid)
               .orderByChild('uid')
               .equalTo(widget.notificationModel.nameId)
               .once()
               .then((DataSnapshot snapshot) {
             if (snapshot.value == null) {
-              final _foid1 = _followDB.child(_auth.currentUser!.uid).push().key;
+              final _foid1 =
+                  _followingDB.child(_auth.currentUser!.uid).push().key;
               final _followModel1 = FollowerModel(
-                name: widget.notificationModel.nameId,
+                name: widget.notificationModel.name,
                 foid: _foid1,
                 uid: widget.notificationModel.nameId,
                 userImg: widget.notificationModel.nameImg,
               );
-              _followDB
+              _followingDB
                   .child(_auth.currentUser!.uid)
                   .child(_foid1)
                   .set(_followModel1.toMap());
-            }
-          });
 
-          //---( Making Follower Model Also --> For Sender after Checking )---//
-          _followDB
-              .child(widget.notificationModel.nameId)
-              .orderByChild('uid')
-              .equalTo(_auth.currentUser!.uid)
-              .once()
-              .then((DataSnapshot snapshot) {
-            if (snapshot.value == null) {
+              //---( Follower Added )---//
               final _foid2 =
-                  _followDB.child(widget.notificationModel.nameId).push().key;
+                  _followerDB.child(widget.notificationModel.nameId).push().key;
               final _followModel2 = FollowerModel(
                 name: userCurrent.getUserName,
                 foid: _foid2,
                 uid: userCurrent.getUserId,
                 userImg: userCurrent.getUserImg,
               );
-              _followDB
+              _followerDB
                   .child(widget.notificationModel.nameId)
                   .child(_foid2)
                   .set(_followModel2.toMap());
+            }
+          });
+
+          //---( Making Follower Model Also --> For Sender after Checking )---//
+          _followingDB
+              .child(widget.notificationModel.nameId)
+              .orderByChild('uid')
+              .equalTo(_auth.currentUser!.uid)
+              .once()
+              .then((DataSnapshot snapshot) {
+            if (snapshot.value == null) {
+              final _foid2 = _followingDB
+                  .child(widget.notificationModel.nameId)
+                  .push()
+                  .key;
+              final _followModel2 = FollowerModel(
+                name: userCurrent.getUserName,
+                foid: _foid2,
+                uid: userCurrent.getUserId,
+                userImg: userCurrent.getUserImg,
+              );
+              _followingDB
+                  .child(widget.notificationModel.nameId)
+                  .child(_foid2)
+                  .set(_followModel2.toMap());
+
+              //---( Follower Added )---//
+              final _foid1 =
+                  _followerDB.child(_auth.currentUser!.uid).push().key;
+              final _followModel1 = FollowerModel(
+                name: widget.notificationModel.name,
+                foid: _foid1,
+                uid: widget.notificationModel.nameId,
+                userImg: widget.notificationModel.nameImg,
+              );
+              _followerDB
+                  .child(_auth.currentUser!.uid)
+                  .child(_foid1)
+                  .set(_followModel1.toMap());
             }
           });
 
