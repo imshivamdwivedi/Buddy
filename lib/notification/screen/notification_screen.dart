@@ -31,7 +31,7 @@ class _UserNotificationState extends State<UserNotification> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                EventCard(),
+                // EventCard(),
                 Image.asset(
                   "assets/images/nonewnot.png",
                   height: MediaQuery.of(context).size.height * 0.5,
@@ -51,7 +51,7 @@ class _UserNotificationState extends State<UserNotification> {
           } else {
             return Column(
               children: [
-                EventCard(),
+                // EventCard(),
                 Container(
                   height: 600,
                   child: ListView.builder(

@@ -16,15 +16,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class UserConnectionViewScreen extends StatefulWidget {
-  const UserConnectionViewScreen({Key? key}) : super(key: key);
+class UserFollowerViewScreen extends StatefulWidget {
+  const UserFollowerViewScreen({Key? key}) : super(key: key);
 
   @override
-  _UserConnectionViewScreenState createState() =>
-      _UserConnectionViewScreenState();
+  _UserFollowerViewScreenState createState() => _UserFollowerViewScreenState();
 }
 
-class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
+class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -140,15 +139,6 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
                                 child: Row(
                                   children: [
                                     _buildChip("4.5"),
-                                    SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.1),
-                                    roundButton('Message', model),
-                                    SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.02),
                                     roundButton(
                                         model.isFollowing
                                             ? 'Following'

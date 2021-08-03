@@ -9,6 +9,8 @@ import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/connection_view_screen.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/follower_viewing_screen.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/follwing_view_screen.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -615,15 +617,39 @@ class BottomSheet extends StatelessWidget {
               ),
             ),
           ),
+          // ListTile(
+          //   leading: new Icon(Icons.group),
+          //   title: new Text('Connections'),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => UserConnectionViewScreen()),
+          //     );
+          //   },
+          // ),
+          // ListTile(
+          //   leading: new Icon(Icons.group),
+          //   title: new Text('Follwoing'),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => UserFollwingViewScreen()),
+          //     );
+          //   },
+          // ),
           ListTile(
             leading: new Icon(Icons.group),
-            title: new Text('Connections'),
+            title: new Text('Followers'),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => UserConnectionViewScreen()),
+                    builder: (context) => UserFollowerViewScreen()),
               );
             },
           ),
