@@ -33,6 +33,10 @@ class HomeSearchProvider with ChangeNotifier {
     _fetchUserList();
   }
 
+  void refresh() {
+    _fetchUserList();
+  }
+
   void _fetchUserList() {
     _userListStream = _userDB.onValue.listen((event) {
       if (event.snapshot.value == null) {

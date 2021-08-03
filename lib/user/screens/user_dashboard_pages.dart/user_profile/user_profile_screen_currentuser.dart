@@ -617,30 +617,30 @@ class BottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          // ListTile(
-          //   leading: new Icon(Icons.group),
-          //   title: new Text('Connections'),
-          //   onTap: () {
-          //     Navigator.of(context).pop();
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => UserConnectionViewScreen()),
-          //     );
-          //   },
-          // ),
-          // ListTile(
-          //   leading: new Icon(Icons.group),
-          //   title: new Text('Follwoing'),
-          //   onTap: () {
-          //     Navigator.of(context).pop();
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => UserFollwingViewScreen()),
-          //     );
-          //   },
-          // ),
+          ListTile(
+            leading: new Icon(Icons.group),
+            title: new Text('Connections'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserConnectionViewScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: new Icon(Icons.group),
+            title: new Text('Follwoing'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserFollwingViewScreen()),
+              );
+            },
+          ),
           ListTile(
             leading: new Icon(Icons.group),
             title: new Text('Followers'),
@@ -681,7 +681,7 @@ class BottomSheet extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: Text('Are you sure you want to Logout !'),
+                  title: Text('Do you want to Logout !'),
                   actions: [
                     TextButton(
                       onPressed: () {

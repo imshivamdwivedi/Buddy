@@ -130,6 +130,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel1 = FollowerModel(
                 name: widget.notificationModel.name,
                 foid: _foid1,
+                collegeName: widget.notificationModel.collegeName,
                 uid: widget.notificationModel.nameId,
                 userImg: widget.notificationModel.nameImg,
               );
@@ -144,6 +145,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel2 = FollowerModel(
                 name: userCurrent.getUserName,
                 foid: _foid2,
+                collegeName: userCurrent.getUserCollege,
                 uid: userCurrent.getUserId,
                 userImg: userCurrent.getUserImg,
               );
@@ -169,6 +171,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _followModel2 = FollowerModel(
                 name: userCurrent.getUserName,
                 foid: _foid2,
+                collegeName: userCurrent.getUserCollege,
                 uid: userCurrent.getUserId,
                 userImg: userCurrent.getUserImg,
               );
@@ -181,6 +184,7 @@ class _RequestNotificationState extends State<RequestNotification> {
               final _foid1 =
                   _followerDB.child(_auth.currentUser!.uid).push().key;
               final _followModel1 = FollowerModel(
+                collegeName: userCurrent.getUserCollege,
                 name: widget.notificationModel.name,
                 foid: _foid1,
                 uid: widget.notificationModel.nameId,
@@ -206,7 +210,6 @@ class _RequestNotificationState extends State<RequestNotification> {
             uid: _auth.currentUser!.uid,
             name: userCurrent.getUserName,
             userImg: userCurrent.getUserImg,
-            isFollowing: true,
           );
           _acceptDB
               .child(widget.notificationModel.nameId)
@@ -219,7 +222,6 @@ class _RequestNotificationState extends State<RequestNotification> {
             uid: widget.notificationModel.nameId,
             name: widget.notificationModel.name,
             userImg: widget.notificationModel.nameImg,
-            isFollowing: true,
           );
           _acceptDB
               .child(_auth.currentUser!.uid)
