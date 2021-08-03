@@ -158,7 +158,8 @@ class _AuthChoiceScreenState extends State<AuthChoiceScreen> {
                           primary: Colors.black.withOpacity(0.5),
                           padding: EdgeInsets.all(15)),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(PhoneAuth.routeName);
+                        Navigator.of(context)
+                            .pushReplacementNamed(PhoneAuth.routeName);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
