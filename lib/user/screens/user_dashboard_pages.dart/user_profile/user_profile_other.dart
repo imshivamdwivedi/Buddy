@@ -247,30 +247,32 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       child: FloatingActionButton.extended(
                         backgroundColor: kPrimaryLightColor,
                         onPressed: () {
-                          _followingList.contains(_userModel.id)
-                              ? showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                    title: Text(
-                                        'Are you sure you want to unfollow ${_userModel.firstName + " " + _userModel.lastName} !'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('No'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          _unFollowUser(_userModel);
-                                        },
-                                        child: Text('Yes'),
-                                      ),
-                                    ],
-                                    elevation: 16.0,
-                                  ),
-                                )
-                              : _followUser(_userModel);
+                          if (_followingList.isNotEmpty) {
+                            _followingList.contains(_userModel.id)
+                                ? showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text(
+                                          'Are you sure you want to unfollow ${_userModel.firstName + " " + _userModel.lastName} !'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('No'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            _unFollowUser(_userModel);
+                                          },
+                                          child: Text('Yes'),
+                                        ),
+                                      ],
+                                      elevation: 16.0,
+                                    ),
+                                  )
+                                : _followUser(_userModel);
+                          }
                         },
                         label: Text(
                           _followingList.contains(_userModel.id)
