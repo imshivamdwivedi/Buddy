@@ -402,6 +402,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
     final _foid = _followDB.push().key;
     final followModel = FollowerModel(
       name: model.name,
+      collegeName: model.collegeName,
       foid: _foid,
       uid: model.uid,
       userImg: model.userImg,
@@ -415,6 +416,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
         .child(model.uid);
     final _ffoid = _followFDB.push().key;
     final followFModel = FollowerModel(
+      collegeName: userCurrent.getUserCollege,
       name: userCurrent.getUserName,
       foid: _ffoid,
       uid: userCurrent.getUserId,

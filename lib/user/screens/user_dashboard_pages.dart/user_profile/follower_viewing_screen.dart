@@ -5,6 +5,7 @@ import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/follower_model.dart';
+import 'package:buddy/user/models/follower_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -27,7 +28,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    final userConnections = Provider.of<ChatSearchProvider>(context).allFriends;
+    final userFollowers = Provider.of<FollowerProvider>(context).allFollowers;
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverAppBar(
@@ -47,10 +48,10 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
                 )),
           ),
         ),
-        userConnections.length > 0
+        userFollowers.length > 0
             ? SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final model = userConnections[index];
+                  final model = userFollowers[index];
                   return Card(
                     color: kPrimaryColor,
                     elevation: 5,
@@ -139,11 +140,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
                                 child: Row(
                                   children: [
                                     _buildChip("4.5"),
-                                    roundButton(
-                                        model.isFollowing
-                                            ? 'Following'
-                                            : 'Follow',
-                                        model),
+                                    roundButton('Remove', model),
                                   ],
                                 ),
                               ),
@@ -153,7 +150,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
                       ],
                     ),
                   );
-                }, childCount: userConnections.length),
+                }, childCount: userFollowers.length),
               )
             : SliverToBoxAdapter(
                 child: Center(
@@ -179,46 +176,39 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
     );
   }
 
-  Widget roundButton(String text, FriendsModel model) {
+  Widget roundButton(String text, FollowerModel model) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          primary: text == 'Following' ? kPrimaryLightColor : Colors.black,
+          primary: kPrimaryLightColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
           )),
       child: Text(
         text,
-        style:
-            TextStyle(color: text == 'Following' ? Colors.black : Colors.white),
+        style: TextStyle(color: Colors.black),
       ),
       onPressed: () {
-        if (text == 'Message') {
-          _createNewDmChannel(model);
-        } else if (text == 'Following') {
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: Text('Are you sure you want to unfollow ${model.name} !'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _unFollowUser(model);
-                  },
-                  child: Text('Yes'),
-                ),
-              ],
-              elevation: 16.0,
-            ),
-          );
-        } else if (text == 'Follow') {
-          _followUser(model);
-        }
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('Are you sure you want to unfollow ${model.name} !'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  _unFollowUser(model);
+                },
+                child: Text('Yes'),
+              ),
+            ],
+            elevation: 16.0,
+          ),
+        );
       },
     );
   }
@@ -336,7 +326,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
     }
   }
 
-  void _unFollowUser(FriendsModel model) {
+  void _unFollowUser(FollowerModel model) {
     //---( Unfollowing from Following tree )---//
     final _unfollowDB =
         FirebaseDatabase.instance.reference().child('Following');
@@ -379,7 +369,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
         .reference()
         .child('Friends')
         .child(_auth.currentUser!.uid);
-    _unfollowConnection.child(model.fid).child('isFollowing').set(false);
+    _unfollowConnection.child(model.foid).child('isFollowing').set(false);
     Navigator.of(context).pop();
   }
 
@@ -394,6 +384,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
       name: model.name,
       foid: _foid,
       uid: model.uid,
+      collegeName: model.collegeName,
       userImg: model.userImg,
     );
     _followDB.child(_foid).set(followModel.toMap());
@@ -407,6 +398,7 @@ class _UserFollowerViewScreenState extends State<UserFollowerViewScreen> {
     final followFModel = FollowerModel(
       name: userCurrent.getUserName,
       foid: _ffoid,
+      collegeName: userCurrent.getUserCollege,
       uid: userCurrent.getUserId,
       userImg: userCurrent.getUserImg,
     );

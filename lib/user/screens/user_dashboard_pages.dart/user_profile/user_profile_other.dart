@@ -458,6 +458,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       name: model.firstName + ' ' + model.lastName,
       foid: _foid,
       uid: model.id,
+      collegeName: model.collegeName,
       userImg: model.userImg,
     );
     _followDB.child(_foid).set(followModel.toMap());
@@ -471,6 +472,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
     final followFModel = FollowerModel(
       name: userCurrent.getUserName,
       foid: _ffoid,
+      collegeName: userCurrent.getUserCollege,
       uid: userCurrent.getUserId,
       userImg: userCurrent.getUserImg,
     );

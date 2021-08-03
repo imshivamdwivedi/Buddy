@@ -5,6 +5,8 @@ import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/follower_model.dart';
+import 'package:buddy/user/models/follower_provider.dart';
+import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -27,7 +29,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
   final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    final userConnections = Provider.of<ChatSearchProvider>(context).allFriends;
+    final userFollowing = Provider.of<FollowingProvider>(context).allFollowings;
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverAppBar(
@@ -47,10 +49,10 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
                 )),
           ),
         ),
-        userConnections.length > 0
+        userFollowing.length > 0
             ? SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final model = userConnections[index];
+                  final model = userFollowing[index];
                   return Card(
                     color: kPrimaryColor,
                     elevation: 5,
@@ -139,11 +141,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
                                 child: Row(
                                   children: [
                                     _buildChip("4.5"),
-                                    roundButton(
-                                        model.isFollowing
-                                            ? 'Following'
-                                            : 'Follow',
-                                        model),
+                                    roundButton('Following', model),
                                   ],
                                 ),
                               ),
@@ -153,7 +151,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
                       ],
                     ),
                   );
-                }, childCount: userConnections.length),
+                }, childCount: userFollowing.length),
               )
             : SliverToBoxAdapter(
                 child: Center(
@@ -179,46 +177,39 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
     );
   }
 
-  Widget roundButton(String text, FriendsModel model) {
+  Widget roundButton(String text, FollowerModel model) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          primary: text == 'Following' ? kPrimaryLightColor : Colors.black,
+          primary: kPrimaryLightColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
           )),
       child: Text(
         text,
-        style:
-            TextStyle(color: text == 'Following' ? Colors.black : Colors.white),
+        style: TextStyle(color: Colors.black),
       ),
       onPressed: () {
-        if (text == 'Message') {
-          _createNewDmChannel(model);
-        } else if (text == 'Following') {
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: Text('Are you sure you want to unfollow ${model.name} !'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _unFollowUser(model);
-                  },
-                  child: Text('Yes'),
-                ),
-              ],
-              elevation: 16.0,
-            ),
-          );
-        } else if (text == 'Follow') {
-          _followUser(model);
-        }
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('Are you sure you want to unfollow ${model.name} !'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  _unFollowUser(model);
+                },
+                child: Text('Yes'),
+              ),
+            ],
+            elevation: 16.0,
+          ),
+        );
       },
     );
   }
@@ -336,7 +327,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
     }
   }
 
-  void _unFollowUser(FriendsModel model) {
+  void _unFollowUser(FollowerModel model) {
     //---( Unfollowing from Following tree )---//
     final _unfollowDB =
         FirebaseDatabase.instance.reference().child('Following');
@@ -379,7 +370,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
         .reference()
         .child('Friends')
         .child(_auth.currentUser!.uid);
-    _unfollowConnection.child(model.fid).child('isFollowing').set(false);
+    _unfollowConnection.child(model.foid).child('isFollowing').set(false);
     Navigator.of(context).pop();
   }
 
@@ -395,6 +386,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
       foid: _foid,
       uid: model.uid,
       userImg: model.userImg,
+      collegeName: model.collegeName,
     );
     _followDB.child(_foid).set(followModel.toMap());
     //---( Following from Followers tree )---//
@@ -408,6 +400,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
       name: userCurrent.getUserName,
       foid: _ffoid,
       uid: userCurrent.getUserId,
+      collegeName: userCurrent.getUserCollege,
       userImg: userCurrent.getUserImg,
     );
     _followFDB.child(_ffoid).set(followFModel.toMap());
