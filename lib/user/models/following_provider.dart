@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 class FollowingProvider with ChangeNotifier {
   List<FollowerModel> _followings = [];
+  List<String> _userIds = [];
   final _followingDB = FirebaseDatabase.instance.reference().child('Following');
   final _userDB = FirebaseDatabase.instance.reference().child('Users');
   final _auth = FirebaseAuth.instance;
@@ -15,6 +16,10 @@ class FollowingProvider with ChangeNotifier {
 
   List<FollowerModel> get allFollowings {
     return [..._followings];
+  }
+
+  List<String> get followingsUid {
+    return [..._userIds];
   }
 
   FollowingProvider() {
@@ -26,8 +31,10 @@ class FollowingProvider with ChangeNotifier {
         _followingDB.child(_auth.currentUser!.uid).onValue.listen((event) {
       if (event.snapshot.value == null) {
         _followings.clear();
+        _userIds.clear();
         notifyListeners();
       } else {
+        _userIds.clear();
         final _allFollowingsMap =
             Map<String, dynamic>.from(event.snapshot.value);
         _followings = _allFollowingsMap.values.map((e) {
@@ -52,8 +59,10 @@ class FollowingProvider with ChangeNotifier {
                   .set(userModel.userImg);
             }
           });
+          _userIds.add(followingData.uid);
           return followingData;
         }).toList();
+        notifyListeners();
       }
     });
   }

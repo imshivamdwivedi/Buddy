@@ -1,15 +1,20 @@
 import 'dart:ui';
 
+import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/follower_model.dart';
+import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 class OtherUserProfileScreen extends StatefulWidget {
   final userId;
@@ -24,6 +29,7 @@ class OtherUserProfileScreen extends StatefulWidget {
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   final _userDB = FirebaseDatabase.instance.reference().child('Users');
+  final _auth = FirebaseAuth.instance;
   UserModel _userModel = UserModel(profile: true);
 
   Widget _buildChip(
@@ -74,6 +80,8 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _followingList =
+        Provider.of<FollowingProvider>(context).followingsUid;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -238,9 +246,36 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       margin: EdgeInsets.symmetric(horizontal: 5),
                       child: FloatingActionButton.extended(
                         backgroundColor: kPrimaryLightColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          _followingList.contains(_userModel.id)
+                              ? showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: Text(
+                                        'Are you sure you want to unfollow ${_userModel.firstName + " " + _userModel.lastName} !'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('No'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _unFollowUser(_userModel);
+                                        },
+                                        child: Text('Yes'),
+                                      ),
+                                    ],
+                                    elevation: 16.0,
+                                  ),
+                                )
+                              : _followUser(_userModel);
+                        },
                         label: Text(
-                          "Follow",
+                          _followingList.contains(_userModel.id)
+                              ? 'Following'
+                              : 'Follow',
                           style: TextStyle(color: Colors.black87),
                         ),
                       ),
@@ -323,7 +358,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text('${index}')
+                                    Text('$index')
                                   ],
                                 ));
                           }),
@@ -346,6 +381,119 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         ),
       ),
     );
+  }
+
+  void _unFollowUser(UserModel model) {
+    //---( Unfollowing from Following tree )---//
+    final _unfollowDB =
+        FirebaseDatabase.instance.reference().child('Following');
+    _unfollowDB
+        .child(_auth.currentUser!.uid)
+        .orderByChild('uid')
+        .equalTo(model.id)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final followModel = FollowerModel.fromMap(element);
+          _unfollowDB
+              .child(_auth.currentUser!.uid)
+              .child(followModel.foid)
+              .set(null);
+        });
+      }
+    });
+    //---( Unfollowing from Followers tree )---//
+    final _unfollowFDB =
+        FirebaseDatabase.instance.reference().child('Followers');
+    _unfollowFDB
+        .child(model.id)
+        .orderByChild('uid')
+        .equalTo(_auth.currentUser!.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final followModel = FollowerModel.fromMap(element);
+          _unfollowFDB.child(model.id).child(followModel.foid).set(null);
+        });
+      }
+    });
+    //---( Unfollowing from Friends Tree )---//
+    final _unfollowConnection = FirebaseDatabase.instance
+        .reference()
+        .child('Friends')
+        .child(_auth.currentUser!.uid);
+    _unfollowConnection
+        .orderByChild('uid')
+        .equalTo(_userModel.id)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final friendsModel = FriendsModel.fromMap(element);
+          _unfollowConnection
+              .child(friendsModel.fid)
+              .child('isFollowing')
+              .set(false);
+        });
+      }
+    });
+    Navigator.of(context).pop();
+  }
+
+  void _followUser(UserModel model) {
+    //---( Following from Following tree )---//
+    final _followDB = FirebaseDatabase.instance
+        .reference()
+        .child('Following')
+        .child(_auth.currentUser!.uid);
+    final _foid = _followDB.push().key;
+    final followModel = FollowerModel(
+      name: model.firstName + ' ' + model.lastName,
+      foid: _foid,
+      uid: model.id,
+      userImg: model.userImg,
+    );
+    _followDB.child(_foid).set(followModel.toMap());
+    //---( Following from Followers tree )---//
+    final userCurrent = Provider.of<UserProvider>(context, listen: false);
+    final _followFDB = FirebaseDatabase.instance
+        .reference()
+        .child('Followers')
+        .child(model.id);
+    final _ffoid = _followFDB.push().key;
+    final followFModel = FollowerModel(
+      name: userCurrent.getUserName,
+      foid: _ffoid,
+      uid: userCurrent.getUserId,
+      userImg: userCurrent.getUserImg,
+    );
+    _followFDB.child(_ffoid).set(followFModel.toMap());
+    //---( Following from Friends Tree )---//
+    final _unfollowConnection = FirebaseDatabase.instance
+        .reference()
+        .child('Friends')
+        .child(_auth.currentUser!.uid);
+    _unfollowConnection
+        .orderByChild('uid')
+        .equalTo(_userModel.id)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final friendsModel = FriendsModel.fromMap(element);
+          _unfollowConnection
+              .child(friendsModel.fid)
+              .child('isFollowing')
+              .set(true);
+        });
+      }
+    });
   }
 }
 

@@ -54,6 +54,7 @@ class FollowerProvider with ChangeNotifier {
           });
           return followerData;
         }).toList();
+        notifyListeners();
       }
     });
   }
