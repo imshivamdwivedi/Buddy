@@ -187,6 +187,7 @@ class _RequestNotificationState extends State<RequestNotification> {
                 collegeName: userCurrent.getUserCollege,
                 name: widget.notificationModel.name,
                 foid: _foid1,
+                collegeName: widget.notificationModel.collegeName,
                 uid: widget.notificationModel.nameId,
                 userImg: widget.notificationModel.nameImg,
               );
