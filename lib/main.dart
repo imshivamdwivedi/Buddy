@@ -29,7 +29,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
-
 import 'chat/group/screens/create_community_screen.dart';
 
 Map<int, Color> colorCodes = {

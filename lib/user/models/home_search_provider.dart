@@ -9,20 +9,26 @@ import 'package:flutter/material.dart';
 class HomeSearchProvider with ChangeNotifier {
   List<HomeSearchHelper> allUsersList = [];
   List<HomeSearchHelper> filteredList = [];
+  List<String> tags = [];
   final _auth = FirebaseAuth.instance;
   final _userDB = FirebaseDatabase.instance.reference().child('Users');
   late StreamSubscription<Event> _userListStream;
 
-  List<ActivityModel> allEvents = [];
-  List<ActivityModel> filteredEvents = [];
-  List<String> tags = [];
+  List<ActivityModel> allEventsList = [];
+  List<ActivityModel> filteredEventsList = [];
+  final _eventDB = FirebaseDatabase.instance.reference().child('Activity');
+  late StreamSubscription<Event> _eventListStream;
 
   List<HomeSearchHelper> get suggestedUsers {
     return [...filteredList];
   }
 
   List<ActivityModel> get suggestedEvents {
-    return [...filteredEvents];
+    return [...filteredEventsList];
+  }
+
+  List<ActivityModel> get allEvents {
+    return [...allEventsList];
   }
 
   List<String> get allTags {
@@ -31,10 +37,12 @@ class HomeSearchProvider with ChangeNotifier {
 
   HomeSearchProvider() {
     _fetchUserList();
+    _fetchEventList();
   }
 
   void refresh() {
     _fetchUserList();
+    _fetchEventList();
   }
 
   void _fetchUserList() {
@@ -45,6 +53,22 @@ class HomeSearchProvider with ChangeNotifier {
       } else {
         final _allUserListMap = Map<String, dynamic>.from(event.snapshot.value);
         _preFilterUsers(_allUserListMap);
+      }
+    });
+  }
+
+  void _fetchEventList() {
+    _eventListStream = _eventDB.onValue.listen((event) {
+      if (event.snapshot.value == null) {
+        allEventsList.clear();
+        notifyListeners();
+      } else {
+        final _allEventMap = Map<String, dynamic>.from(event.snapshot.value);
+        allEventsList = _allEventMap.values.map((e) {
+          final actModel = ActivityModel.fromMap(Map<String, dynamic>.from(e));
+          return actModel;
+        }).toList();
+        notifyListeners();
       }
     });
   }
@@ -95,6 +119,7 @@ class HomeSearchProvider with ChangeNotifier {
   void updateQuery(String query) {
     if (query == '') {
       filteredList.clear();
+      filteredEventsList.clear();
       notifyListeners();
       tags = [];
       return;
@@ -102,22 +127,35 @@ class HomeSearchProvider with ChangeNotifier {
 
     tags.clear();
     filteredList = allUsersList;
+    filteredEventsList = allEventsList;
 
     final filters = query.trim().split(' ');
     tags = filters;
 
     filters.forEach((filter) {
       final newFilter = filteredList
-          .where((element) => element.userModel.searchTag.contains(filter))
+          .where((element) => element.userModel.searchTag
+              .toLowerCase()
+              .contains(filter.toLowerCase()))
           .toList();
       filteredList = newFilter;
+      final newEventFilter = filteredEventsList
+          .where((element) => element.title
+              .trim()
+              .toLowerCase()
+              .replaceAll(' ', '')
+              .contains(filter))
+          .toList();
+      filteredEventsList = newEventFilter;
     });
+
     notifyListeners();
   }
 
   @override
   void dispose() {
     _userListStream.cancel();
+    _eventListStream.cancel();
     super.dispose();
   }
 }

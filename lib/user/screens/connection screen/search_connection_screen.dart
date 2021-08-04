@@ -7,6 +7,7 @@ import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/user/users_connections/connection_handler.dart';
+import 'package:buddy/user/widgets/activity_item.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -127,19 +128,21 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
   }
 
   Widget buildEventList(BuildContext context) {
-    return Container(
-        // child: Expanded(
-        //   child: ListView.builder(
-        //     itemCount: userData.suggestedUsers.length,
-        //     itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-        //       value: userData.suggestedUsers[index],
-        //       child: Consumer<HomeSearchHelper>(
-        //         builder: (_, user, child) => userCard(user.userModel, user),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        );
+    final eventData =
+        Provider.of<HomeSearchProvider>(context).filteredEventsList;
+    return Column(
+      children: [
+        Container(
+          child: Expanded(
+            child: ListView.builder(
+              itemCount: eventData.length,
+              itemBuilder: (context, index) =>
+                  ActivityItem(dataModel: eventData[index]),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   //H://---( Buddies List Widget )---//
