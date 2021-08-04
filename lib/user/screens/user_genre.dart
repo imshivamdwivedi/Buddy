@@ -98,28 +98,34 @@ class _UserGenreState extends State<UserGenre> {
     Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
   }
 
+  void _fetchGenre(BuildContext context) async {
+    final _user = _auth.currentUser;
+    await _databaseReference.once().then((DataSnapshot snapshot) {
+      List<Category> myList = [];
+      Map map = snapshot.value;
+      map.values.forEach((element) {
+        myList.add(Category.fromMap(element));
+      });
+      Provider.of<UserGenreProvider>(context, listen: false).addList(myList);
+    });
+    await _userDatabase
+        .orderByChild('id')
+        .equalTo(_user!.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      String name = snapshot.value[_user.uid]['firstName'].toString() +
+          ' ' +
+          snapshot.value[_user.uid]['lastName'].toString();
+      Provider.of<UserGenreProvider>(context, listen: false).setName(name);
+      Provider.of<UserGenreProvider>(context, listen: false)
+          .addPreGenre(snapshot.value[_user.uid]['userGenre']);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (init) {
-      final _user = _auth.currentUser;
-      _userDatabase
-          .orderByChild('id')
-          .equalTo(_user!.uid)
-          .once()
-          .then((DataSnapshot snapshot) {
-        String name = snapshot.value[_user.uid]['firstName'].toString() +
-            ' ' +
-            snapshot.value[_user.uid]['lastName'].toString();
-        Provider.of<UserGenreProvider>(context, listen: false).setName(name);
-      });
-      _databaseReference.once().then((DataSnapshot snapshot) {
-        List<Category> myList = [];
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          myList.add(Category.fromMap(element));
-        });
-        Provider.of<UserGenreProvider>(context, listen: false).addList(myList);
-      });
+      _fetchGenre(context);
       init = false;
     }
     return Scaffold(

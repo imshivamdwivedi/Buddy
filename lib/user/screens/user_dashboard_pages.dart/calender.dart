@@ -49,22 +49,6 @@ class _UserCalenderState extends State<UserCalender> {
           });
         }
       });
-      // final List<EventCalender> events = [
-      //   EventCalender(
-      //     title: 'Temp Title',
-      //     description: 'Temp Description',
-      //     from: DateTime.now(),
-      //     to: DateTime.now().add(Duration(hours: 2)),
-      //     isAllDay: false,
-      //   ),
-      //   EventCalender(
-      //     title: 'Temp Title 2',
-      //     description: 'Temp Description 2',
-      //     from: DateTime.now().add(Duration(hours: 1)),
-      //     to: DateTime.now().add(Duration(hours: 6)),
-      //     isAllDay: false,
-      //   ),
-      // ];
       Provider.of<EventProvider>(context, listen: false).addEventList(events);
 
       //---( Snack Payload )---//
