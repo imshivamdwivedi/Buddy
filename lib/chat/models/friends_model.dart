@@ -4,7 +4,6 @@ class FriendsModel {
   String name;
   String collegeName;
   String userImg;
-  bool isFollowing;
 
   FriendsModel({
     required this.collegeName,
@@ -12,7 +11,6 @@ class FriendsModel {
     required this.uid,
     required this.name,
     required this.userImg,
-    required this.isFollowing,
   });
 
   factory FriendsModel.fromMap(Map map) {
@@ -22,7 +20,6 @@ class FriendsModel {
       uid: map['uid'],
       name: map['name'],
       userImg: map['userImg'],
-      isFollowing: map['isFollowing'],
     );
   }
 
@@ -33,7 +30,6 @@ class FriendsModel {
       'uid': uid,
       'name': name,
       'userImg': userImg,
-      'isFollowing': isFollowing,
     };
   }
 }

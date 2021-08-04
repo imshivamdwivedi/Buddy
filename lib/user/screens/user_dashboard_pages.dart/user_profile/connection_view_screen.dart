@@ -149,11 +149,7 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.02),
-                                    roundButton(
-                                        model.isFollowing
-                                            ? 'Following'
-                                            : 'Follow',
-                                        model),
+                                    roundButton('Remove', model),
                                   ],
                                 ),
                               ),
@@ -204,30 +200,8 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
       onPressed: () {
         if (text == 'Message') {
           _createNewDmChannel(model);
-        } else if (text == 'Following') {
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: Text('Are you sure you want to unfollow ${model.name} !'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _unFollowUser(model);
-                  },
-                  child: Text('Yes'),
-                ),
-              ],
-              elevation: 16.0,
-            ),
-          );
-        } else if (text == 'Follow') {
-          _followUser(model);
+        } else if (text == 'Remove') {
+          _removeConnection(model);
         }
       },
     );
@@ -346,11 +320,37 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
     }
   }
 
-  void _unFollowUser(FriendsModel model) {
-    //---( Unfollowing from Following tree )---//
-    final _unfollowDB =
+  _removeConnection(FriendsModel model) {
+    //---( Removing Connection From Both Trees )---//
+    final _rmFriendDB = FirebaseDatabase.instance.reference().child('Friends');
+    _rmFriendDB.child(_auth.currentUser!.uid).child(model.fid).set(null);
+    _rmFriendDB.child(model.uid).child(model.fid).set(null);
+
+    //---( Removing Dm Chats Between Them )---//
+    final _chatDB = FirebaseDatabase.instance.reference().child('Chats');
+    final _chDB = FirebaseDatabase.instance.reference().child('Channels');
+    _chDB
+        .child(_auth.currentUser!.uid)
+        .orderByChild('user')
+        .equalTo(model.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final _chatModel = ChatListModel.fromMap(element);
+          final _chid = _chatModel.chid;
+          _chDB.child(_auth.currentUser!.uid).child(_chid).set(null);
+          _chDB.child(model.uid).child(_chid).set(null);
+          _chatDB.child(_chid).set(null);
+        });
+      }
+    });
+
+    //---( Clearing Followings List )---//
+    final _followingList =
         FirebaseDatabase.instance.reference().child('Following');
-    _unfollowDB
+    _followingList
         .child(_auth.currentUser!.uid)
         .orderByChild('uid')
         .equalTo(model.uid)
@@ -359,18 +359,16 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
       if (snapshot.value != null) {
         Map map = snapshot.value;
         map.values.forEach((element) {
-          final followModel = FollowerModel.fromMap(element);
-          _unfollowDB
+          final _tempModel = FollowerModel.fromMap(element);
+          _followingList
               .child(_auth.currentUser!.uid)
-              .child(followModel.foid)
+              .child(_tempModel.foid)
               .set(null);
         });
       }
     });
-    //---( Unfollowing from Followers tree )---//
-    final _unfollowFDB =
-        FirebaseDatabase.instance.reference().child('Followers');
-    _unfollowFDB
+
+    _followingList
         .child(model.uid)
         .orderByChild('uid')
         .equalTo(_auth.currentUser!.uid)
@@ -379,55 +377,46 @@ class _UserConnectionViewScreenState extends State<UserConnectionViewScreen> {
       if (snapshot.value != null) {
         Map map = snapshot.value;
         map.values.forEach((element) {
-          final followModel = FollowerModel.fromMap(element);
-          _unfollowFDB.child(model.uid).child(followModel.foid).set(null);
+          final _tempModel = FollowerModel.fromMap(element);
+          _followingList.child(model.uid).child(_tempModel.foid).set(null);
         });
       }
     });
-    //---( Unfollowing from Friends Tree )---//
-    final _unfollowConnection = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_auth.currentUser!.uid);
-    _unfollowConnection.child(model.fid).child('isFollowing').set(false);
-    Navigator.of(context).pop();
-  }
 
-  void _followUser(FriendsModel model) {
-    //---( Following from Following tree )---//
-    final _followDB = FirebaseDatabase.instance
-        .reference()
-        .child('Following')
-        .child(_auth.currentUser!.uid);
-    final _foid = _followDB.push().key;
-    final followModel = FollowerModel(
-      name: model.name,
-      collegeName: model.collegeName,
-      foid: _foid,
-      uid: model.uid,
-      userImg: model.userImg,
-    );
-    _followDB.child(_foid).set(followModel.toMap());
-    //---( Following from Followers tree )---//
-    final userCurrent = Provider.of<UserProvider>(context, listen: false);
-    final _followFDB = FirebaseDatabase.instance
-        .reference()
-        .child('Followers')
-        .child(model.uid);
-    final _ffoid = _followFDB.push().key;
-    final followFModel = FollowerModel(
-      collegeName: userCurrent.getUserCollege,
-      name: userCurrent.getUserName,
-      foid: _ffoid,
-      uid: userCurrent.getUserId,
-      userImg: userCurrent.getUserImg,
-    );
-    _followFDB.child(_ffoid).set(followFModel.toMap());
-    //---( Following from Friends Tree )---//
-    final _unfollowConnection = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_auth.currentUser!.uid);
-    _unfollowConnection.child(model.fid).child('isFollowing').set(true);
+    //---( Clearing Followers List )---//
+    final _followerList =
+        FirebaseDatabase.instance.reference().child('Followers');
+    _followerList
+        .child(_auth.currentUser!.uid)
+        .orderByChild('uid')
+        .equalTo(model.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final _tempModel = FollowerModel.fromMap(element);
+          _followerList
+              .child(_auth.currentUser!.uid)
+              .child(_tempModel.foid)
+              .set(null);
+        });
+      }
+    });
+
+    _followerList
+        .child(model.uid)
+        .orderByChild('uid')
+        .equalTo(_auth.currentUser!.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        Map map = snapshot.value;
+        map.values.forEach((element) {
+          final _tempModel = FollowerModel.fromMap(element);
+          _followerList.child(model.uid).child(_tempModel.foid).set(null);
+        });
+      }
+    });
   }
 }

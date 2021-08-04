@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/social_icons.dart';
 import 'package:buddy/constants.dart';
@@ -247,32 +246,30 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                       child: FloatingActionButton.extended(
                         backgroundColor: kPrimaryLightColor,
                         onPressed: () {
-                          if (_followingList.isNotEmpty) {
-                            _followingList.contains(_userModel.id)
-                                ? showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                      title: Text(
-                                          'Are you sure you want to unfollow ${_userModel.firstName + " " + _userModel.lastName} !'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('No'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            _unFollowUser(_userModel);
-                                          },
-                                          child: Text('Yes'),
-                                        ),
-                                      ],
-                                      elevation: 16.0,
-                                    ),
-                                  )
-                                : _followUser(_userModel);
-                          }
+                          _followingList.contains(_userModel.id)
+                              ? showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: Text(
+                                        'Do you want to unfollow ${_userModel.firstName + " " + _userModel.lastName} !'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('No'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _unFollowUser(_userModel);
+                                        },
+                                        child: Text('Yes'),
+                                      ),
+                                    ],
+                                    elevation: 16.0,
+                                  ),
+                                )
+                              : _followUser(_userModel);
                         },
                         label: Text(
                           _followingList.contains(_userModel.id)
@@ -423,27 +420,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         });
       }
     });
-    //---( Unfollowing from Friends Tree )---//
-    final _unfollowConnection = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_auth.currentUser!.uid);
-    _unfollowConnection
-        .orderByChild('uid')
-        .equalTo(_userModel.id)
-        .once()
-        .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          final friendsModel = FriendsModel.fromMap(element);
-          _unfollowConnection
-              .child(friendsModel.fid)
-              .child('isFollowing')
-              .set(false);
-        });
-      }
-    });
     Navigator.of(context).pop();
   }
 
@@ -477,27 +453,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       userImg: userCurrent.getUserImg,
     );
     _followFDB.child(_ffoid).set(followFModel.toMap());
-    //---( Following from Friends Tree )---//
-    final _unfollowConnection = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_auth.currentUser!.uid);
-    _unfollowConnection
-        .orderByChild('uid')
-        .equalTo(_userModel.id)
-        .once()
-        .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          final friendsModel = FriendsModel.fromMap(element);
-          _unfollowConnection
-              .child(friendsModel.fid)
-              .child('isFollowing')
-              .set(true);
-        });
-      }
-    });
   }
 }
 

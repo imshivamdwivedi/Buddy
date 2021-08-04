@@ -1,11 +1,9 @@
 import 'package:buddy/chat/models/chat_list_model.dart';
-import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/follower_model.dart';
-import 'package:buddy/user/models/follower_provider.dart';
 import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
@@ -42,7 +40,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
           ),
           flexibleSpace: FlexibleSpaceBar(
             centerTitle: true,
-            title: Text('Connections',
+            title: Text('Following',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -165,7 +163,7 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
                       ),
                       Center(
                         child: Text(
-                          'You have no Connection !',
+                          'You have no Following !',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
@@ -248,85 +246,6 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
     );
   }
 
-  void _createNewDmChannel(FriendsModel model) async {
-    //---( Checking if Channel Already Exist )---//
-    bool _isNewChannel = true;
-    String chidPrev = '';
-    final _checkDb = FirebaseDatabase.instance
-        .reference()
-        .child('Channels')
-        .child(_auth.currentUser!.uid);
-    await _checkDb
-        .orderByChild('user')
-        .equalTo(model.uid)
-        .once()
-        .then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        _isNewChannel = false;
-        print(_isNewChannel);
-        Map map = snapshot.value;
-        map.values.forEach((element) {
-          chidPrev = element['chid'];
-        });
-      }
-    });
-    if (_isNewChannel) {
-      final tempNameProvider =
-          Provider.of<UserProvider>(context, listen: false);
-      //---( Creating New Channel )---//
-      final _channelDb = FirebaseDatabase.instance.reference().child('Chats');
-      final _chid = _channelDb.push().key;
-      final newChannel = DmChannel(
-        chid: _chid,
-        type: 'DM',
-        users: _auth.currentUser!.uid + "+" + model.uid,
-      );
-      await _channelDb.child(_chid).set(newChannel.toMap());
-
-      //---( Creating Channel History )---//
-      final _chRecord = FirebaseDatabase.instance
-          .reference()
-          .child('Channels')
-          .child(_auth.currentUser!.uid)
-          .child(_chid);
-      final _channel = ChatListModel(
-        chid: _chid,
-        name: model.name,
-        nameImg: model.userImg,
-        user: model.uid,
-        msgPen: 0,
-        lastMsg: '',
-      );
-      await _chRecord.set(_channel.toMap());
-
-      final _chRecord1 = FirebaseDatabase.instance
-          .reference()
-          .child('Channels')
-          .child(model.uid)
-          .child(_chid);
-      final _channel1 = ChatListModel(
-        chid: _chid,
-        name: tempNameProvider.getUserName,
-        nameImg: tempNameProvider.getUserImg,
-        user: _auth.currentUser!.uid,
-        msgPen: 0,
-        lastMsg: '',
-      );
-      await _chRecord1.set(_channel1.toMap());
-
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (ctx) => DmChatScreen(
-                chatRoomId: _chid,
-                userId: model.uid,
-              )));
-    } else {
-      //---( Opening Previous Channel )---//
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (ctx) =>
-              DmChatScreen(chatRoomId: chidPrev, userId: model.uid)));
-    }
-  }
-
   void _unFollowUser(FollowerModel model) {
     //---( Unfollowing from Following tree )---//
     final _unfollowDB =
@@ -365,50 +284,6 @@ class _UserFollwingViewScreenState extends State<UserFollwingViewScreen> {
         });
       }
     });
-    //---( Unfollowing from Friends Tree )---//
-    final _unfollowConnection = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_auth.currentUser!.uid);
-    _unfollowConnection.child(model.foid).child('isFollowing').set(false);
     Navigator.of(context).pop();
-  }
-
-  void _followUser(FriendsModel model) {
-    //---( Following from Following tree )---//
-    final _followDB = FirebaseDatabase.instance
-        .reference()
-        .child('Following')
-        .child(_auth.currentUser!.uid);
-    final _foid = _followDB.push().key;
-    final followModel = FollowerModel(
-      name: model.name,
-      foid: _foid,
-      uid: model.uid,
-      userImg: model.userImg,
-      collegeName: model.collegeName,
-    );
-    _followDB.child(_foid).set(followModel.toMap());
-    //---( Following from Followers tree )---//
-    final userCurrent = Provider.of<UserProvider>(context, listen: false);
-    final _followFDB = FirebaseDatabase.instance
-        .reference()
-        .child('Followers')
-        .child(model.uid);
-    final _ffoid = _followFDB.push().key;
-    final followFModel = FollowerModel(
-      name: userCurrent.getUserName,
-      foid: _ffoid,
-      uid: userCurrent.getUserId,
-      collegeName: userCurrent.getUserCollege,
-      userImg: userCurrent.getUserImg,
-    );
-    _followFDB.child(_ffoid).set(followFModel.toMap());
-    //---( Following from Friends Tree )---//
-    final _unfollowConnection = FirebaseDatabase.instance
-        .reference()
-        .child('Friends')
-        .child(_auth.currentUser!.uid);
-    _unfollowConnection.child(model.fid).child('isFollowing').set(true);
   }
 }

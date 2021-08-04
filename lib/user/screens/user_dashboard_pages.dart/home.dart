@@ -31,7 +31,7 @@ class _UserHomeState extends State<UserHome> {
   }
 
   void _updateSearch(BuildContext context) async {
-    Provider.of<HomeSearchProvider>(context);
+    Provider.of<HomeSearchProvider>(context, listen: false).refresh();
   }
 
   @override

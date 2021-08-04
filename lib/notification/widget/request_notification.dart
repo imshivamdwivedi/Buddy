@@ -210,7 +210,6 @@ class _RequestNotificationState extends State<RequestNotification> {
             uid: _auth.currentUser!.uid,
             name: userCurrent.getUserName,
             userImg: userCurrent.getUserImg,
-            isFollowing: true,
           );
           _acceptDB
               .child(widget.notificationModel.nameId)
@@ -223,7 +222,6 @@ class _RequestNotificationState extends State<RequestNotification> {
             uid: widget.notificationModel.nameId,
             name: widget.notificationModel.name,
             userImg: widget.notificationModel.nameImg,
-            isFollowing: true,
           );
           _acceptDB
               .child(_auth.currentUser!.uid)
