@@ -20,6 +20,7 @@ class UserGenre extends StatefulWidget {
 
 class _UserGenreState extends State<UserGenre> {
   bool init = true;
+  bool isNew = true;
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
   final _databaseReference =
@@ -92,10 +93,16 @@ class _UserGenreState extends State<UserGenre> {
       }
     });
 
-    print(
-        'SUCCESS +++++++++++ ___________ ++++++++++++++ +==================== ');
-
-    Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
+    if (isNew) {
+      Navigator.pushReplacementNamed(context, UserDashBoard.routeName);
+    } else {
+      Navigator.of(context).pop();
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Genre Updated Successfully !',
+        color: Colors.green,
+      );
+    }
   }
 
   void _fetchGenre(BuildContext context) async {
@@ -113,12 +120,16 @@ class _UserGenreState extends State<UserGenre> {
         .equalTo(_user!.uid)
         .once()
         .then((DataSnapshot snapshot) {
+      String userGenre = snapshot.value[_user.uid]['userGenre'];
       String name = snapshot.value[_user.uid]['firstName'].toString() +
           ' ' +
           snapshot.value[_user.uid]['lastName'].toString();
       Provider.of<UserGenreProvider>(context, listen: false).setName(name);
       Provider.of<UserGenreProvider>(context, listen: false)
-          .addPreGenre(snapshot.value[_user.uid]['userGenre']);
+          .addPreGenre(userGenre);
+      if (snapshot.value[_user.uid]['userGenre'] != '') {
+        isNew = false;
+      }
     });
   }
 

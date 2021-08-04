@@ -666,6 +666,7 @@ class BottomSheet extends StatelessWidget {
             leading: new Icon(Icons.hdr_strong),
             title: new Text('Interest'),
             onTap: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UserGenre()),
