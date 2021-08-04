@@ -19,15 +19,15 @@ class UserGenreProvider with ChangeNotifier {
     genreList.addAll(value);
     catList.clear();
     catList.addAll(value);
-    topGenreList.clear();
-    for (int i = 0; i < 6; i++) {
-      topGenreList.add(value[i]);
-    }
     notifyListeners();
   }
 
   void addPreGenre(String string) {
     if (string == '') {
+      topGenreList.clear();
+      for (int i = 0; i < 6; i++) {
+        topGenreList.add(genreList[i]);
+      }
       return;
     }
     final idList = string.split(splitCode);
