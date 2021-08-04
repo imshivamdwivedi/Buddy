@@ -1,4 +1,5 @@
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_viewing_screen.dart';
@@ -17,7 +18,7 @@ class ModalBootom extends StatefulWidget {
 class _ModalBootomState extends State<ModalBootom> {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<EventProvider>(context);
+    final provider = Provider.of<EventsProvider>(context);
     final selectedEvents = provider.eventsOfSelectedDate;
 
     if (selectedEvents.isEmpty) {

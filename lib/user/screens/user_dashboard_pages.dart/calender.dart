@@ -1,6 +1,7 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
+import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/bottom_sheet.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
 import 'package:buddy/user/screens/calender_screen/event_provider.dart';
@@ -23,33 +24,35 @@ class _UserCalenderState extends State<UserCalender> {
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      final _user = FirebaseAuth.instance.currentUser;
-      final _dbref = FirebaseDatabase.instance.reference().child('Activity');
-      List<EventCalender> events = [];
-      await _dbref
-          .orderByChild('creatorId')
-          .equalTo(_user!.uid)
-          .once()
-          .then((DataSnapshot snapshot) {
-        if (snapshot.value == null) {
-          events = [];
-        } else {
-          Map myMap = snapshot.value;
-          myMap.values.forEach((element) {
-            final activityData = ActivityModel.fromMap(element);
-            final event = EventCalender(
-              id: activityData.id,
-              title: activityData.title,
-              description: activityData.desc,
-              from: DateTime.parse(activityData.startDate),
-              to: DateTime.parse(activityData.endDate),
-              isAllDay: false,
-            );
-            events.add(event);
-          });
-        }
-      });
-      Provider.of<EventProvider>(context, listen: false).addEventList(events);
+      Provider.of<EventsProvider>(context, listen: false).refresh();
+
+      // final _user = FirebaseAuth.instance.currentUser;
+      // final _dbref = FirebaseDatabase.instance.reference().child('Activity');
+      // List<EventCalender> events = [];
+      // await _dbref
+      //     .orderByChild('creatorId')
+      //     .equalTo(_user!.uid)
+      //     .once()
+      //     .then((DataSnapshot snapshot) {
+      //   if (snapshot.value == null) {
+      //     events = [];
+      //   } else {
+      //     Map myMap = snapshot.value;
+      //     myMap.values.forEach((element) {
+      //       final activityData = ActivityModel.fromMap(element);
+      //       final event = EventCalender(
+      //         id: activityData.id,
+      //         title: activityData.title,
+      //         description: activityData.desc,
+      //         from: DateTime.parse(activityData.startDate),
+      //         to: DateTime.parse(activityData.endDate),
+      //         isAllDay: false,
+      //       );
+      //       events.add(event);
+      //     });
+      //   }
+      // });
+      // Provider.of<EventProvider>(context, listen: false).addEventList(events);
 
       //---( Snack Payload )---//
       final helper = Provider.of<ScreenHelperProvider>(context, listen: false);
@@ -67,7 +70,7 @@ class _UserCalenderState extends State<UserCalender> {
 
   @override
   Widget build(BuildContext context) {
-    final events = Provider.of<EventProvider>(context).events;
+    final events = Provider.of<EventsProvider>(context).allEvents;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -83,7 +86,7 @@ class _UserCalenderState extends State<UserCalender> {
         initialSelectedDate: DateTime.now(),
         cellBorderColor: Colors.transparent,
         onTap: (details) {
-          final provider = Provider.of<EventProvider>(context, listen: false);
+          final provider = Provider.of<EventsProvider>(context, listen: false);
 
           provider.setDate(details.date!);
           showModalBottomSheet(

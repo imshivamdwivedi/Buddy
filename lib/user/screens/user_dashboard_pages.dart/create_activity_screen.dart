@@ -368,6 +368,13 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         );
       } else {
         await _dbref.child(_aid).set(payload.toMap());
+
+        final _refUserEvent = FirebaseDatabase.instance
+            .reference()
+            .child('Events')
+            .child(_user.uid)
+            .child(_aid);
+        await _refUserEvent.child('eid').set(_aid);
         CustomSnackbar().showFloatingFlushbar(
           context: context,
           message: 'Activity Created Successfully!',
