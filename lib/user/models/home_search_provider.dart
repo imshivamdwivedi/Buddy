@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,12 +20,21 @@ class HomeSearchProvider with ChangeNotifier {
   final _eventDB = FirebaseDatabase.instance.reference().child('Activity');
   late StreamSubscription<Event> _eventListStream;
 
+  List<GroupChannel> allCommunity = [];
+  List<GroupChannel> filteredCommunity = [];
+  final _communityDB = FirebaseDatabase.instance.reference().child('Chats');
+  late StreamSubscription<Event> _communityStream;
+
   List<HomeSearchHelper> get suggestedUsers {
     return [...filteredList];
   }
 
   List<ActivityModel> get suggestedEvents {
     return [...filteredEventsList];
+  }
+
+  List<GroupChannel> get suggestedCommunity {
+    return [...filteredCommunity];
   }
 
   List<ActivityModel> get allEvents {
@@ -38,11 +48,13 @@ class HomeSearchProvider with ChangeNotifier {
   HomeSearchProvider() {
     _fetchUserList();
     _fetchEventList();
+    _fetchCommunity();
   }
 
   void refresh() {
     _fetchUserList();
     _fetchEventList();
+    _fetchCommunity();
   }
 
   void _fetchUserList() {
@@ -67,6 +79,22 @@ class HomeSearchProvider with ChangeNotifier {
         allEventsList = _allEventMap.values.map((e) {
           final actModel = ActivityModel.fromMap(Map<String, dynamic>.from(e));
           return actModel;
+        }).toList();
+        notifyListeners();
+      }
+    });
+  }
+
+  void _fetchCommunity() {
+    _communityStream = _communityDB.onValue.listen((event) {
+      if (event.snapshot.value == null) {
+        allCommunity.clear();
+        notifyListeners();
+      } else {
+        final _allCommnityMap = Map<String, dynamic>.from(event.snapshot.value);
+        allCommunity = _allCommnityMap.values.map((e) {
+          final comModel = GroupChannel.fromMap(Map<String, dynamic>.from(e));
+          return comModel;
         }).toList();
         notifyListeners();
       }
@@ -120,6 +148,7 @@ class HomeSearchProvider with ChangeNotifier {
     if (query == '') {
       filteredList.clear();
       filteredEventsList.clear();
+      filteredCommunity.clear();
       notifyListeners();
       tags = [];
       return;
@@ -128,6 +157,7 @@ class HomeSearchProvider with ChangeNotifier {
     tags.clear();
     filteredList = allUsersList;
     filteredEventsList = allEventsList;
+    filteredCommunity = allCommunity;
 
     final filters = query.trim().split(' ');
     tags = filters;
@@ -139,6 +169,7 @@ class HomeSearchProvider with ChangeNotifier {
               .contains(filter.toLowerCase()))
           .toList();
       filteredList = newFilter;
+
       final newEventFilter = filteredEventsList
           .where((element) => element.title
               .trim()
@@ -147,8 +178,16 @@ class HomeSearchProvider with ChangeNotifier {
               .contains(filter))
           .toList();
       filteredEventsList = newEventFilter;
-    });
 
+      final newCommunityFilter = filteredCommunity
+          .where((element) => element.chName
+              .trim()
+              .toLowerCase()
+              .replaceAll(' ', '')
+              .contains(filter))
+          .toList();
+      filteredCommunity = newCommunityFilter;
+    });
     notifyListeners();
   }
 
@@ -156,6 +195,7 @@ class HomeSearchProvider with ChangeNotifier {
   void dispose() {
     _userListStream.cancel();
     _eventListStream.cancel();
+    _communityStream.cancel();
     super.dispose();
   }
 }
