@@ -4,6 +4,7 @@ class EventCalender {
   final String description;
   final DateTime from;
   final DateTime to;
+  final String creatotId;
   final bool isAllDay;
 
   const EventCalender({
@@ -11,6 +12,7 @@ class EventCalender {
     required this.title,
     required this.description,
     required this.from,
+    required this.creatotId,
     required this.to,
     required this.isAllDay,
   });

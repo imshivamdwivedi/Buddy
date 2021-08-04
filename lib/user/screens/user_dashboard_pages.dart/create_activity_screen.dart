@@ -3,6 +3,7 @@ import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
+import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
@@ -344,7 +345,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       if (isEditing) {
         final _newDbref =
             FirebaseDatabase.instance.reference().child('Activity');
-        _newDbref
+        await _newDbref
             .orderByChild('id')
             .equalTo(widget.event!.id)
             .once()
@@ -366,6 +367,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
           message: 'Activity Edited Successfully!',
           color: Colors.green,
         );
+        Provider.of<EventsProvider>(context, listen: false).refresh();
       } else {
         await _dbref.child(_aid).set(payload.toMap());
 

@@ -1,7 +1,6 @@
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
-import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/event_viewing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +21,7 @@ class _ModalBootomState extends State<ModalBootom> {
     final selectedEvents = provider.eventsOfSelectedDate;
 
     if (selectedEvents.isEmpty) {
+      print('true');
       return Center(
         child: Text(
           "No Events found!",

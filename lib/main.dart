@@ -68,9 +68,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => UserProvider(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => EventProvider(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (ctx) => EventProvider(),
+        // ),
         ChangeNotifierProvider(
           create: (ctx) => EventsProvider(),
         ),

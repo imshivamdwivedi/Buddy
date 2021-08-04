@@ -1,8 +1,10 @@
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/notification/screen/notification_screen.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
+import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/models/follower_provider.dart';
 import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -96,6 +98,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
       Provider.of<ChatListProvider>(context, listen: false);
       Provider.of<FollowerProvider>(context, listen: false);
       Provider.of<FollowingProvider>(context, listen: false);
+      Provider.of<NotificationProvider>(context, listen: false);
+      Provider.of<EventsProvider>(context, listen: false).refresh();
       init = false;
     }
     return Scaffold(

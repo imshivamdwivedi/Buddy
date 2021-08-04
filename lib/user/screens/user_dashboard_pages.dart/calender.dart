@@ -1,14 +1,9 @@
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/screens/calender_screen/bottom_sheet.dart';
 import 'package:buddy/user/screens/calender_screen/event_datasource.dart';
-import 'package:buddy/user/screens/calender_screen/event_provider.dart';
-import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -24,8 +19,7 @@ class _UserCalenderState extends State<UserCalender> {
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      Provider.of<EventsProvider>(context, listen: false).refresh();
-
+      //Provider.of<EventsProvider>(context, listen: false);
       // final _user = FirebaseAuth.instance.currentUser;
       // final _dbref = FirebaseDatabase.instance.reference().child('Activity');
       // List<EventCalender> events = [];
@@ -55,22 +49,18 @@ class _UserCalenderState extends State<UserCalender> {
       // Provider.of<EventProvider>(context, listen: false).addEventList(events);
 
       //---( Snack Payload )---//
-      final helper = Provider.of<ScreenHelperProvider>(context, listen: false);
-      if (helper.getSnackAvail) {
-        CustomSnackbar().showFloatingFlushbar(
-          context: context,
-          message: helper.getSnackPayload,
-          color: Colors.green,
-        );
-      }
-      helper.flushSnackMessage();
+      // final helper = Provider.of<ScreenHelperProvider>(context, listen: false);
+      // if (helper.getSnackAvail) {
+
+      // }
+      // helper.flushSnackMessage();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final events = Provider.of<EventsProvider>(context).allEvents;
+    final events = Provider.of<EventsProvider>(context).events;
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -87,7 +77,6 @@ class _UserCalenderState extends State<UserCalender> {
         cellBorderColor: Colors.transparent,
         onTap: (details) {
           final provider = Provider.of<EventsProvider>(context, listen: false);
-
           provider.setDate(details.date!);
           showModalBottomSheet(
             shape: RoundedRectangleBorder(

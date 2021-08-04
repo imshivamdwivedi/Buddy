@@ -1,9 +1,11 @@
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -119,24 +121,37 @@ class EventViewingScreen extends StatelessWidget {
   List<Widget> buildViewActions(
           BuildContext context, EventCalender eventCalender) =>
       [
-        IconButton(
-            onPressed: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) => CreateActivityScreen(eventCalender))),
-            icon: Icon(
-              Icons.edit,
-              color: Colors.black87,
-            )),
+        if (event.creatotId == FirebaseAuth.instance.currentUser!.uid)
+          IconButton(
+              onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CreateActivityScreen(eventCalender))),
+              icon: Icon(
+                Icons.edit,
+                color: Colors.black87,
+              )),
         IconButton(
           onPressed: () async {
+            final _auth = FirebaseAuth.instance;
+            if (event.creatotId == _auth.currentUser!.uid) {
+              final _dbref =
+                  FirebaseDatabase.instance.reference().child('Activity');
+              await _dbref.child(event.id).set(null);
+            }
             final _dbref =
-                FirebaseDatabase.instance.reference().child('Activity');
-            await _dbref.child(event.id).set(null);
-            final helper =
-                Provider.of<ScreenHelperProvider>(context, listen: false);
-            helper.setCurrentTab(1);
-            helper.setSnackMessage('Activity Deleted Succesfully!');
-            Navigator.of(context).pushReplacementNamed(UserDashBoard.routeName);
+                FirebaseDatabase.instance.reference().child('Events');
+            await _dbref
+                .child(_auth.currentUser!.uid)
+                .child(event.id)
+                .set(null);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            CustomSnackbar().showFloatingFlushbar(
+              context: context,
+              message: 'Activity Deleted Succesfully!',
+              color: Colors.green,
+            );
           },
           icon: Icon(
             Icons.delete,
