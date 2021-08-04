@@ -11,6 +11,7 @@ import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/connection_view_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/follower_viewing_screen.dart';
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/follwing_view_screen.dart';
+import 'package:buddy/user/screens/user_genre.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -653,27 +654,30 @@ class BottomSheet extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            leading: new Icon(Icons.brightness_medium),
-            title: new Text('Theme'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+          // ListTile(
+          //   leading: new Icon(Icons.brightness_medium),
+          //   title: new Text('Theme'),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //   },
+          // ),
           ListTile(
             leading: new Icon(Icons.hdr_strong),
             title: new Text('Interest'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserGenre()),
+              );
             },
           ),
-          ListTile(
-            leading: new Icon(Icons.share),
-            title: new Text('Share'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+          // ListTile(
+          //   leading: new Icon(Icons.share),
+          //   title: new Text('Share'),
+          //   onTap: () {
+
+          //   },
+          // ),
           ListTile(
             leading: new Icon(Icons.logout),
             title: new Text('Logout'),

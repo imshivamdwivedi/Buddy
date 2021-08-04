@@ -38,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     decoration: InputDecoration(
                       focusColor: Colors.black87,
                       prefixIcon: Icon(Icons.search),
-                      hintText: 'Search User name',
+                      hintText: 'Search Catgeory',
                     ),
                   ),
                   suggestionsCallback: CategoryAPI.getUserSuggestion,
