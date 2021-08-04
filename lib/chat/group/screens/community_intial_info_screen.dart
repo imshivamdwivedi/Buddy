@@ -5,10 +5,13 @@ import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
+import 'package:file_support/file_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,10 +27,11 @@ class CommunityIntialInfoCreateScreen extends StatefulWidget {
 
 class _CommunityIntialInfoCreateScreenState
     extends State<CommunityIntialInfoCreateScreen> {
+  UploadTask? task;
   final _auth = FirebaseAuth.instance;
   final TextEditingController _chNameController = new TextEditingController();
 
-  File? _image = null;
+  File? _image;
   final picker = ImagePicker();
 
   Future getImage(ImageSource source) async {
@@ -49,10 +53,6 @@ class _CommunityIntialInfoCreateScreenState
       if (cropedImage != null) {
         Navigator.pop(context);
         if ((cropedImage.lengthSync() / 1024) < 256) {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => new CustomLoader().buildLoader(context));
           _image = File(cropedImage.path);
         } else {
           CustomSnackbar().showFloatingFlushbar(
@@ -76,14 +76,45 @@ class _CommunityIntialInfoCreateScreenState
         lockAspectRatio: false,
       );
 
-  void _createCommunity() {
+  Future<String> uploadFile(File _file, String chName) async {
+    final fileName = FileSupport().getFileNameWithoutExtension(_file);
+    final destination = 'GroupImages/$chName/$fileName';
+
+    task = FirebaseApi.uploadFile(destination, _file);
+
+    if (task == null) return '';
+
+    final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    return urlDownload;
+  }
+
+  void _createCommunity() async {
     final String chName = _chNameController.text;
 
     if (_chNameController.text.isEmpty) {
       //---( Null Check )---//
-
+      CustomSnackbar().showFloatingFlushbar(
+        context: context,
+        message: 'Channel name field can not be Empty',
+        color: Colors.red,
+      );
       return;
     }
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => new CustomLoader().buildLoader(context));
+
+    final result = await uploadFile(File(_image!.path), chName);
+
+    if (result == '') {
+      Navigator.pop(context);
+      return;
+    }
+
     var users = _auth.currentUser!.uid;
     final admins = _auth.currentUser!.uid;
 
@@ -101,7 +132,7 @@ class _CommunityIntialInfoCreateScreenState
       users: users,
       admins: admins,
       chName: chName,
-      chImg: '',
+      chImg: result,
       createdAt: DateTime.now().toString(),
     );
     _comDb.child(_chid).set(_newGroupChannel.toMap());
@@ -115,14 +146,14 @@ class _CommunityIntialInfoCreateScreenState
       final _chPayload = ChatListModel(
         chid: _chid,
         name: chName,
-        nameImg: '',
+        nameImg: result,
         user: element,
         msgPen: 0,
         lastMsg: '',
       );
       _chOne.set(_chPayload.toMap());
     });
-
+    Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);
   }

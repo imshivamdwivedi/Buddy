@@ -92,6 +92,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         hideBottomControls: true,
         lockAspectRatio: false,
       );
+
   Future uploadFile(File _file) async {
     final userImg =
         Provider.of<UserProvider>(context, listen: false).getUserImg;
