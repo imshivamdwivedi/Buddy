@@ -46,7 +46,7 @@ class _UserHomeState extends State<UserHome> {
                   children: [
                     Container(
                       child: SearchBar(
-                        text: 'Search buddies',
+                        text: 'Find Buddies',
                         icon: Icons.search,
                         val: true,
                         func: () {
@@ -58,21 +58,8 @@ class _UserHomeState extends State<UserHome> {
                         },
                       ),
                     ),
-                    // IconButton(
-                    //   onPressed: () {
-                    // Navigator.of(context)
-                    //     .pushNamed(SearchConnectionScreen.routeName)
-                    //     .then((_) {
-                    //   _updateSearch(context);
-                    // });
-                    //   },
-                    //   icon: Icon(
-                    //     Icons.search,
-                    //     color: Colors.black87,
-                    //   ),
-                    // ),
                     SizedBox(
-                      width: size.width * 0.03,
+                      width: size.width * 0.05,
                     ),
                     Consumer<ChatListProvider>(
                       builder: (context, value, child) =>
@@ -83,28 +70,12 @@ class _UserHomeState extends State<UserHome> {
                               : child!,
                       child: IconButton(
                         onPressed: () {
-                          // showDialog(
-                          //   barrierDismissible: false,
-                          //   context: context,
-                          //   builder: (context) =>
-                          //       new CustomLoader().buildLoader(context),
-                          // );
-
                           Navigator.of(context)
                               .pushNamed(UserChatList.routeName);
-
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ChangeNotifierProvider(
-                          //       create: (ctx) => ChatListProvider(),
-                          //       child: UserChatList(),
-                          //     ),
-                          //   ),
-                          // );
                         },
                         icon: Icon(
                           Icons.message,
-                          size: size.height * 0.05,
+                          size: size.height * 0.04,
                           color: Colors.black87,
                         ),
                       ),
