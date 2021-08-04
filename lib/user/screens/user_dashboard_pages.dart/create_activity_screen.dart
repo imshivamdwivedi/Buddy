@@ -61,6 +61,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     }
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         actions: buildEdtingActions(),
         title: const Text(
           "Create Events",

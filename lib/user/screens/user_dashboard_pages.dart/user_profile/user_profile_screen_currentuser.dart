@@ -210,6 +210,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
+        elevation: 0.0,
         title: Text(
           "Profile",
           style: TextStyle(color: Colors.black87),

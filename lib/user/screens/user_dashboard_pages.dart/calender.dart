@@ -86,6 +86,7 @@ class _UserCalenderState extends State<UserCalender> {
     final events = Provider.of<EventProvider>(context).events;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         title: Text(
           "Events",
           style: TextStyle(color: Colors.black87),

@@ -5,6 +5,9 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +22,21 @@ class ActivityItem extends StatefulWidget {
 }
 
 class _ActivityItemState extends State<ActivityItem> {
+  final _firebaseDatabase = FirebaseDatabase.instance;
+  final _auth = FirebaseAuth.instance;
+
+  void AddEvent() async {
+    final uid = _auth.currentUser!.uid;
+    final activity_id = widget.dataModel.id;
+
+    final _refUserEvent = _firebaseDatabase
+        .reference()
+        .child('Events')
+        .child(uid)
+        .child(activity_id);
+    await _refUserEvent.child('eid').set(activity_id);
+  }
+
   @override
   Widget build(BuildContext context) {
     var dateTime = DateTime.parse(widget.dataModel.startDate);
@@ -151,6 +169,7 @@ class _ActivityItemState extends State<ActivityItem> {
                       iconSize: 20,
                       height: 35,
                       width: 35,
+                      OnPressed: () {},
                     ),
                     Transform.rotate(
                       angle: -math.pi / 4,
@@ -161,6 +180,7 @@ class _ActivityItemState extends State<ActivityItem> {
                         iconSize: 20,
                         height: 35,
                         width: 35,
+                        OnPressed: () {},
                       ),
                     ),
                     ProfileFloatingButton(
@@ -170,6 +190,7 @@ class _ActivityItemState extends State<ActivityItem> {
                       iconSize: 20,
                       height: 35,
                       width: 35,
+                      OnPressed: AddEvent,
                     ),
                     ProfileFloatingButton(
                       color: Colors.black,
@@ -178,6 +199,7 @@ class _ActivityItemState extends State<ActivityItem> {
                       iconSize: 20,
                       height: 35,
                       width: 35,
+                      OnPressed: () {},
                     ),
                   ],
                 ),

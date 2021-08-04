@@ -285,6 +285,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     ProfileFloatingButton(
                       color: kPrimaryLightColor,
                       icon: Icons.email,
+                      OnPressed: () {},
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.02,
@@ -292,6 +293,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                     ProfileFloatingButton(
                       color: kPrimaryLightColor,
                       icon: Icons.person_add,
+                      OnPressed: () {},
                     ),
                   ],
                 ),

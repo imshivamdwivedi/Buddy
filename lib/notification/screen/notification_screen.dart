@@ -17,6 +17,7 @@ class _UserNotificationState extends State<UserNotification> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           "Notifications",
