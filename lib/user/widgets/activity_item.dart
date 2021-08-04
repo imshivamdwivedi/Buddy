@@ -1,8 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:buddy/components/profile_floating_button.dart';
+import 'package:buddy/components/rounded_button.dart';
+import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
+import 'package:buddy/user/models/user_provider.dart';
+import 'package:buddy/user/widgets/comment_model.dart';
+import 'package:buddy/user/widgets/comments_view_screen.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +16,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ActivityItem extends StatefulWidget {
   final ActivityModel dataModel;
@@ -22,6 +28,7 @@ class ActivityItem extends StatefulWidget {
 }
 
 class _ActivityItemState extends State<ActivityItem> {
+  final TextEditingController _commentController = TextEditingController();
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 
@@ -35,6 +42,29 @@ class _ActivityItemState extends State<ActivityItem> {
         .child(uid)
         .child(activity_id);
     await _refUserEvent.child('eid').set(activity_id);
+  }
+
+  void _addComment() async {
+    if (_commentController.text == null) {
+      return;
+    }
+    final uid = _auth.currentUser!.uid;
+    final User = Provider.of<UserProvider>(context, listen: false);
+    final post_id = widget.dataModel.id;
+
+    final refEventComment =
+        _firebaseDatabase.reference().child('Comments').child(post_id);
+    final cid = refEventComment.push().key;
+
+    final commentPayload = CommentModel(
+        cid: cid,
+        uid: User.getUserId,
+        comment: _commentController.text,
+        userImg: User.getUserImg,
+        userName: User.getUserName);
+    await refEventComment.child(cid).set(commentPayload.toMap());
+    _commentController.text = "";
+    Navigator.of(context).pop();
   }
 
   @override
@@ -169,7 +199,14 @@ class _ActivityItemState extends State<ActivityItem> {
                       iconSize: 20,
                       height: 35,
                       width: 35,
-                      OnPressed: () {},
+                      OnPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              _buildPopupDialogComment(
+                                  context, widget.dataModel.id),
+                        );
+                      },
                     ),
                     Transform.rotate(
                       angle: -math.pi / 4,
@@ -206,6 +243,39 @@ class _ActivityItemState extends State<ActivityItem> {
               ),
             ],
           )),
+    );
+  }
+
+  Widget _buildPopupDialogComment(BuildContext context, String post_id) {
+    return new AlertDialog(
+      content: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: Column(
+            children: [
+              RoundedInputField(
+                  text: 'Add Comment', controller: _commentController),
+              RoundedButton(
+                  MediaQuery.of(context).size,
+                  0.4,
+                  Text(
+                    "Add",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  _addComment,
+                  ''),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommentViewScreen(post_id),
+                    ));
+                  },
+                  child: Text("Load Previos Comments")),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

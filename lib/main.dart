@@ -23,6 +23,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provi
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:buddy/user/screens/user_genre.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
+import 'package:buddy/user/widgets/comments_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => HomeSearchProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => CommentProvider(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => ChatSearchProvider(),
