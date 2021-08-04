@@ -1,3 +1,4 @@
+import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/category_class.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class UserGenreProvider with ChangeNotifier {
   List<Category> genreList = [];
   List<Category> topGenreList = [];
   static List<Category> catList = [];
-  String userName = 'User Name';
+  String userName = '';
   static String queryFin = '';
 
   String get getQuery {
@@ -13,13 +14,30 @@ class UserGenreProvider with ChangeNotifier {
   }
 
   void addList(List<Category> value) {
+    value.sort((a, b) => a.count > b.count ? -1 : 1);
     genreList.clear();
     genreList.addAll(value);
     catList.clear();
     catList.addAll(value);
-    topGenreList
-        .addAll(genreList.where((element) => element.count > 5).toList());
+    topGenreList.clear();
+    for (int i = 0; i < 6; i++) {
+      topGenreList.add(value[i]);
+    }
     notifyListeners();
+  }
+
+  void addPreGenre(String string) {
+    if (string == '') {
+      return;
+    }
+    final idList = string.split(splitCode);
+    topGenreList.clear();
+    idList.forEach((genreTemp) {
+      final tempGenre =
+          genreList.firstWhere((element) => element.id == genreTemp);
+      tempGenre.isSelected = true;
+      topGenreList.add(tempGenre);
+    });
   }
 
   void addGenre(Category category) {
@@ -27,6 +45,13 @@ class UserGenreProvider with ChangeNotifier {
     if (!topGenreList.contains(category)) {
       topGenreList.add(category);
       notifyListeners();
+    } else {
+      topGenreList.forEach((element) {
+        if (element == category) {
+          element.isSelected = true;
+          notifyListeners();
+        }
+      });
     }
   }
 
