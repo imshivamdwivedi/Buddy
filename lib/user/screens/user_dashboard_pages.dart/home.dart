@@ -6,7 +6,6 @@ import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
 import 'package:buddy/user/widgets/badge.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +19,6 @@ class UserHome extends StatefulWidget {
 }
 
 class _UserHomeState extends State<UserHome> {
-  // final _nameController = TextEditingController();
-  final _auth = FirebaseAuth.instance;
-  Query _refAct = FirebaseDatabase.instance.reference().child('Activity');
-
   @override
   void initState() {
     _updateSearch(context);
@@ -130,15 +125,12 @@ class _UserHomeState extends State<UserHome> {
                   kToolbarHeight +
                   size.height * 0.01 -
                   kBottomNavigationBarHeight,
-              child: FirebaseAnimatedList(
-                query: _refAct,
-                itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                    Animation<double> animation, int index) {
-                  Map data = snapshot.value;
-                  return ActivityItem(
-                    dataModel: ActivityModel.fromMap(data),
-                  );
-                },
+              child: Consumer<HomeSearchProvider>(
+                builder: (_, model, child) => ListView.builder(
+                  itemCount: model.allEventsList.length,
+                  itemBuilder: (context, index) =>
+                      ActivityItem(dataModel: model.allEventsList[index]),
+                ),
               ),
             ),
           ],
@@ -147,3 +139,13 @@ class _UserHomeState extends State<UserHome> {
     );
   }
 }
+// FirebaseAnimatedList(
+//                 query: _refAct,
+//                 itemBuilder: (BuildContext context, DataSnapshot snapshot,
+//                     Animation<double> animation, int index) {
+//                   Map data = snapshot.value;
+//                   return ActivityItem(
+//                     dataModel: ActivityModel.fromMap(data),
+//                   );
+//                 },
+//               )
