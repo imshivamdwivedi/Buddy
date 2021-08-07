@@ -15,7 +15,6 @@ import 'package:buddy/user/models/following_provider.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_genre_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
-import 'package:buddy/user/screens/calender_screen/event_provider.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/screens/genre_searchbar/search_screen.dart';
 import 'package:buddy/user/screens/user_dashboard.dart';
