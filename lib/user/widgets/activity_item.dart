@@ -44,29 +44,6 @@ class _ActivityItemState extends State<ActivityItem> {
     await _refUserEvent.child('eid').set(activity_id);
   }
 
-  void _addComment() async {
-    if (_commentController.text == null) {
-      return;
-    }
-    final uid = _auth.currentUser!.uid;
-    final User = Provider.of<UserProvider>(context, listen: false);
-    final post_id = widget.dataModel.id;
-
-    final refEventComment =
-        _firebaseDatabase.reference().child('Comments').child(post_id);
-    final cid = refEventComment.push().key;
-
-    final commentPayload = CommentModel(
-        cid: cid,
-        uid: User.getUserId,
-        comment: _commentController.text,
-        userImg: User.getUserImg,
-        userName: User.getUserName);
-    await refEventComment.child(cid).set(commentPayload.toMap());
-    _commentController.text = "";
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     var dateTime = DateTime.parse(widget.dataModel.startDate);
@@ -200,11 +177,11 @@ class _ActivityItemState extends State<ActivityItem> {
                       height: 35,
                       width: 35,
                       OnPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _buildPopupDialogComment(
-                                  context, widget.dataModel.id),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CommentViewScreen(
+                                  dataModel: widget.dataModel)),
                         );
                       },
                     ),
@@ -263,15 +240,10 @@ class _ActivityItemState extends State<ActivityItem> {
                     "Add",
                     style: TextStyle(color: Colors.black),
                   ),
-                  _addComment,
+                  () {},
                   ''),
               ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CommentViewScreen(post_id),
-                    ));
-                  },
-                  child: Text("Load Previos Comments")),
+                  onPressed: () {}, child: Text("Load Previos Comments")),
             ],
           ),
         ),
