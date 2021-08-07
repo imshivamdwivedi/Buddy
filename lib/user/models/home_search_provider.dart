@@ -52,6 +52,10 @@ class HomeSearchProvider with ChangeNotifier {
   }
 
   void refresh() {
+    filteredCommunity.clear();
+    tags.clear();
+    filteredEventsList.clear();
+    filteredList.clear();
     _fetchUserList();
     _fetchEventList();
     _fetchCommunity();
@@ -175,7 +179,7 @@ class HomeSearchProvider with ChangeNotifier {
               .trim()
               .toLowerCase()
               .replaceAll(' ', '')
-              .contains(filter))
+              .contains(filter.toLowerCase()))
           .toList();
       filteredEventsList = newEventFilter;
 
@@ -184,7 +188,7 @@ class HomeSearchProvider with ChangeNotifier {
               .trim()
               .toLowerCase()
               .replaceAll(' ', '')
-              .contains(filter))
+              .contains(filter.toLowerCase()))
           .toList();
       filteredCommunity = newCommunityFilter;
     });
@@ -200,7 +204,7 @@ class HomeSearchProvider with ChangeNotifier {
   }
 }
 
-//H://---( Here Model Class )---//
+//---( Here Model Class )---//
 class HomeSearchHelper with ChangeNotifier {
   UserModel userModel;
   bool isPending;

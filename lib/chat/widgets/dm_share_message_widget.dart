@@ -2,12 +2,12 @@ import 'package:buddy/user/models/activity_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class DmMessageTile extends StatelessWidget {
+class DmShareMessageTile extends StatelessWidget {
   final String message;
   final bool isRead;
   final bool sendByMe;
 
-  DmMessageTile({
+  DmShareMessageTile({
     required this.message,
     required this.isRead,
     required this.sendByMe,
@@ -15,10 +15,8 @@ class DmMessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _fDB = FirebaseDatabase.instance
-        .reference()
-        .child('Activity')
-        .child('-MgGmO2o35M4uv_xPnkI');
+    final _fDB =
+        FirebaseDatabase.instance.reference().child('Activity').child(message);
     return Container(
       padding: EdgeInsets.only(
         top: 4,
@@ -52,9 +50,27 @@ class DmMessageTile extends StatelessWidget {
               child: StreamBuilder<Event>(
                 stream: _fDB.onValue,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  final model =
-                      ActivityModel.fromMap(snapshot.data.snapshot.value);
-                  return Text(model.title);
+                  if (snapshot.hasData) {
+                    final model =
+                        ActivityModel.fromMap(snapshot.data.snapshot.value);
+                    return Text(
+                      'POST TITLE = ${model.title}\nLike And Subscribe !',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300),
+                    );
+                  } else {
+                    return Text(
+                      'Loading...',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300),
+                    );
+                  }
                 },
               ),
             ),

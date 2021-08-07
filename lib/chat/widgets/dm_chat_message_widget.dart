@@ -42,12 +42,14 @@ class DmMessageTile extends StatelessWidget {
                         ? [const Color(0xff007EF4), const Color(0xff007EF4)]
                         : [const Color(0xff000000), const Color(0xff000000)],
                   )),
-              child: Text(message,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300)),
+              child: Text(
+                message,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300),
+              ),
             ),
             if (sendByMe && isRead)
               Row(
