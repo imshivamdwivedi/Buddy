@@ -3,8 +3,6 @@ import 'dart:math' as math;
 import 'package:buddy/chat/screens/event_detail_screen.dart';
 import 'package:buddy/chat/screens/share_posts.dart';
 import 'package:buddy/components/profile_floating_button.dart';
-import 'package:buddy/components/rounded_button.dart';
-import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/widgets/comments_view_screen.dart';
@@ -207,7 +205,9 @@ class _ActivityItemState extends State<ActivityItem> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SharePost()),
+                                  builder: (context) => SharePost(
+                                        postId: widget.dataModel.id,
+                                      )),
                             );
                           },
                         ),

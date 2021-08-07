@@ -90,7 +90,11 @@ class HomeSearchProvider with ChangeNotifier {
   }
 
   void _fetchCommunity() {
-    _communityStream = _communityDB.onValue.listen((event) {
+    _communityStream = _communityDB
+        .orderByChild('type')
+        .equalTo('COM')
+        .onValue
+        .listen((event) {
       if (event.snapshot.value == null) {
         allCommunity.clear();
         notifyListeners();

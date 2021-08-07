@@ -103,16 +103,20 @@ class _CommunityIntialInfoCreateScreenState
       return;
     }
 
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => new CustomLoader().buildLoader(context));
+    late String result = '';
 
-    final result = await uploadFile(File(_image!.path), chName);
+    if (_image != null) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => new CustomLoader().buildLoader(context));
 
-    if (result == '') {
-      Navigator.pop(context);
-      return;
+      result = await uploadFile(File(_image!.path), chName);
+
+      if (result == '') {
+        Navigator.pop(context);
+        return;
+      }
     }
 
     var users = _auth.currentUser!.uid;
@@ -153,7 +157,6 @@ class _CommunityIntialInfoCreateScreenState
       );
       _chOne.set(_chPayload.toMap());
     });
-    Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);
   }

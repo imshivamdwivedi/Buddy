@@ -1,3 +1,4 @@
+import 'package:buddy/chat/screens/event_detail_screen.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -53,13 +54,23 @@ class DmShareMessageTile extends StatelessWidget {
                   if (snapshot.hasData) {
                     final model =
                         ActivityModel.fromMap(snapshot.data.snapshot.value);
-                    return Text(
-                      'POST TITLE = ${model.title}\nLike And Subscribe !',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300),
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EventDetailScreen(activityModel: model),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'POST TITLE = ${model.title}\nLike And Subscribe !',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300),
+                      ),
                     );
                   } else {
                     return Text(
