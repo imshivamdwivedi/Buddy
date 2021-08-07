@@ -1,22 +1,19 @@
 import 'dart:math' as math;
 
+import 'package:buddy/chat/screens/share_posts.dart';
 import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
-import 'package:buddy/user/models/user_provider.dart';
-import 'package:buddy/user/widgets/comment_model.dart';
 import 'package:buddy/user/widgets/comments_view_screen.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class ActivityItem extends StatefulWidget {
   final ActivityModel dataModel;
@@ -194,7 +191,13 @@ class _ActivityItemState extends State<ActivityItem> {
                         iconSize: 20,
                         height: 35,
                         width: 35,
-                        OnPressed: () {},
+                        OnPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SharePost()),
+                          );
+                        },
                       ),
                     ),
                     ProfileFloatingButton(
@@ -220,34 +223,6 @@ class _ActivityItemState extends State<ActivityItem> {
               ),
             ],
           )),
-    );
-  }
-
-  Widget _buildPopupDialogComment(BuildContext context, String post_id) {
-    return new AlertDialog(
-      content: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: Column(
-            children: [
-              RoundedInputField(
-                  text: 'Add Comment', controller: _commentController),
-              RoundedButton(
-                  MediaQuery.of(context).size,
-                  0.4,
-                  Text(
-                    "Add",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  () {},
-                  ''),
-              ElevatedButton(
-                  onPressed: () {}, child: Text("Load Previos Comments")),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

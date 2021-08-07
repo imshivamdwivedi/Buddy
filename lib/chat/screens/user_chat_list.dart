@@ -249,7 +249,7 @@ class _UserChatListState extends State<UserChatList> {
                                   );
                                 }
                               },
-                              tileColor: kPrimaryLightColor,
+                              tileColor: kPrimaryColor,
                               leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
