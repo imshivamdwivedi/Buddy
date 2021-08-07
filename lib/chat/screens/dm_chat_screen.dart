@@ -1,5 +1,6 @@
 import 'package:buddy/chat/models/dm_message_model.dart';
 import 'package:buddy/chat/widgets/dm_chat_message_widget.dart';
+import 'package:buddy/chat/widgets/dm_share_message_widget.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
@@ -47,7 +48,6 @@ class _DmChatScreenState extends State<DmChatScreen> {
   }
 
   Widget chatMessages() {
-    String msgId = '';
     return FirebaseAnimatedList(
       sort: (a, b) {
         return a.value['createdAt'] > b.value['createdAt'] ? -1 : 1;
@@ -70,11 +70,21 @@ class _DmChatScreenState extends State<DmChatScreen> {
           //---( Message is of Another One )---//
           _updateCount(msg.msgId);
         }
-        return DmMessageTile(
-          isRead: false,
-          message: msg.text,
-          sendByMe: (msg.senderId == _auth.currentUser!.uid),
-        );
+        if (msg.text.startsWith(splitCode + 'sharepost=')) {
+          //---( Share Post Message )---//
+          return DmShareMessageTile(
+            isRead: false,
+            message: msg.text.substring(14),
+            sendByMe: (msg.senderId == _auth.currentUser!.uid),
+          );
+        } else {
+          //---( Simple Text Message )---//
+          return DmMessageTile(
+            isRead: false,
+            message: msg.text,
+            sendByMe: (msg.senderId == _auth.currentUser!.uid),
+          );
+        }
       },
     );
   }
