@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
       return;
     }
 
-    //---( Password Pattern )----//
+    //----( Password Pattern )----//
     if (!validateStructure(_pass)) {
       print('invalid-password-format');
       CustomSnackbar().showFloatingFlushbar(
@@ -57,7 +57,7 @@ class _SignInState extends State<SignIn> {
       builder: (context) => new CustomLoader().buildLoader(context),
     );
 
-    //---( Password and email Pattern )---//
+    //----( Password and email Pattern )---//
     try {
       await _auth.signInWithEmailAndPassword(email: _email, password: _pass);
       print('Signed User In !');

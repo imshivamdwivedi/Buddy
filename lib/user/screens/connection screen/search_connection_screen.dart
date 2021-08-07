@@ -3,7 +3,6 @@ import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/dm_chat_screen.dart';
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
@@ -225,7 +224,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
     );
   }
 
-  //H://---( Buddies List Widget )---//
+  //---( Buddies List Widget )---//
   Widget buildBuddiesList(BuildContext context) {
     final userData = Provider.of<HomeSearchProvider>(context);
     return Column(
@@ -310,7 +309,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
     );
   }
 
-  //H://---( Communities List Widget )---//
+  //---( Communities List Widget )---//
 
   Widget userCard(UserModel userModel, HomeSearchHelper user) {
     return Card(
