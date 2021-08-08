@@ -6,6 +6,8 @@ import 'package:buddy/components/profile_floating_button.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/widgets/comments_view_screen.dart';
+import 'package:buddy/utils/dynamci_link_service.dart';
+import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +15,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 
 class ActivityItem extends StatefulWidget {
   final ActivityModel dataModel;
@@ -24,20 +27,19 @@ class ActivityItem extends StatefulWidget {
 }
 
 class _ActivityItemState extends State<ActivityItem> {
-  final TextEditingController _commentController = TextEditingController();
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 
-  void AddEvent() async {
+  void addEvent() async {
     final uid = _auth.currentUser!.uid;
-    final activity_id = widget.dataModel.id;
+    final activityId = widget.dataModel.id;
 
     final _refUserEvent = _firebaseDatabase
         .reference()
         .child('Events')
         .child(uid)
-        .child(activity_id);
-    await _refUserEvent.child('eid').set(activity_id);
+        .child(activityId);
+    await _refUserEvent.child('eid').set(activityId);
   }
 
   @override
@@ -219,7 +221,7 @@ class _ActivityItemState extends State<ActivityItem> {
                         iconSize: 20,
                         height: 35,
                         width: 35,
-                        OnPressed: AddEvent,
+                        OnPressed: addEvent,
                       ),
                       ProfileFloatingButton(
                         color: Colors.black,
@@ -228,7 +230,23 @@ class _ActivityItemState extends State<ActivityItem> {
                         iconSize: 20,
                         height: 35,
                         width: 35,
-                        OnPressed: () {},
+                        OnPressed: () async {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) =>
+                                  new CustomLoader().buildLoader(context));
+                          final link = await DynamicLinkService(context)
+                              .createPostShareLink(widget.dataModel.id);
+                          Navigator.of(context).pop();
+                          final RenderBox box =
+                              context.findRenderObject() as RenderBox;
+                          {
+                            await Share.share(link,
+                                sharePositionOrigin:
+                                    box.localToGlobal(Offset.zero) & box.size);
+                          }
+                        },
                       ),
                     ],
                   ),

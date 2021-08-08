@@ -31,9 +31,6 @@ class UserDashBoard extends StatefulWidget {
 
 class _UserDashBoardState extends State<UserDashBoard> {
   bool init = true;
-  //final _startTimeController = TextEditingController();
-  //final _descriptionController = TextEditingController();
-  //final _titleController = TextEditingController();
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
 
@@ -48,28 +45,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = UserHome();
 
-  // Future<dynamic> _openPopup(context) {
-  //   final Size size = MediaQuery.of(context).size;
-  //   // return showDialog(
-  //   //   context: context,
-  //   //   builder: (context) {
-  //   //     return StatefulBuilder(
-  //   //       builder: (context, setState) {
-
-  //   //       },
-  //   //     );
-  //   //   },
-  //   // );
-  // }
-
   @override
   void initState() {
-    _handleLinks();
+    _handleLinks(context);
     super.initState();
   }
 
-  void _handleLinks() async {
-    await DynamicLinkService().handleDynamicLinks();
+  void _handleLinks(BuildContext context) async {
+    await DynamicLinkService(context).handleDynamicLinks();
   }
 
   @override

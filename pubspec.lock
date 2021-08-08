@@ -414,7 +414,7 @@ packages:
       name: mime
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.7"
+    version: "1.0.0"
   mime_type:
     dependency: transitive
     description:
@@ -582,7 +582,7 @@ packages:
       name: share
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.5+4"
+    version: "2.0.4"
   sky_engine:
     dependency: transitive
     description: flutter
