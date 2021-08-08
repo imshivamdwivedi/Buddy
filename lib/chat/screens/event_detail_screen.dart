@@ -1,15 +1,10 @@
-import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
-import 'package:buddy/user/screens/user_dashboard.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/create_activity_screen.dart';
-import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EventDetailScreen extends StatefulWidget {
   final ActivityModel activityModel;
@@ -22,16 +17,16 @@ class EventDetailScreen extends StatefulWidget {
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  void AddEvent() async {
+  void addEvent() async {
     final uid = _auth.currentUser!.uid;
-    final activity_id = widget.activityModel.id;
+    final activityId = widget.activityModel.id;
 
     final _refUserEvent = FirebaseDatabase.instance
         .reference()
         .child('Events')
         .child(uid)
-        .child(activity_id);
-    await _refUserEvent.child('eid').set(activity_id);
+        .child(activityId);
+    await _refUserEvent.child('eid').set(activityId);
   }
 
   @override
@@ -51,7 +46,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             Icons.add,
           ),
           backgroundColor: Colors.black87,
-          onPressed: AddEvent),
+          onPressed: addEvent),
       appBar: AppBar(
         leading: CloseButton(
           color: Colors.black87,
