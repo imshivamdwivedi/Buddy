@@ -76,150 +76,7 @@ class DmShareMessageTile extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.16,
-                        child: Card(
-                          elevation: 5,
-                          color: kPrimaryColor,
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 5),
-                                    child: Column(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 5,
-                                                    color: Colors.grey,
-                                                    spreadRadius: 1)
-                                              ],
-                                            ),
-                                            child: Provider.of<UserProvider>(
-                                                            context)
-                                                        .getUserImg ==
-                                                    ''
-                                                ? NamedProfileAvatar()
-                                                    .profileAvatar(
-                                                        Provider.of<UserProvider>(
-                                                                context)
-                                                            .getUserName
-                                                            .substring(0, 1),
-                                                        80.0)
-                                                : CachedNetworkImage(
-                                                    width: 80.0,
-                                                    height: 80.0,
-                                                    fit: BoxFit.cover,
-                                                    imageUrl: Provider.of<
-                                                                UserProvider>(
-                                                            context)
-                                                        .getUserImg,
-                                                    placeholder:
-                                                        (context, url) {
-                                                      return Center(
-                                                          child:
-                                                              new SpinKitWave(
-                                                        type: SpinKitWaveType
-                                                            .start,
-                                                        size: 20,
-                                                        color: Colors.black87,
-                                                      ));
-                                                    },
-                                                  ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          model.title,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.02,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text("Creator -"),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.01,
-                                        ),
-                                        Text(model.creatorName)
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.02,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.calendar_today,
-                                          size: 18,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.01,
-                                        ),
-                                        Text(Utils.toDate(
-                                            DateTime.parse(model.startDate))),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.02,
-                                        ),
-                                        Icon(
-                                          Icons.access_alarm,
-                                          size: 18,
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.01,
-                                        ),
-                                        Text(Utils.toTime(
-                                            DateTime.parse(model.startDate))),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      child: ShareTile(model: model),
                     );
                   } else {
                     return Text(
@@ -251,6 +108,133 @@ class DmShareMessageTile extends StatelessWidget {
                   // ),
                 ],
               )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ShareTile extends StatelessWidget {
+  const ShareTile({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
+
+  final ActivityModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.16,
+      child: Card(
+        elevation: 5,
+        color: kPrimaryColor,
+        child: Row(
+          children: [
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 5,
+                                  color: Colors.grey,
+                                  spreadRadius: 1)
+                            ],
+                          ),
+                          child: Provider.of<UserProvider>(context)
+                                      .getUserImg ==
+                                  ''
+                              ? NamedProfileAvatar().profileAvatar(
+                                  Provider.of<UserProvider>(context)
+                                      .getUserName
+                                      .substring(0, 1),
+                                  80.0)
+                              : CachedNetworkImage(
+                                  width: 80.0,
+                                  height: 80.0,
+                                  fit: BoxFit.cover,
+                                  imageUrl: Provider.of<UserProvider>(context)
+                                      .getUserImg,
+                                  placeholder: (context, url) {
+                                    return Center(
+                                        child: new SpinKitWave(
+                                      type: SpinKitWaveType.start,
+                                      size: 20,
+                                      color: Colors.black87,
+                                    ));
+                                  },
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        model.title,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Row(
+                    children: [
+                      Text("Creator -"),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      Text(model.creatorName)
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 18,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      Text(Utils.toDate(DateTime.parse(model.startDate))),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.02,
+                      ),
+                      Icon(
+                        Icons.access_alarm,
+                        size: 18,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      Text(Utils.toTime(DateTime.parse(model.startDate))),
+                    ],
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
