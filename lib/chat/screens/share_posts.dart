@@ -1,9 +1,13 @@
+import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
+import 'package:buddy/chat/models/dm_channel_model.dart';
 import 'package:buddy/chat/models/dm_message_model.dart';
 import 'package:buddy/chat/models/friends_model.dart';
 import 'package:buddy/chat/screens/share_post_model.dart';
+import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -74,10 +78,12 @@ class _SharePostState extends State<SharePost> {
       if (element.isSelected) {
         if (element.isCom) {
           //---( Sharing in Community )---//
+          _addMessageToCommunity(element);
         } else {
           //---( Sharing in DM )---//
           if (element.chid == '') {
             //---( New Channel + First Message )---//
+            _createNewDmChannel(element);
           } else {
             //---( Already Channel Exist + First Message )---//
             _addDMMessageToExisted(element);
@@ -85,6 +91,77 @@ class _SharePostState extends State<SharePost> {
         }
       }
     });
+    CustomSnackbar().showFloatingFlushbar(
+      context: context,
+      message: 'Event Shared Successfully !',
+      color: Colors.green,
+    );
+  }
+
+  void _addMessageToCommunity(SharePostModel element) async {
+    final _msgDb = FirebaseDatabase.instance
+        .reference()
+        .child('Chats')
+        .child(element.chid)
+        .child('ChatRoom');
+    final _msgKey = _msgDb.push().key;
+    final _newMessage = NewDmMessage(
+      msgId: _msgKey,
+      senderId: _auth.currentUser!.uid,
+      text: splitCode + 'sharepost=${widget.postId}',
+      isRead: false,
+      createdAt: DateTimeStamp().getDate(),
+    );
+    await _msgDb.child(_msgKey).set(_newMessage.toMap());
+    Navigator.of(context).pop();
+  }
+
+  void _createNewDmChannel(SharePostModel element) async {
+    //---( New Channel + First Message )---//
+    final tempNameProvider = Provider.of<UserProvider>(context, listen: false);
+    //---( Creating New Channel )---//
+    final _channelDb = FirebaseDatabase.instance.reference().child('Chats');
+    final _chid = _channelDb.push().key;
+    final newChannel = DmChannel(
+      chid: _chid,
+      type: 'DM',
+      users: _auth.currentUser!.uid + "+" + element.id,
+    );
+    await _channelDb.child(_chid).set(newChannel.toMap());
+
+    //---( Creating Channel History )---//
+    final _chRecord = FirebaseDatabase.instance
+        .reference()
+        .child('Channels')
+        .child(_auth.currentUser!.uid)
+        .child(_chid);
+    final _channel = ChatListModel(
+      chid: _chid,
+      name: element.name,
+      nameImg: element.img,
+      user: element.id,
+      msgPen: 0,
+      lastMsg: '',
+    );
+    await _chRecord.set(_channel.toMap());
+
+    final _chRecord1 = FirebaseDatabase.instance
+        .reference()
+        .child('Channels')
+        .child(element.id)
+        .child(_chid);
+    final _channel1 = ChatListModel(
+      chid: _chid,
+      name: tempNameProvider.getUserName,
+      nameImg: tempNameProvider.getUserImg,
+      user: _auth.currentUser!.uid,
+      msgPen: 0,
+      lastMsg: '',
+    );
+    await _chRecord1.set(_channel1.toMap());
+    //---( Channel Created Sending Message )---//
+    element.chid = _chid;
+    _addDMMessageToExisted(element);
   }
 
   void _addDMMessageToExisted(SharePostModel element) async {
@@ -126,6 +203,7 @@ class _SharePostState extends State<SharePost> {
         .child(element.chid)
         .child('lastMsg')
         .set('See Attachment !');
+    Navigator.of(context).pop();
   }
 
   @override

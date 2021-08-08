@@ -175,7 +175,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     await _refUser.child('firstName').set(_firstName);
     await _refUser.child('lastName').set(_secondName);
 
-    //H://---( Updating User Search Tag )---//
+    //---( Updating User Search Tag )---//
     final _refUserTag =
         _firebaseDatabase.reference().child('Users').child(_uid);
 

@@ -1,7 +1,8 @@
 import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/dm_message_model.dart';
 import 'package:buddy/chat/models/group_message_name_provider.dart';
-import 'package:buddy/chat/widgets/group_chat_message_widget%20copy.dart';
+import 'package:buddy/chat/widgets/group_chat_message_widget.dart';
+import 'package:buddy/chat/widgets/group_share_message_widget.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/utils/date_time_stamp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,11 +47,21 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         itemBuilder: (BuildContext context, DataSnapshot snapshot,
             Animation<double> animation, int index) {
           final msg = NewDmMessage.fromMap(snapshot.value);
-          return GroupMessageTile(
-            sendBy: userNames[msg.senderId].toString().split(' ').first,
-            message: msg.text,
-            sendByMe: (msg.senderId == _auth.currentUser!.uid),
-          );
+          if (msg.text.startsWith(splitCode + 'sharepost=')) {
+            //---( Share Post Message )---//
+            return GroupShareMessageTile(
+              sendBy: userNames[msg.senderId].toString().split(' ').first,
+              message: msg.text,
+              sendByMe: (msg.senderId == _auth.currentUser!.uid),
+            );
+          } else {
+            //---( Simple Text Message )---//
+            return GroupMessageTile(
+              sendBy: userNames[msg.senderId].toString().split(' ').first,
+              message: msg.text,
+              sendByMe: (msg.senderId == _auth.currentUser!.uid),
+            );
+          }
         },
       ),
     );
