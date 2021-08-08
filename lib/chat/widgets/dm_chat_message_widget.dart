@@ -10,6 +10,7 @@ class DmMessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _corners = 16.0;
     return Container(
       padding: EdgeInsets.only(
         top: 4,
@@ -30,13 +31,13 @@ class DmMessageTile extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: sendByMe
                       ? BorderRadius.only(
-                          topLeft: Radius.circular(23),
-                          topRight: Radius.circular(23),
-                          bottomLeft: Radius.circular(23))
+                          topLeft: Radius.circular(_corners),
+                          topRight: Radius.circular(_corners),
+                          bottomLeft: Radius.circular(_corners))
                       : BorderRadius.only(
-                          topLeft: Radius.circular(23),
-                          topRight: Radius.circular(23),
-                          bottomRight: Radius.circular(23)),
+                          topLeft: Radius.circular(_corners),
+                          topRight: Radius.circular(_corners),
+                          bottomRight: Radius.circular(_corners)),
                   gradient: LinearGradient(
                     colors: sendByMe
                         ? [

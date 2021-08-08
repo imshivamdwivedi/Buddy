@@ -91,6 +91,7 @@ class _SharePostState extends State<SharePost> {
         }
       }
     });
+    Navigator.of(context).pop();
     CustomSnackbar().showFloatingFlushbar(
       context: context,
       message: 'Event Shared Successfully !',
@@ -113,7 +114,6 @@ class _SharePostState extends State<SharePost> {
       createdAt: DateTimeStamp().getDate(),
     );
     await _msgDb.child(_msgKey).set(_newMessage.toMap());
-    Navigator.of(context).pop();
   }
 
   void _createNewDmChannel(SharePostModel element) async {
@@ -203,7 +203,6 @@ class _SharePostState extends State<SharePost> {
         .child(element.chid)
         .child('lastMsg')
         .set('See Attachment !');
-    Navigator.of(context).pop();
   }
 
   @override

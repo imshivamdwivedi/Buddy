@@ -51,7 +51,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             //---( Share Post Message )---//
             return GroupShareMessageTile(
               sendBy: userNames[msg.senderId].toString().split(' ').first,
-              message: msg.text,
+              message: msg.text.substring(14),
               sendByMe: (msg.senderId == _auth.currentUser!.uid),
             );
           } else {
