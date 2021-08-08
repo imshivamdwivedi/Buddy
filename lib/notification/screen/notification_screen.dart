@@ -55,7 +55,7 @@ class _UserNotificationState extends State<UserNotification> {
                   height: MediaQuery.of(context).size.height -
                       kToolbarHeight -
                       kBottomNavigationBarHeight -
-                      20,
+                      25,
                   child: ListView.builder(
                     itemCount: value.allNotifications.length,
                     itemBuilder: (ctx, index) {

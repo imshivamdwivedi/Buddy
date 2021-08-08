@@ -192,6 +192,8 @@ class _DmChatScreenState extends State<DmChatScreen> {
                         child: TextField(
                       controller: _textEditingController,
                       autocorrect: true,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                       enableSuggestions: true,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(20.0),
