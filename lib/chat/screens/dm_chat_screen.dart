@@ -169,59 +169,61 @@ class _DmChatScreenState extends State<DmChatScreen> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-                child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  )),
-              child: chatMessages(),
-            )),
-            Container(
-              color: kPrimaryColor,
-              padding: EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: TextField(
-                    controller: _textEditingController,
-                    autocorrect: true,
-                    enableSuggestions: true,
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(20.0),
-                        hintText: 'Send message',
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 0),
-                          gapPadding: 10,
-                          borderRadius: BorderRadius.circular(25),
-                        )),
-                  )),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _addMessage();
-                      print("Debugger");
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue,
-                      ),
-                      child: Icon(Icons.send, color: Colors.white),
+        child: Container(
+          child: Column(
+            children: [
+              Expanded(
+                  child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: kPrimaryColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
+                    )),
+                child: chatMessages(),
+              )),
+              Container(
+                color: kPrimaryColor,
+                padding: EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                      controller: _textEditingController,
+                      autocorrect: true,
+                      enableSuggestions: true,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(20.0),
+                          hintText: 'Send message',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(width: 0),
+                            gapPadding: 10,
+                            borderRadius: BorderRadius.circular(25),
+                          )),
+                    )),
+                    SizedBox(
+                      width: 10,
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    InkWell(
+                      onTap: () {
+                        _addMessage();
+                        print("Debugger");
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue,
+                        ),
+                        child: Icon(Icons.send, color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
