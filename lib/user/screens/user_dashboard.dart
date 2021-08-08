@@ -15,6 +15,7 @@ import 'package:buddy/user/screens/user_dashboard_pages.dart/screen_helper_provi
 import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_screen_currentuser.dart';
 import 'package:buddy/user/screens/user_genre.dart';
 import 'package:buddy/user/screens/user_intial_info.dart';
+import 'package:buddy/utils/dynamci_link_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,16 @@ class _UserDashBoardState extends State<UserDashBoard> {
   //   //   },
   //   // );
   // }
+
+  @override
+  void initState() {
+    _handleLinks();
+    super.initState();
+  }
+
+  void _handleLinks() async {
+    await DynamicLinkService().handleDynamicLinks();
+  }
 
   @override
   Widget build(BuildContext context) {
