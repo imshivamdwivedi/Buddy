@@ -37,8 +37,14 @@ class GroupMessageTile extends StatelessWidget {
                     bottomRight: Radius.circular(23)),
             gradient: LinearGradient(
               colors: sendByMe
-                  ? [const Color(0xff007EF4), const Color(0xff007EF4)]
-                  : [const Color(0xff000000), const Color(0xff000000)],
+                  ? [
+                      const Color(0xff007EF4).withOpacity(0.8),
+                      const Color(0xff007EF4).withOpacity(0.8)
+                    ]
+                  : [
+                      const Color(0xff000000).withOpacity(0.8),
+                      const Color(0xff000000).withOpacity(0.8)
+                    ],
             )),
         child: Column(
           crossAxisAlignment:
