@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/custom_snackbar.dart';
@@ -9,9 +11,15 @@ import 'package:buddy/user/models/event_provider.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/events.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
+import 'package:buddy/utils/firebase_api_storage.dart';
+import 'package:buddy/utils/loading_widget.dart';
+import 'package:file_support/file_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class CreateActivityScreen extends StatefulWidget {
@@ -35,6 +43,66 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   bool init = true;
   String _creatorName = '';
   String _creatorClg = '';
+
+  File? _image;
+  final picker = ImagePicker();
+  UploadTask? task;
+
+  Future getImage(ImageSource source) async {
+    final pickedFile = await picker.getImage(source: source, imageQuality: 25);
+    File? cropedImage = await ImageCropper.cropImage(
+      sourcePath: pickedFile!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.ratio16x9,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.square
+      ],
+      //compressQuality: 100,
+      compressFormat: ImageCompressFormat.jpg,
+      androidUiSettings: androidUiSettingsLoked(),
+    );
+    setState(() {
+      if (cropedImage != null) {
+        Navigator.pop(context);
+        if ((cropedImage.lengthSync() / 1024) < 256) {
+          _image = File(cropedImage.path);
+        } else {
+          CustomSnackbar().showFloatingFlushbar(
+            context: context,
+            message: 'Image size must be less then 1 MB',
+            color: Colors.red,
+          );
+        }
+      } else {
+        Navigator.pop(context);
+        print('No image selected.');
+      }
+    });
+  }
+
+  AndroidUiSettings androidUiSettingsLoked() => AndroidUiSettings(
+        toolbarTitle: 'Crop Image',
+        toolbarColor: Colors.purple,
+        toolbarWidgetColor: Colors.white,
+        hideBottomControls: true,
+        lockAspectRatio: false,
+      );
+
+  Future<String> uploadFile(File _file, String chName) async {
+    final fileName = FileSupport().getFileNameWithoutExtension(_file);
+    final destination = 'GroupImages/$chName/$fileName';
+
+    task = FirebaseApi.uploadFile(destination, _file);
+
+    if (task == null) return '';
+
+    final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    return urlDownload;
+  }
 
   @override
   void initState() {
@@ -83,6 +151,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              eventImage(),
               shareWith(),
               buildTitle(),
               buildDateTimePickers(),
@@ -92,6 +161,40 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         ),
       ),
     );
+  }
+
+  Widget eventImage() {
+    return InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => _buildPopupDialogImage(context),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(60.0),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(blurRadius: 5, color: Colors.grey, spreadRadius: 1)
+              ],
+            ),
+            child: _image == null
+                ? Image.asset(
+                    'assets/icons/camera.jpg',
+                    width: 110.0,
+                    height: 110.0,
+                    fit: BoxFit.cover,
+                  )
+                : Image.file(
+                    _image!,
+                    width: 110.0,
+                    height: 110.0,
+                    fit: BoxFit.fill,
+                  ),
+          ),
+        ));
   }
 
   void _fetchCurrentCommunities() {
@@ -107,7 +210,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   }
 
   Widget shareWith() => Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         child: Row(
           children: [
             Text("Share With :", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -352,9 +455,25 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
       final _aid = _dbref.push().key;
 
+      late String result = '';
+
+      if (_image != null) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => new CustomLoader().buildLoader(context));
+
+        result = await uploadFile(File(_image!.path), _aid);
+
+        if (result == '') {
+          Navigator.pop(context);
+          return;
+        }
+      }
+
       final payload = ActivityModel(
         id: _aid,
-        img: '',
+        img: result,
         title: _title,
         desc: _desc,
         startDate: fromDate.toString(),
@@ -423,6 +542,31 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       provider.addEvents(event);*/
       //Navigator.of(context).pop();
     }
+  }
+
+  Widget _buildPopupDialogImage(BuildContext context) {
+    return new AlertDialog(
+      title: const Text('Add a Photo'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          InkWell(
+              onTap: () {
+                getImage(ImageSource.camera);
+              },
+              child: Text("Take photo")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(
+              onTap: () {
+                getImage(ImageSource.gallery);
+              },
+              child: Text("Choose from gallery")),
+        ],
+      ),
+    );
   }
 }
 

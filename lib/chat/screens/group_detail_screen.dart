@@ -121,7 +121,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
             children: [
               Container(
                 height: size.height * 0.2,
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     color: kPrimaryLightColor,
@@ -163,6 +163,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         //           ),
         //       childCount: 10),
         // )
+
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             ///no.of items in the horizontal axis
