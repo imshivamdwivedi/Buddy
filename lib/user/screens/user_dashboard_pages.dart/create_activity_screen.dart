@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:buddy/chat/models/chat_list_provider.dart';
-import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
@@ -202,10 +201,10 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         Provider.of<ChatListProvider>(context, listen: false).allChatList;
     _chatList.forEach((element) {
       if (element.user == auth.currentUser!.uid) {
-        _allCommunities += splitCode + element.chid;
+        _allCommunities +=
+            _allCommunities == '' ? element.chid : splitCode + element.chid;
       }
     });
-    _allCommunities.replaceFirst(splitCode, '');
     print(_allCommunities);
   }
 
@@ -227,9 +226,11 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                     builder: (context) {
                       return BottomSheet();
                     }).then((value) {
-                  setState(() {
-                    selectedShareType = value;
-                  });
+                  if (value != null) {
+                    setState(() {
+                      selectedShareType = value;
+                    });
+                  }
                 });
               },
               child: Container(
@@ -483,7 +484,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         creatorId: _user!.uid,
         creatorName: _creatorName,
         creatorClg: _creatorClg,
-        communities: '',
+        communities: _allCommunities,
       );
 
       final isEditing = widget.event != null;
