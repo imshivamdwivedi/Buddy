@@ -6,6 +6,7 @@ import 'package:buddy/auth/verify.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/models/chat_search_provider.dart';
 import 'package:buddy/chat/models/group_message_name_provider.dart';
+import 'package:buddy/chat/screens/group_detail_screen.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/notification/model/notification_provider.dart';
 import 'package:buddy/onboarder/onboarder_widget.dart';
@@ -115,6 +116,7 @@ class MyApp extends StatelessWidget {
           SignIn.routeName: (ctx) => SignIn(),
           SignUp.routeName: (ctx) => SignUp(),
           PhoneAuth.routeName: (ctx) => PhoneAuth(),
+          GroupDetailScreen.routeName: (ctx) => GroupDetailScreen(),
           VerifyEmail.routeName: (ctx) => VerifyEmail(),
           UserGenre.routeName: (ctx) => UserGenre(),
           UserIntialInfo.routeName: (ctx) => UserIntialInfo(),

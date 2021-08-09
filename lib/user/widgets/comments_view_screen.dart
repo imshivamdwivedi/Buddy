@@ -138,6 +138,8 @@ class _CommentViewScreenState extends State<CommentViewScreen> {
                             child: TextField(
                           controller: _commentController,
                           autocorrect: true,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
                           enableSuggestions: true,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(20.0),
