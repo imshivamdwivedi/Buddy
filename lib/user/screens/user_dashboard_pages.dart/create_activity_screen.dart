@@ -39,6 +39,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   final descriptionController = TextEditingController();
   late DateTime fromDate;
   late DateTime toDate;
+  late String result;
   bool init = true;
   String _creatorName = '';
   String _creatorClg = '';
@@ -110,12 +111,14 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     if (widget.event == null) {
       fromDate = DateTime.now();
       toDate = DateTime.now().add(Duration(hours: 2));
+      result = '';
     } else {
       final event = widget.event;
       titleController.text = event!.title;
       descriptionController.text = event.description;
       fromDate = event.from;
       toDate = event.to;
+      result = event.img;
     }
   }
 
@@ -164,36 +167,41 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
   Widget eventImage() {
     return InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => _buildPopupDialogImage(context),
-          );
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(60.0),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(blurRadius: 5, color: Colors.grey, spreadRadius: 1)
-              ],
-            ),
-            child: _image == null
-                ? Image.asset(
-                    'assets/icons/camera.jpg',
-                    width: 110.0,
-                    height: 110.0,
-                    fit: BoxFit.cover,
-                  )
-                : Image.file(
-                    _image!,
-                    width: 110.0,
-                    height: 110.0,
-                    fit: BoxFit.fill,
-                  ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => _buildPopupDialogImage(context),
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(55.0),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 5,
+                color: Colors.grey,
+                spreadRadius: 1,
+              ),
+            ],
           ),
-        ));
+          child: _image == null
+              ? Image.asset(
+                  'assets/icons/camera.jpg',
+                  width: 110.0,
+                  height: 110.0,
+                  fit: BoxFit.cover,
+                )
+              : Image.file(
+                  _image!,
+                  width: 110.0,
+                  height: 110.0,
+                  fit: BoxFit.fill,
+                ),
+        ),
+      ),
+    );
   }
 
   void _fetchCurrentCommunities() {
@@ -466,8 +474,6 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       final _dbref = FirebaseDatabase.instance.reference().child('Activity');
 
       final _aid = _dbref.push().key;
-
-      late String result = '';
 
       if (_image != null) {
         showDialog(

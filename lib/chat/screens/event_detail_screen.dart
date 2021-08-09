@@ -39,6 +39,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       from: DateTime.parse(widget.activityModel.startDate),
       to: DateTime.parse(widget.activityModel.endDate),
       isAllDay: false,
+      img: widget.activityModel.img,
     );
     return Scaffold(
       floatingActionButton: FloatingActionButton(

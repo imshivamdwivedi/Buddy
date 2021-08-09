@@ -74,6 +74,7 @@ class EventsProvider with ChangeNotifier {
             from: DateTime.parse(eventModel.startDate),
             to: DateTime.parse(eventModel.endDate),
             isAllDay: false,
+            img: eventModel.img,
           );
           _events.add(event);
         }
