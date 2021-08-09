@@ -1,6 +1,7 @@
 import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/dm_message_model.dart';
 import 'package:buddy/chat/models/group_message_name_provider.dart';
+import 'package:buddy/chat/screens/group_detail_screen.dart';
 import 'package:buddy/chat/widgets/group_chat_message_widget.dart';
 import 'package:buddy/chat/widgets/group_share_message_widget.dart';
 import 'package:buddy/constants.dart';
@@ -120,10 +121,15 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         ),
         foregroundColor: Colors.black87,
         backgroundColor: kPrimaryColor,
-        title: Text(
-          _chName,
-          style: TextStyle(
-            color: Colors.black87,
+        title: InkWell(
+          onTap: () {
+            Navigator.of(context).pushNamed(GroupDetailScreen.routeName);
+          },
+          child: Text(
+            _chName,
+            style: TextStyle(
+              color: Colors.black87,
+            ),
           ),
         ),
       ),
