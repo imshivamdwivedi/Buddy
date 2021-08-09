@@ -92,8 +92,6 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   void initState() {
-    Provider.of<GroupMessageProviderName>(context, listen: false)
-        .fetchGroupName(widget.chatRoomId);
     setState(() {
       _chats = _chats.child('Chats').child(widget.chatRoomId).child('ChatRoom');
     });
@@ -113,6 +111,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<GroupMessageProviderName>(context, listen: false)
+        .fetchGroupName(widget.chatRoomId);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(

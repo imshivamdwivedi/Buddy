@@ -1,3 +1,5 @@
+import 'package:buddy/chat/models/chat_list_provider.dart';
+import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_input_field.dart';
 import 'package:buddy/components/textarea.dart';
@@ -22,6 +24,9 @@ class CreateActivityScreen extends StatefulWidget {
 }
 
 class _CreateActivityScreenState extends State<CreateActivityScreen> {
+  final auth = FirebaseAuth.instance;
+  String selectedShareType = 'Public';
+  String _allCommunities = '';
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -34,6 +39,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchCurrentCommunities();
     if (widget.event == null) {
       fromDate = DateTime.now();
       toDate = DateTime.now().add(Duration(hours: 2));
@@ -88,6 +94,18 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     );
   }
 
+  void _fetchCurrentCommunities() {
+    final _chatList =
+        Provider.of<ChatListProvider>(context, listen: false).allChatList;
+    _chatList.forEach((element) {
+      if (element.user == auth.currentUser!.uid) {
+        _allCommunities += splitCode + element.chid;
+      }
+    });
+    _allCommunities.replaceFirst(splitCode, '');
+    print(_allCommunities);
+  }
+
   Widget shareWith() => Container(
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         child: Row(
@@ -105,7 +123,11 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                     context: context,
                     builder: (context) {
                       return BottomSheet();
-                    });
+                    }).then((value) {
+                  setState(() {
+                    selectedShareType = value;
+                  });
+                });
               },
               child: Container(
                 padding: const EdgeInsets.all(3.0),
@@ -124,7 +146,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                       width: 5,
                     ),
                     Text(
-                      "Connections",
+                      selectedShareType,
                       style: TextStyle(fontSize: 14),
                     ),
                     SizedBox(
@@ -332,13 +354,17 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
       final payload = ActivityModel(
         id: _aid,
+        img: '',
         title: _title,
         desc: _desc,
         startDate: fromDate.toString(),
         endDate: toDate.toString(),
+        shareType: selectedShareType.substring(0, 3).toUpperCase(),
+        searchTag: '',
         creatorId: _user!.uid,
         creatorName: _creatorName,
         creatorClg: _creatorClg,
+        communities: '',
       );
 
       final isEditing = widget.event != null;
@@ -426,45 +452,24 @@ class BottomSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: new Icon(Icons.settings),
-            title: new Text('Setting'),
+            leading: new Icon(Icons.public),
+            title: new Text('Public'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop('Public');
             },
           ),
           ListTile(
-            leading: new Icon(Icons.calendar_today),
-            title: new Text('Events'),
+            leading: new Icon(Icons.group),
+            title: new Text('Communities'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop('Communities');
             },
           ),
           ListTile(
-            leading: new Icon(Icons.videocam),
-            title: new Text('Video'),
+            leading: new Icon(Icons.plus_one),
+            title: new Text('Followers'),
             onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: new Icon(Icons.share),
-            title: new Text('Share'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: new Icon(Icons.share),
-            title: new Text('Share'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: new Icon(Icons.share),
-            title: new Text('Share'),
-            onTap: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop('Followers');
             },
           ),
         ],
