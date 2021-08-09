@@ -433,6 +433,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
     final isValid = _formKey.currentState!.validate();
     final _title = titleController.text.trim();
     final _desc = descriptionController.text.trim();
+    String _tagString = '';
 
     if (isValid) {
       if (_title.isEmpty || _desc.isEmpty) {
@@ -451,6 +452,16 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         );
         return;
       }
+      final _tags = _desc.split('\n');
+      _tags.forEach((element) {
+        if (element.startsWith('#')) {
+          final _tempTags = element.split(' ');
+          _tempTags.forEach((e) {
+            print(e.trim());
+            _tagString += _tagString == '' ? e : splitCode + e;
+          });
+        }
+      });
       final _user = FirebaseAuth.instance.currentUser;
       final _dbref = FirebaseDatabase.instance.reference().child('Activity');
 
@@ -480,7 +491,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         startDate: fromDate.toString(),
         endDate: toDate.toString(),
         shareType: selectedShareType.substring(0, 3).toUpperCase(),
-        searchTag: '',
+        searchTag: _tagString,
         creatorId: _user!.uid,
         creatorName: _creatorName,
         creatorClg: _creatorClg,
