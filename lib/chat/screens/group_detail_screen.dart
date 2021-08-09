@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:buddy/chat/screens/group_member_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -163,7 +164,27 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         //           ),
         //       childCount: 10),
         // )
-
+        SliverToBoxAdapter(
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Row(
+              children: [
+                Text("Members",
+                    style: TextStyle(
+                      fontSize: 14,
+                    )),
+                SizedBox(
+                  width: size.width * 0.01,
+                ),
+                Icon(
+                  Icons.group,
+                  color: Colors.green,
+                  size: 14,
+                )
+              ],
+            ),
+          ),
+        ),
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             ///no.of items in the horizontal axis
@@ -177,14 +198,21 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               /// uncomment the following line:
               /// if (index > n) return null;
               return index == 9
-                  ? ListTile(
-                      leading: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: kPrimaryLightColor,
-                          child: Text(
-                            "240 +",
-                            style: TextStyle(color: Colors.black),
-                          )),
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => GroupMemberScreen(),
+                        ));
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: kPrimaryLightColor,
+                            child: Text(
+                              "240 +",
+                              style: TextStyle(color: Colors.black),
+                            )),
+                      ),
                     )
                   : ListTile(
                       leading: CircleAvatar(
