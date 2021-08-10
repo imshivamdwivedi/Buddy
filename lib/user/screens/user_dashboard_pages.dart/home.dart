@@ -1,13 +1,10 @@
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/chat/screens/user_chat_list.dart';
 import 'package:buddy/components/searchbar.dart';
-import 'package:buddy/user/models/activity_model.dart';
 import 'package:buddy/user/models/home_search_provider.dart';
 import 'package:buddy/user/screens/connection%20screen/search_connection_screen.dart';
 import 'package:buddy/user/widgets/activity_item.dart';
 import 'package:buddy/user/widgets/badge.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

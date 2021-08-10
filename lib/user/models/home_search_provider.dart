@@ -267,11 +267,8 @@ class HomeSearchProvider with ChangeNotifier {
       filteredList = newFilter;
 
       final newEventFilter = filteredEventsList
-          .where((element) => element.title
-              .trim()
-              .toLowerCase()
-              .replaceAll(' ', '')
-              .contains(filter.toLowerCase()))
+          .where((element) =>
+              element.searchTag.toLowerCase().contains(filter.toLowerCase()))
           .toList();
       filteredEventsList = newEventFilter;
 

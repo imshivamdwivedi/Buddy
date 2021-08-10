@@ -538,7 +538,9 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         startDate: fromDate.toString(),
         endDate: toDate.toString(),
         shareType: selectedShareType.substring(0, 3).toUpperCase(),
-        searchTag: _tagString,
+        searchTag: _title.toLowerCase().trim().replaceAll(' ', '') +
+            splitCode +
+            _tagString,
         creatorId: _user!.uid,
         creatorName: _creatorName,
         creatorClg: _creatorClg,
