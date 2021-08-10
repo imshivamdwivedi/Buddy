@@ -500,6 +500,12 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         );
         return;
       }
+
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => new CustomLoader().buildLoader(context));
+
       final _tags = _desc.split('\n');
       _tags.forEach((element) {
         if (element.startsWith('#')) {
@@ -517,11 +523,6 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
       //---( Image Changed for first time )---//
       if (_image != null && prevImg != _image) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => new CustomLoader().buildLoader(context));
-
         result = await uploadFile(File(_image!.path), _aid);
 
         if (result == '') {
@@ -568,6 +569,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
                 .set(existingPayLoad.toMap());
           });
         });
+        Navigator.of(context).pop();
         CustomSnackbar().showFloatingFlushbar(
           context: context,
           message: 'Activity Edited Successfully!',
@@ -583,13 +585,12 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
             .child(_user.uid)
             .child(_aid);
         await _refUserEvent.child('eid').set(_aid);
+        Navigator.of(context).pop();
         CustomSnackbar().showFloatingFlushbar(
           context: context,
           message: 'Activity Created Successfully!',
           color: Colors.green,
         );
-
-        Navigator.of(context).pop();
       }
       /*Provider.of<ScreenHelperProvider>(context, listen: false)
                 .setCurrentTab(1);

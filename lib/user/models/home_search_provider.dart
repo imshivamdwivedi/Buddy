@@ -123,7 +123,6 @@ class HomeSearchProvider with ChangeNotifier {
                 return;
               }
             });
-            allFollowingEventList.add(actModel);
           } else if (actModel.shareType == 'COM') {
             //---( Adding All Communites Event To List )---//
             allCommunities.forEach((element) {

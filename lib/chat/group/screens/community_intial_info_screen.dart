@@ -157,8 +157,9 @@ class _CommunityIntialInfoCreateScreenState
       );
       _chOne.set(_chPayload.toMap());
     });
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
