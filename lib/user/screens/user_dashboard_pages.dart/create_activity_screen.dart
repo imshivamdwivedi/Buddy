@@ -666,6 +666,13 @@ class BottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: new Icon(Icons.share_location),
+            title: new Text('Connections'),
+            onTap: () {
+              Navigator.of(context).pop('Connections');
+            },
+          ),
+          ListTile(
             leading: new Icon(Icons.group),
             title: new Text('Communities'),
             onTap: () {
