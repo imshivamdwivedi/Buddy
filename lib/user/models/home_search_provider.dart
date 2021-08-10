@@ -1,13 +1,19 @@
 import 'dart:async';
 
+import 'package:buddy/chat/models/chat_list_model.dart';
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/user/models/activity_model.dart';
+import 'package:buddy/user/models/follower_model.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class HomeSearchProvider with ChangeNotifier {
+  List<String> allCommunities = [];
+  List<String> allFollowings = [];
+  final auth = FirebaseAuth.instance;
+
   List<HomeSearchHelper> allUsersList = [];
   List<HomeSearchHelper> filteredList = [];
   List<String> tags = [];
@@ -16,6 +22,10 @@ class HomeSearchProvider with ChangeNotifier {
   late StreamSubscription<Event> _userListStream;
 
   List<ActivityModel> allEventsList = [];
+  List<ActivityModel> allEventsVisibleList = [];
+  List<ActivityModel> allPublicEventList = [];
+  List<ActivityModel> allFollowingEventList = [];
+  List<ActivityModel> allCommunityEventList = [];
   List<ActivityModel> filteredEventsList = [];
   final _eventDB = FirebaseDatabase.instance.reference().child('Activity');
   late StreamSubscription<Event> _eventListStream;
@@ -41,11 +51,17 @@ class HomeSearchProvider with ChangeNotifier {
     return [...allEventsList];
   }
 
+  List<ActivityModel> get allVisibleEvent {
+    return [...allEventsVisibleList];
+  }
+
   List<String> get allTags {
     return [...tags];
   }
 
   HomeSearchProvider() {
+    _fetchCurrentCommunities();
+    _fetchCurrentFollowing();
     _fetchUserList();
     _fetchEventList();
     _fetchCommunity();
@@ -56,6 +72,8 @@ class HomeSearchProvider with ChangeNotifier {
     tags.clear();
     filteredEventsList.clear();
     filteredList.clear();
+    _fetchCurrentCommunities();
+    _fetchCurrentFollowing();
     _fetchUserList();
     _fetchEventList();
     _fetchCommunity();
@@ -77,14 +95,84 @@ class HomeSearchProvider with ChangeNotifier {
     _eventListStream = _eventDB.onValue.listen((event) {
       if (event.snapshot.value == null) {
         allEventsList.clear();
+        allPublicEventList.clear();
+        allCommunities.clear();
+        allCommunityEventList.clear();
+        allFollowings.clear();
+        allFollowingEventList.clear();
+        allEventsVisibleList.clear();
         notifyListeners();
       } else {
+        allPublicEventList.clear();
+        allCommunities.clear();
+        allCommunityEventList.clear();
+        allFollowings.clear();
+        allFollowingEventList.clear();
+        allEventsVisibleList.clear();
         final _allEventMap = Map<String, dynamic>.from(event.snapshot.value);
         allEventsList = _allEventMap.values.map((e) {
           final actModel = ActivityModel.fromMap(Map<String, dynamic>.from(e));
+          if (actModel.shareType == 'PUB') {
+            //---( Adding All Public Event TO List )---//
+            allPublicEventList.add(actModel);
+          } else if (actModel.shareType == 'FOL') {
+            //---( Adding Alll Following Event To List )---//
+            allFollowings.forEach((element) {
+              if (actModel.creatorId == element) {
+                allFollowingEventList.add(actModel);
+                return;
+              }
+            });
+            allFollowingEventList.add(actModel);
+          } else if (actModel.shareType == 'COM') {
+            //---( Adding All Communites Event To List )---//
+            allCommunities.forEach((element) {
+              if (actModel.communities.contains(element)) {
+                allCommunityEventList.add(actModel);
+                return;
+              }
+            });
+          }
           return actModel;
         }).toList();
+        allEventsVisibleList.addAll(allFollowingEventList);
+        allEventsVisibleList.addAll(allCommunityEventList);
+        allEventsVisibleList.addAll(allPublicEventList);
         notifyListeners();
+      }
+    });
+  }
+
+  void _fetchCurrentCommunities() {
+    allCommunities.clear();
+    final _chatListDB = FirebaseDatabase.instance.reference().child('Channels');
+    _chatListDB
+        .child(_auth.currentUser!.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      final Map map = snapshot.value;
+      map.values.forEach((element) {
+        final model = ChatListModel.fromMap(element);
+        if (model.user == _auth.currentUser!.uid) {
+          allCommunities.add(model.chid);
+        }
+      });
+    });
+  }
+
+  void _fetchCurrentFollowing() {
+    allFollowings.clear();
+    final _followingDB =
+        FirebaseDatabase.instance.reference().child('Following');
+    _followingDB
+        .child(_auth.currentUser!.uid)
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        final Map map = snapshot.value;
+        map.values.forEach((element) {
+          allFollowings.add(FollowerModel.fromMap(element).uid);
+        });
       }
     });
   }
@@ -164,7 +252,7 @@ class HomeSearchProvider with ChangeNotifier {
 
     tags.clear();
     filteredList = allUsersList;
-    filteredEventsList = allEventsList;
+    filteredEventsList = allEventsVisibleList;
     filteredCommunity = allCommunity;
 
     final filters = query.trim().split(' ');

@@ -98,9 +98,9 @@ class _UserHomeState extends State<UserHome> {
                   kBottomNavigationBarHeight,
               child: Consumer<HomeSearchProvider>(
                 builder: (_, model, child) => ListView.builder(
-                  itemCount: model.allEventsList.length,
-                  itemBuilder: (context, index) =>
-                      ActivityItem(dataModel: model.allEventsList[index]),
+                  itemCount: model.allEventsVisibleList.length,
+                  itemBuilder: (context, index) => ActivityItem(
+                      dataModel: model.allEventsVisibleList[index]),
                 ),
               ),
             ),
@@ -110,13 +110,3 @@ class _UserHomeState extends State<UserHome> {
     );
   }
 }
-// FirebaseAnimatedList(
-//                 query: _refAct,
-//                 itemBuilder: (BuildContext context, DataSnapshot snapshot,
-//                     Animation<double> animation, int index) {
-//                   Map data = snapshot.value;
-//                   return ActivityItem(
-//                     dataModel: ActivityModel.fromMap(data),
-//                   );
-//                 },
-//               )

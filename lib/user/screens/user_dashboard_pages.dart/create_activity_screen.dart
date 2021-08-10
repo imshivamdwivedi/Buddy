@@ -254,7 +254,6 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
             _allCommunities == '' ? element.chid : splitCode + element.chid;
       }
     });
-    print(_allCommunities);
   }
 
   Widget shareWith() => Container(
