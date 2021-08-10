@@ -5,13 +5,16 @@ import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   static const routeName = "/group-detail";
-  const GroupDetailScreen({Key? key}) : super(key: key);
+  final String chatRoomId;
+  const GroupDetailScreen({required this.chatRoomId});
 
   @override
   _GroupDetailScreenState createState() => _GroupDetailScreenState();
@@ -23,6 +26,13 @@ enum FilterOptions {
 }
 
 class _GroupDetailScreenState extends State<GroupDetailScreen> {
+  final _auth = FirebaseAuth.instance;
+  final channelDB = FirebaseDatabase.instance.reference().child('Chats');
+  @override
+  initState() {
+    super.initState();
+  }
+
   Widget _buildChip(
     String label,
   ) {
@@ -71,16 +81,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           iconTheme: IconThemeData(color: Colors.black),
           flexibleSpace: FlexibleSpaceBar(
             centerTitle: true,
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Title',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                    )),
-              ],
-            ),
             background: CircleAvatar(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(60.0),
@@ -118,40 +118,53 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           ],
         ),
         SliverToBoxAdapter(
-          child: Column(
-            children: [
-              Container(
-                height: size.height * 0.2,
-                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: kPrimaryLightColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Bio and Guidelines :",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    Flexible(
-                      child: Text(
-                        "bchjdsbchsdchbdsjhcbmdnsbchjs sdhbcshjdbchdsbcjhs nhbcsjhdbcnsdcbhsdcbm   jhdsbcjhdsbchjsdbcjhsbc bsdvcjhsdbcjhdbchdsbchsdbcbsdkhcbsdkjcbkdsjnc ncbhdsbckdsncjsdcknsdckjh",
-                        maxLines: null,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Title',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
         ),
+        SliverToBoxAdapter(
+          child: Container(
+            height: size.height * 0.2,
+            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: kPrimaryLightColor,
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Bio and Guidelines :",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                Flexible(
+                  child: Text(
+                    "bchjdsbchsdchbdsjhcbmdnsbchjs sdhbcshjdbchdsbcjhs nhbcsjhdbcnsdcbhsdcbm   jhdsbcjhdsbchjsdbcjhsbc bsdvcjhsdbcjhdbchdsbchsdbcbsdkhcbsdkjcbkdsjnc ncbhdsbckdsncjsdcknsdckjh",
+                    maxLines: null,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+
         // SliverList(
         //   delegate: SliverChildBuilderDelegate(
         //       (context, index) => ListTile(

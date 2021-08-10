@@ -123,7 +123,10 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
         backgroundColor: kPrimaryColor,
         title: InkWell(
           onTap: () {
-            Navigator.of(context).pushNamed(GroupDetailScreen.routeName);
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  GroupDetailScreen(chatRoomId: widget.chatRoomId),
+            ));
           },
           child: Text(
             _chName,

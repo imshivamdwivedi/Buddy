@@ -1,10 +1,6 @@
 import 'package:buddy/constants.dart';
-import 'package:buddy/user/models/user_provider.dart';
-import 'package:buddy/utils/named_profile_avatar.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
 class GroupMemberScreen extends StatefulWidget {
   const GroupMemberScreen({Key? key}) : super(key: key);
