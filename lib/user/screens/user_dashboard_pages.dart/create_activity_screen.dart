@@ -508,12 +508,12 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
       final _tags = _desc.split('\n');
       _tags.forEach((element) {
-        if (element.startsWith('#')) {
-          final _tempTags = element.split(' ');
-          _tempTags.forEach((e) {
+        final _tempTags = element.split(' ');
+        _tempTags.forEach((e) {
+          if (e.startsWith('#')) {
             _tagString += _tagString == '' ? e : splitCode + e;
-          });
-        }
+          }
+        });
       });
 
       final _user = FirebaseAuth.instance.currentUser;
