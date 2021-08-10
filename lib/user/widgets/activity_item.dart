@@ -90,28 +90,36 @@ class _ActivityItemState extends State<ActivityItem> {
                                     spreadRadius: 1)
                               ],
                             ),
-                            child: CachedNetworkImage(
-                              width: 80.0,
-                              height: 80.0,
-                              fit: BoxFit.cover,
-                              imageUrl:
-                                  "https://firebasestorage.googleapis.com/v0/b/buddy-ae267.appspot.com/o/UserImages%2F0Etid34298grAwMLOCmAX1FTwt72%2Fimage_picker2255930506045845358.jpg?alt=media&token=fc44be39-bfe8-4a41-9b69-6be343b0432f",
-                              placeholder: (context, url) {
-                                return Center(
-                                  child: new SpinKitWave(
-                                    type: SpinKitWaveType.start,
-                                    size: 20,
-                                    color: Colors.black87,
+                            child: widget.dataModel.img == ''
+                                ? NamedProfileAvatar().profileAvatar(
+                                    widget.dataModel.title
+                                        .substring(0, 1)
+                                        .toUpperCase(),
+                                    80.0,
+                                  )
+                                : CachedNetworkImage(
+                                    width: 80.0,
+                                    height: 80.0,
+                                    fit: BoxFit.cover,
+                                    imageUrl: widget.dataModel.img,
+                                    placeholder: (context, url) {
+                                      return Center(
+                                        child: new SpinKitWave(
+                                          type: SpinKitWaveType.start,
+                                          size: 20,
+                                          color: Colors.black87,
+                                        ),
+                                      );
+                                    },
+                                    errorWidget: (context, url, error) {
+                                      return NamedProfileAvatar().profileAvatar(
+                                        widget.dataModel.title
+                                            .substring(0, 1)
+                                            .toUpperCase(),
+                                        80.0,
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                              errorWidget: (context, url, error) {
-                                return NamedProfileAvatar().profileAvatar(
-                                  'E',
-                                  80.0,
-                                );
-                              },
-                            ),
                           ),
                         ),
                       ],

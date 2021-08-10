@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:buddy/chat/models/chat_list_provider.dart';
 import 'package:buddy/components/custom_snackbar.dart';
 import 'package:buddy/components/rounded_input_field.dart';
@@ -45,8 +48,23 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
   String _creatorClg = '';
 
   File? _image;
+  File? prevImg;
   final picker = ImagePicker();
   UploadTask? task;
+
+  Future<File> _fileFromImageUrl(String uri, String path) async {
+    print('Reached Here --> NOW');
+    final response = await http.get(Uri.parse(uri));
+    print(response);
+
+    final documentDirectory = await getApplicationDocumentsDirectory();
+
+    final file = File(documentDirectory.path + '$path.png');
+
+    file.writeAsBytesSync(response.bodyBytes);
+
+    return file;
+  }
 
   Future getImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source, imageQuality: 25);
@@ -92,7 +110,7 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
 
   Future<String> uploadFile(File _file, String chName) async {
     final fileName = FileSupport().getFileNameWithoutExtension(_file);
-    final destination = 'GroupImages/$chName/$fileName';
+    final destination = 'EventImages/$chName/$fileName';
 
     task = FirebaseApi.uploadFile(destination, _file);
 
@@ -119,7 +137,18 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
       fromDate = event.from;
       toDate = event.to;
       result = event.img;
+      if (event.img != '') {
+        _fetchEventImg(event);
+      }
     }
+  }
+
+  void _fetchEventImg(EventCalender event) async {
+    _image = await _fileFromImageUrl(event.img, event.id);
+    setState(() {
+      print(_image!.path);
+      prevImg = _image;
+    });
   }
 
   @override
@@ -187,12 +216,24 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
             ],
           ),
           child: _image == null
-              ? Image.asset(
-                  'assets/icons/camera.jpg',
-                  width: 110.0,
-                  height: 110.0,
-                  fit: BoxFit.cover,
-                )
+              ? result != ''
+                  ? Container(
+                      height: 110,
+                      width: 110,
+                      child: Center(
+                        child: new SpinKitWave(
+                          type: SpinKitWaveType.start,
+                          size: 25,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    )
+                  : Image.asset(
+                      'assets/icons/camera.jpg',
+                      width: 110.0,
+                      height: 110.0,
+                      fit: BoxFit.cover,
+                    )
               : Image.file(
                   _image!,
                   width: 110.0,
@@ -465,17 +506,18 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
         if (element.startsWith('#')) {
           final _tempTags = element.split(' ');
           _tempTags.forEach((e) {
-            print(e.trim());
             _tagString += _tagString == '' ? e : splitCode + e;
           });
         }
       });
+
       final _user = FirebaseAuth.instance.currentUser;
       final _dbref = FirebaseDatabase.instance.reference().child('Activity');
 
       final _aid = _dbref.push().key;
 
-      if (_image != null) {
+      //---( Image Changed for first time )---//
+      if (_image != null && prevImg != _image) {
         showDialog(
             barrierDismissible: false,
             context: context,
@@ -545,6 +587,8 @@ class _CreateActivityScreenState extends State<CreateActivityScreen> {
           message: 'Activity Created Successfully!',
           color: Colors.green,
         );
+
+        Navigator.of(context).pop();
       }
       /*Provider.of<ScreenHelperProvider>(context, listen: false)
                 .setCurrentTab(1);

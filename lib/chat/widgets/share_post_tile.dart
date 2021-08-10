@@ -1,12 +1,10 @@
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/activity_model.dart';
-import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/user/screens/calender_screen/utils.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
 class ShareTile extends StatelessWidget {
   const ShareTile({
@@ -56,28 +54,26 @@ class ShareTile extends StatelessWidget {
                                 spreadRadius: 1)
                           ],
                         ),
-                        child:
-                            Provider.of<UserProvider>(context).getUserImg == ''
-                                ? NamedProfileAvatar().profileAvatar(
-                                    Provider.of<UserProvider>(context)
-                                        .getUserName
-                                        .substring(0, 1),
-                                    80.0)
-                                : CachedNetworkImage(
-                                    width: 80.0,
-                                    height: 80.0,
-                                    fit: BoxFit.cover,
-                                    imageUrl: Provider.of<UserProvider>(context)
-                                        .getUserImg,
-                                    placeholder: (context, url) {
-                                      return Center(
-                                          child: new SpinKitWave(
-                                        type: SpinKitWaveType.start,
-                                        size: 20,
-                                        color: Colors.black87,
-                                      ));
-                                    },
-                                  ),
+                        child: model.img == ''
+                            ? NamedProfileAvatar().profileAvatar(
+                                model.title.substring(0, 1), 80.0)
+                            : CachedNetworkImage(
+                                width: 80.0,
+                                height: 80.0,
+                                fit: BoxFit.cover,
+                                imageUrl: model.img,
+                                placeholder: (context, url) {
+                                  return Center(
+                                      child: new SpinKitWave(
+                                    type: SpinKitWaveType.start,
+                                    size: 20,
+                                    color: Colors.black87,
+                                  ));
+                                },
+                                errorWidget: (context, url, error) =>
+                                    NamedProfileAvatar().profileAvatar(
+                                        model.title.substring(0, 1), 80.0),
+                              ),
                       ),
                     ),
                   ],

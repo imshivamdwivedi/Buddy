@@ -280,11 +280,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         .getUserImg,
                                     placeholder: (context, url) {
                                       return Center(
-                                          child: new SpinKitWave(
-                                        type: SpinKitWaveType.start,
-                                        size: 20,
-                                        color: Colors.black87,
-                                      ));
+                                        child: new SpinKitWave(
+                                          type: SpinKitWaveType.start,
+                                          size: 20,
+                                          color: Colors.black87,
+                                        ),
+                                      );
                                     },
                                   ),
                           ),
