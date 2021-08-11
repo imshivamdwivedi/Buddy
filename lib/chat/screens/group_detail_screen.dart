@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/group_member_screen.dart';
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,9 +29,30 @@ enum FilterOptions {
 class _GroupDetailScreenState extends State<GroupDetailScreen> {
   final _auth = FirebaseAuth.instance;
   final channelDB = FirebaseDatabase.instance.reference().child('Chats');
+  final _userDB = FirebaseDatabase.instance.reference().child('Users');
+  late GroupChannel? groupChannelModel;
+  List<UserModel> _users = [];
+
   @override
   initState() {
+    fetchGroupDetail(widget.chatRoomId);
     super.initState();
+  }
+
+  void fetchGroupDetail(String chatRoomId) async {
+    await channelDB.child(chatRoomId).once().then((value) {
+      Map map = Map<String, dynamic>.from(value.value);
+      final model = GroupChannel.fromMap(map);
+      setState(() {
+        groupChannelModel = model;
+        final userList = model.users.split("+");
+        userList.forEach((element) {
+          _userDB.child(element).once().then((value) {
+            _users.add(UserModel.fromMap(value.value));
+          });
+        });
+      });
+    });
   }
 
   Widget _buildChip(
@@ -84,18 +107,14 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(60.0),
                 child: Container(
-                  child: Provider.of<UserProvider>(context).getUserImg == ''
+                  child: groupChannelModel!.chImg == ''
                       ? NamedProfileAvatar().profileAvatar(
-                          Provider.of<UserProvider>(context)
-                              .getUserName
-                              .substring(0, 1),
-                          120.0)
+                          groupChannelModel!.chName.substring(0, 1), 120.0)
                       : CachedNetworkImage(
                           width: 120.0,
                           height: 120.0,
                           fit: BoxFit.cover,
-                          imageUrl:
-                              Provider.of<UserProvider>(context).getUserImg,
+                          imageUrl: groupChannelModel!.chImg,
                           placeholder: (context, url) {
                             return Center(
                                 child: new SpinKitWave(
@@ -123,7 +142,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Title',
+                Text(groupChannelModel!.chName,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
@@ -209,7 +228,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               /// To convert this infinite list to a list with "n" no of items,
               /// uncomment the following line:
               /// if (index > n) return null;
-              return index == 9
+              print(_users.length);
+              return index + 1 > 10
                   ? InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -221,22 +241,34 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             radius: 30,
                             backgroundColor: kPrimaryLightColor,
                             child: Text(
-                              "240 +",
+                              '${_users.length - 10}+',
                               style: TextStyle(color: Colors.black),
                             )),
                       ),
                     )
                   : ListTile(
                       leading: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                            "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            child: _users[index].userImg == ''
+                                ? NamedProfileAvatar().profileAvatar(
+                                    _users[index].firstName.substring(0, 1),
+                                    40.0)
+                                : Image.network(
+                                    _users[index].userImg,
+                                    height: 40.0,
+                                    width: 40.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                        ),
                       ),
                     );
             },
 
             /// Set childCount to limit no.of items
-            childCount: 10,
+            childCount: _users.length,
           ),
         ),
       ]),
