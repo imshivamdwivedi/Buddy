@@ -4,14 +4,11 @@ import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/group_member_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
-import 'package:buddy/user/models/user_provider.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   final String chatRoomId;
@@ -27,10 +24,9 @@ enum FilterOptions {
 }
 
 class _GroupDetailScreenState extends State<GroupDetailScreen> {
-  final _auth = FirebaseAuth.instance;
   final channelDB = FirebaseDatabase.instance.reference().child('Chats');
   final _userDB = FirebaseDatabase.instance.reference().child('Users');
-  late GroupChannel? groupChannelModel;
+  late GroupChannel groupChannelModel;
   List<UserModel> _users = [];
 
   @override
@@ -40,14 +36,26 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   }
 
   void fetchGroupDetail(String chatRoomId) async {
+    groupChannelModel = new GroupChannel(
+      chid: '',
+      type: '',
+      users: '',
+      admins: '',
+      chName: '',
+      chImg: '',
+      createdAt: '',
+    );
+    _users.clear();
     await channelDB.child(chatRoomId).once().then((value) {
       Map map = Map<String, dynamic>.from(value.value);
       final model = GroupChannel.fromMap(map);
       setState(() {
         groupChannelModel = model;
-        final userList = model.users.split("+");
-        userList.forEach((element) {
-          _userDB.child(element).once().then((value) {
+      });
+      final userList = model.users.split("+");
+      userList.forEach((element) {
+        _userDB.child(element).once().then((value) {
+          setState(() {
             _users.add(UserModel.fromMap(value.value));
           });
         });
@@ -90,7 +98,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    bool _showOnlyFavourites = false;
 
     return Scaffold(
       body: CustomScrollView(slivers: [
@@ -107,14 +114,17 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(60.0),
                 child: Container(
-                  child: groupChannelModel!.chImg == ''
+                  child: groupChannelModel.chImg == ''
                       ? NamedProfileAvatar().profileAvatar(
-                          groupChannelModel!.chName.substring(0, 1), 120.0)
+                          groupChannelModel.chName == ''
+                              ? 'G'
+                              : groupChannelModel.chName.substring(0, 1),
+                          120.0)
                       : CachedNetworkImage(
                           width: 120.0,
                           height: 120.0,
                           fit: BoxFit.cover,
-                          imageUrl: groupChannelModel!.chImg,
+                          imageUrl: groupChannelModel.chImg,
                           placeholder: (context, url) {
                             return Center(
                                 child: new SpinKitWave(
@@ -142,7 +152,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(groupChannelModel!.chName,
+                Text(groupChannelModel.chName,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
@@ -228,7 +238,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               /// To convert this infinite list to a list with "n" no of items,
               /// uncomment the following line:
               /// if (index > n) return null;
-              print(_users.length);
               return index + 1 > 10
                   ? InkWell(
                       onTap: () {
