@@ -33,8 +33,8 @@ class HomeSearchProvider with ChangeNotifier {
   final _eventDB = FirebaseDatabase.instance.reference().child('Activity');
   late StreamSubscription<Event> _eventListStream;
 
-  List<GroupChannel> allCommunity = [];
-  List<GroupChannel> filteredCommunity = [];
+  List<CommunitySearchHelper> allCommunity = [];
+  List<CommunitySearchHelper> filteredCommunity = [];
   final _communityDB = FirebaseDatabase.instance.reference().child('Chats');
   late StreamSubscription<Event> _communityStream;
 
@@ -46,7 +46,7 @@ class HomeSearchProvider with ChangeNotifier {
     return [...filteredEventsList];
   }
 
-  List<GroupChannel> get suggestedCommunity {
+  List<CommunitySearchHelper> get suggestedCommunity {
     return [...filteredCommunity];
   }
 
@@ -218,7 +218,10 @@ class HomeSearchProvider with ChangeNotifier {
         final _allCommnityMap = Map<String, dynamic>.from(event.snapshot.value);
         allCommunity = _allCommnityMap.values.map((e) {
           final comModel = GroupChannel.fromMap(Map<String, dynamic>.from(e));
-          return comModel;
+          return CommunitySearchHelper(
+            groupChannel: comModel,
+            isPending: comModel.requests.contains(_auth.currentUser!.uid),
+          );
         }).toList();
         notifyListeners();
       }
@@ -301,7 +304,7 @@ class HomeSearchProvider with ChangeNotifier {
       filteredEventsList = newEventFilter;
 
       final newCommunityFilter = filteredCommunity
-          .where((element) => element.chName
+          .where((element) => element.groupChannel.chName
               .trim()
               .toLowerCase()
               .replaceAll(' ', '')
@@ -334,6 +337,22 @@ class HomeSearchHelper with ChangeNotifier {
   });
 
   void toggleFriend() {
+    isPending = true;
+    notifyListeners();
+  }
+}
+
+//---( Here Community Model Class )---//
+class CommunitySearchHelper with ChangeNotifier {
+  bool isPending;
+  GroupChannel groupChannel;
+
+  CommunitySearchHelper({
+    required this.groupChannel,
+    this.isPending = false,
+  });
+
+  void toggleRequest() {
     isPending = true;
     notifyListeners();
   }

@@ -136,7 +136,12 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
           child: Expanded(
             child: ListView.builder(
               itemCount: comData.length,
-              itemBuilder: (context, index) => comCard(comData[index]),
+              itemBuilder: (context, index) => ChangeNotifierProvider.value(
+                value: comData[index],
+                child: Consumer<CommunitySearchHelper>(
+                  builder: (_, value, child) => comCard(value),
+                ),
+              ),
             ),
           ),
         ),
@@ -299,7 +304,7 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
               itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
                 value: userData.suggestedUsers[index],
                 child: Consumer<HomeSearchHelper>(
-                  builder: (_, user, child) => userCard(user.userModel, user),
+                  builder: (_, user, child) => userCard(user),
                 ),
               ),
             ),
@@ -311,7 +316,8 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
 
   //---( Communities List Widget )---//
 
-  Widget userCard(UserModel userModel, HomeSearchHelper user) {
+  Widget userCard(HomeSearchHelper user) {
+    UserModel userModel = user.userModel;
     return Card(
       color: kPrimaryColor,
       elevation: 5,
@@ -422,7 +428,8 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
     );
   }
 
-  Widget comCard(GroupChannel model) {
+  Widget comCard(CommunitySearchHelper communitySearchHelper) {
+    GroupChannel model = communitySearchHelper.groupChannel;
     return Card(
       color: kPrimaryColor,
       elevation: 5,
@@ -517,12 +524,13 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.2,
                       ),
-                      roundButton(
-                          'Join',
-                          HomeSearchHelper(
-                              userModel: new UserModel(profile: true)),
+                      roundButtonCom(
+                          communitySearchHelper.isPending
+                              ? 'Requested'
+                              : 'Join',
+                          communitySearchHelper,
                           Provider.of<UserProvider>(context, listen: false)
-                              .getUserName)
+                              .getUserName),
                     ],
                   ),
                 ),
@@ -617,6 +625,35 @@ class _SearchConnectionScreenState extends State<SearchConnectionScreen>
                 ConnectionHandler().createRequest(_auth.currentUser!.uid,
                     user.userModel.id, context, userName, user);
               }
+            },
+    );
+  }
+
+  Widget roundButtonCom(String text,
+      CommunitySearchHelper communitySearchHelper, String userName) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: Colors.black87,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          )),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white),
+      ),
+      onPressed: communitySearchHelper.isPending
+          ? null
+          : () {
+              final _comDB = FirebaseDatabase.instance
+                  .reference()
+                  .child('Chats')
+                  .child(communitySearchHelper.groupChannel.chid);
+              _comDB.child('requests').once().then((value) {
+                String oldStr = value.value;
+                oldStr += '+' + _auth.currentUser!.uid;
+                _comDB.child('requests').set(oldStr);
+                communitySearchHelper.toggleRequest();
+              });
             },
     );
   }

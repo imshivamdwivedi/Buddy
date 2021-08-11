@@ -43,6 +43,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       admins: '',
       chName: '',
       chImg: '',
+      chDesc: '',
+      requests: '',
       createdAt: '',
     );
     _users.clear();

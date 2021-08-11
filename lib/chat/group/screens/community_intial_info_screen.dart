@@ -137,6 +137,8 @@ class _CommunityIntialInfoCreateScreenState
       admins: admins,
       chName: chName,
       chImg: result,
+      requests: '',
+      chDesc: '',
       createdAt: DateTime.now().toString(),
     );
     _comDb.child(_chid).set(_newGroupChannel.toMap());
