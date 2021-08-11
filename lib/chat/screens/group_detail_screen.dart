@@ -239,6 +239,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             ///no.of items in the horizontal axis
             crossAxisCount: 4,
+            childAspectRatio: 3 / 2,
           ),
 
           ///Lazy building of list
@@ -251,7 +252,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   ? InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => GroupMemberScreen(),
+                          builder: (context) => GroupMemberScreen(
+                              _users.sublist(10, _users.length)),
                         ));
                       },
                       child: ListTile(
@@ -259,7 +261,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             radius: 30,
                             backgroundColor: kPrimaryLightColor,
                             child: Text(
-                              '${_users.length - 10}+',
+                              '${_users.length - 2}+',
                               style: TextStyle(color: Colors.black),
                             )),
                       ),
@@ -272,30 +274,93 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                               _buildPopupDialogMoreOption(context),
                         );
                       },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              child: _users[index].userImg == ''
-                                  ? NamedProfileAvatar().profileAvatar(
-                                      _users[index].firstName.substring(0, 1),
-                                      40.0)
-                                  : Image.network(
-                                      _users[index].userImg,
-                                      height: 40.0,
-                                      width: 40.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                      child: index == 0
+                          ? Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: Container(
+                                    child: _users[index].userImg == ''
+                                        ? NamedProfileAvatar().profileAvatar(
+                                            _users[index].firstName == ''
+                                                ? 'G'
+                                                : _users[index]
+                                                    .firstName
+                                                    .substring(0, 1),
+                                            60.0)
+                                        : CachedNetworkImage(
+                                            width: 60.0,
+                                            height: 60.0,
+                                            fit: BoxFit.cover,
+                                            imageUrl: _users[index].userImg,
+                                            placeholder: (context, url) {
+                                              return Center(
+                                                  child: new SpinKitWave(
+                                                type: SpinKitWaveType.start,
+                                                size: 20,
+                                                color: Colors.black87,
+                                              ));
+                                            },
+                                          ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  right: 15,
+                                  child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.circle,
+                                          size: 20,
+                                          color: Colors.black,
+                                        ),
+                                        Icon(
+                                          Icons.circle,
+                                          size: 18,
+                                          color: Colors.cyan,
+                                        ),
+                                      ]),
+                                )
+                              ],
+                            )
+                          : Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: Container(
+                                    child: _users[index].userImg == ''
+                                        ? NamedProfileAvatar().profileAvatar(
+                                            _users[index].firstName == ''
+                                                ? 'G'
+                                                : _users[index]
+                                                    .firstName
+                                                    .substring(0, 1),
+                                            60.0)
+                                        : CachedNetworkImage(
+                                            width: 60.0,
+                                            height: 60.0,
+                                            fit: BoxFit.cover,
+                                            imageUrl: _users[index].userImg,
+                                            placeholder: (context, url) {
+                                              return Center(
+                                                  child: new SpinKitWave(
+                                                type: SpinKitWaveType.start,
+                                                size: 20,
+                                                color: Colors.black87,
+                                              ));
+                                            },
+                                          ),
+                                  ),
+                                ),
+                              ],
+                            ));
             },
 
             /// Set childCount to limit no.of items
-            childCount: _users.length,
+            childCount: _users.length > 10 ? 11 : _users.length,
           ),
         ),
       ]),

@@ -1,9 +1,12 @@
 import 'package:buddy/constants.dart';
+import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/utils/named_profile_avatar.dart';
 
 import 'package:flutter/material.dart';
 
 class GroupMemberScreen extends StatefulWidget {
-  const GroupMemberScreen({Key? key}) : super(key: key);
+  List<UserModel> _users;
+  GroupMemberScreen(this._users);
 
   @override
   _GroupMemberScreenState createState() => _GroupMemberScreenState();
@@ -44,21 +47,70 @@ class _GroupMemberScreenState extends State<GroupMemberScreen> {
               (context, index) => Container(
                     child: Column(
                       children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(
-                                "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
+                        InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  _buildPopupDialogMoreOption(context),
+                            );
+                          },
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  child: widget._users[index].userImg == ''
+                                      ? NamedProfileAvatar().profileAvatar(
+                                          widget._users[index].firstName
+                                              .substring(0, 1),
+                                          40.0)
+                                      : Image.network(
+                                          widget._users[index].userImg,
+                                          height: 40.0,
+                                          width: 40.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            title: Text(widget._users[index].firstName +
+                                " " +
+                                widget._users[index].lastName),
                           ),
-                          title: Text("Parneet"),
                         ),
                         Divider()
                       ],
                     ),
                   ),
-              childCount: 20),
+              childCount: widget._users.length),
         )
       ]),
+    );
+  }
+
+  Widget _buildPopupDialogMoreOption(BuildContext context) {
+    return new AlertDialog(
+      backgroundColor: kPrimaryColor,
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          InkWell(onTap: () {}, child: Text("Visit Profile")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(onTap: () {}, child: Text("Make Admin")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(onTap: () {}, child: Text("Remove")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(onTap: () {}, child: Text("Block"))
+        ],
+      ),
     );
   }
 }
