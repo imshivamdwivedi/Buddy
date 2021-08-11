@@ -83,57 +83,59 @@ class ShareTile extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      model.title,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.01,
-                ),
-                Row(
-                  children: [
-                    Text("Creator -"),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.01,
-                    ),
-                    Text(model.creatorName)
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.01,
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: 18,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                    Text(Utils.toDate(DateTime.parse(model.startDate))),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                    Icon(
-                      Icons.access_alarm,
-                      size: 18,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.01,
-                    ),
-                    Text(Utils.toTime(DateTime.parse(model.startDate))),
-                  ],
-                )
-              ],
+            child: FittedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        model.title,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Row(
+                    children: [
+                      Text("Creator -"),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      Text(model.creatorName)
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 18,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      Text(Utils.toDate(DateTime.parse(model.startDate))),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.02,
+                      ),
+                      Icon(
+                        Icons.access_alarm,
+                        size: 18,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.01,
+                      ),
+                      Text(Utils.toTime(DateTime.parse(model.startDate))),
+                    ],
+                  )
+                ],
+              ),
             ),
           )
         ],
