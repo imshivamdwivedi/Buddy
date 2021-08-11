@@ -116,7 +116,6 @@ class MyApp extends StatelessWidget {
           SignIn.routeName: (ctx) => SignIn(),
           SignUp.routeName: (ctx) => SignUp(),
           PhoneAuth.routeName: (ctx) => PhoneAuth(),
-          GroupDetailScreen.routeName: (ctx) => GroupDetailScreen(),
           VerifyEmail.routeName: (ctx) => VerifyEmail(),
           UserGenre.routeName: (ctx) => UserGenre(),
           UserIntialInfo.routeName: (ctx) => UserIntialInfo(),

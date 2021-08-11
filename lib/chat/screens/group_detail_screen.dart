@@ -12,7 +12,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class GroupDetailScreen extends StatefulWidget {
-  static const routeName = "/group-detail";
   final String chatRoomId;
   const GroupDetailScreen({required this.chatRoomId});
 
