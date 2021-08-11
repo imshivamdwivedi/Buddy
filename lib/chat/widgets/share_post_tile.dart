@@ -96,7 +96,7 @@ class ShareTile extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
+                  height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 Row(
                   children: [
@@ -108,7 +108,7 @@ class ShareTile extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.02,
+                  height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 Row(
                   children: [
@@ -117,7 +117,7 @@ class ShareTile extends StatelessWidget {
                       size: 18,
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.01,
+                      width: MediaQuery.of(context).size.width * 0.02,
                     ),
                     Text(Utils.toDate(DateTime.parse(model.startDate))),
                     SizedBox(

@@ -130,7 +130,16 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return new BottomSheet();
+                    });
+              },
               icon: Icon(Icons.format_list_bulleted, color: Colors.grey),
             )
           ],
@@ -246,21 +255,30 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             )),
                       ),
                     )
-                  : ListTile(
-                      leading: CircleAvatar(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            child: _users[index].userImg == ''
-                                ? NamedProfileAvatar().profileAvatar(
-                                    _users[index].firstName.substring(0, 1),
-                                    40.0)
-                                : Image.network(
-                                    _users[index].userImg,
-                                    height: 40.0,
-                                    width: 40.0,
-                                    fit: BoxFit.cover,
-                                  ),
+                  : InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              _buildPopupDialogMoreOption(context),
+                        );
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              child: _users[index].userImg == ''
+                                  ? NamedProfileAvatar().profileAvatar(
+                                      _users[index].firstName.substring(0, 1),
+                                      40.0)
+                                  : Image.network(
+                                      _users[index].userImg,
+                                      height: 40.0,
+                                      width: 40.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
                           ),
                         ),
                       ),
@@ -272,6 +290,89 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           ),
         ),
       ]),
+    );
+  }
+
+  Widget _buildPopupDialogMoreOption(BuildContext context) {
+    return new AlertDialog(
+      backgroundColor: kPrimaryColor,
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          InkWell(onTap: () {}, child: Text("Visit Profile")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(onTap: () {}, child: Text("Make Admin")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(onTap: () {}, child: Text("Remove")),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(onTap: () {}, child: Text("Block"))
+        ],
+      ),
+    );
+  }
+}
+
+class BottomSheet extends StatelessWidget {
+  const BottomSheet({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                height: 5.0,
+                width: 40.0,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: new Icon(Icons.group),
+            title: new Text('Request'),
+            onTap: () {},
+          ),
+          // ListTile(
+          //   leading: new Icon(Icons.group),
+          //   title: new Text('Follwoing'),
+          //   onTap: () {
+
+          //   },
+          // ),
+          // ListTile(
+          //   leading: new Icon(Icons.group),
+          //   title: new Text('Followers'),
+          //   onTap: () {
+
+          //   },
+          // ),
+
+          // ListTile(
+          //   leading: new Icon(Icons.hdr_strong),
+          //   title: new Text('Interest'),
+          //   onTap: () {
+
+          //   },
+          // ),
+        ],
+      ),
     );
   }
 }

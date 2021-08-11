@@ -38,12 +38,6 @@ class _GroupMemberScreenState extends State<GroupMemberScreen> {
               ],
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.format_list_bulleted, color: Colors.grey),
-            )
-          ],
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
