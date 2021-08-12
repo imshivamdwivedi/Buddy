@@ -9,6 +9,7 @@ import 'package:buddy/components/rounded_button.dart';
 import 'package:buddy/components/textarea.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
+import 'package:buddy/user/screens/user_dashboard_pages.dart/user_profile/user_profile_other.dart';
 import 'package:buddy/utils/firebase_api_storage.dart';
 import 'package:buddy/utils/loading_widget.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -404,7 +405,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             radius: 30,
                             backgroundColor: kPrimaryLightColor,
                             child: Text(
-                              '${_users.length - 2}+',
+                              '${_users.length - 10}+',
                               style: TextStyle(color: Colors.black),
                             )),
                       ),
@@ -414,10 +415,11 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) =>
-                              _buildPopupDialogMoreOption(context),
+                              _buildPopupDialogMoreOption(
+                                  context, _users[index].id),
                         );
                       },
-                      child: index == 0
+                      child: _users[index].id == groupChannelModel.admins
                           ? Stack(
                               alignment: Alignment.topCenter,
                               children: [
@@ -561,29 +563,40 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     );
   }
 
-  Widget _buildPopupDialogMoreOption(BuildContext context) {
-    return new AlertDialog(
-      backgroundColor: kPrimaryColor,
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          InkWell(onTap: () {}, child: Text("Visit Profile")),
-          SizedBox(
-            height: 20,
-          ),
-          InkWell(onTap: () {}, child: Text("Make Admin")),
-          SizedBox(
-            height: 20,
-          ),
-          InkWell(onTap: () {}, child: Text("Remove")),
-          SizedBox(
-            height: 20,
-          ),
-          InkWell(onTap: () {}, child: Text("Block"))
-        ],
-      ),
-    );
+  Widget _buildPopupDialogMoreOption(BuildContext context, final _uid) {
+    return _auth.currentUser!.uid == _uid
+        ? Text("leave Group")
+        : new AlertDialog(
+            backgroundColor: kPrimaryColor,
+            content: new Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                            builder: (context) =>
+                                OtherUserProfileScreen(userId: _uid),
+                          ))
+                          .then((value) => Navigator.pop(context));
+                    },
+                    child: Text("Visit Profile")),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(onTap: () {}, child: Text("Make Admin")),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(onTap: () {}, child: Text("Remove")),
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(onTap: () {}, child: Text("Block"))
+              ],
+            ),
+          );
   }
 }
 
