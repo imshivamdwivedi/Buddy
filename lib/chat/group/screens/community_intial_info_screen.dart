@@ -123,7 +123,7 @@ class _CommunityIntialInfoCreateScreenState
     final admins = _auth.currentUser!.uid;
 
     widget.users.forEach((element) {
-      users = users + '+' + element.uid;
+      users += '+' + element.uid;
     });
 
     //---( Creating Basic Channel )---//

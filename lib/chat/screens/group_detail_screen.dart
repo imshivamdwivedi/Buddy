@@ -172,38 +172,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     });
   }
 
-  Widget _buildChip(
-    String label,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(1),
-      decoration: BoxDecoration(
-        color: Color(0xFFE2DFC5),
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        // runSpacing: 10,
-        children: <Widget>[
-          Icon(
-            Icons.star,
-            color: Colors.amber,
-            size: 18,
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -268,6 +236,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                       return new BottomSheet(
                         reqString: requestString,
                         chId: widget.chatRoomId,
+                        users: _users,
                       );
                     }).then((value) {
                   if (value == 'refresh') {
@@ -345,19 +314,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
             ),
           ),
         ),
-
-        // SliverList(
-        //   delegate: SliverChildBuilderDelegate(
-        //       (context, index) => ListTile(
-        //             leading: CircleAvatar(
-        //               radius: 20,
-        //               backgroundImage: NetworkImage(
-        //                   "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg-1024x683.jpg"),
-        //             ),
-        //             title: Text("Parneet"),
-        //           ),
-        //       childCount: 10),
-        // )
         SliverToBoxAdapter(
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -589,7 +545,29 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                InkWell(onTap: () {}, child: Text("Remove")),
+                InkWell(
+                    onTap: () async {
+                      //---( Removing from Channel User List )---//
+                      final _comDB = FirebaseDatabase.instance
+                          .reference()
+                          .child('Chats')
+                          .child(widget.chatRoomId);
+                      await _comDB.child('requests').once().then((value) {
+                        String oldStr = value.value;
+                        _comDB
+                            .child('users')
+                            .set(oldStr.replaceAll('+$_uid', ''));
+                      });
+                      //---( Removing his Channel History )---//
+                      final _chDB = FirebaseDatabase.instance
+                          .reference()
+                          .child('Channels')
+                          .child(_uid);
+                      await _chDB.child(widget.chatRoomId).set(null);
+                      Navigator.of(context).pop();
+                      fetchGroupDetail(widget.chatRoomId);
+                    },
+                    child: Text("Remove")),
                 SizedBox(
                   height: 20,
                 ),
@@ -603,10 +581,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
 class BottomSheet extends StatelessWidget {
   final String chId;
   final String reqString;
+  final List<UserModel> users;
   const BottomSheet({
     Key? key,
     required this.chId,
     required this.reqString,
+    required this.users,
   }) : super(key: key);
 
   @override
@@ -641,13 +621,25 @@ class BottomSheet extends StatelessWidget {
                   .then((value) => Navigator.of(context).pop('refresh'));
             },
           ),
-          // ListTile(
-          //   leading: new Icon(Icons.group),
-          //   title: new Text('Follwoing'),
-          //   onTap: () {
-
-          //   },
-          // ),
+          ListTile(
+            leading: new Icon(Icons.group),
+            title: new Text('Delete Group'),
+            onTap: () {
+              //---( Deleting Channel History For All Users )---//
+              users.forEach((element) {
+                final _delChhDB =
+                    FirebaseDatabase.instance.reference().child('Channels');
+                _delChhDB.child(element.id).child(chId).set(null);
+              });
+              //---( Deleting Channel from Main Tree )---//
+              final _delCh =
+                  FirebaseDatabase.instance.reference().child('Chats');
+              _delCh.child(chId).set(null);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+          ),
           // ListTile(
           //   leading: new Icon(Icons.group),
           //   title: new Text('Followers'),
