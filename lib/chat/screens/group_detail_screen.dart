@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/group_member_screen.dart';
+import 'package:buddy/chat/screens/group_request_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -423,7 +424,11 @@ class BottomSheet extends StatelessWidget {
           ListTile(
             leading: new Icon(Icons.group),
             title: new Text('Request'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => GroupRequestScreen(),
+              ));
+            },
           ),
           // ListTile(
           //   leading: new Icon(Icons.group),
