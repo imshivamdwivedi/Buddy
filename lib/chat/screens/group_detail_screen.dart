@@ -605,11 +605,7 @@ class BottomSheet extends StatelessWidget {
           ListTile(
             leading: new Icon(Icons.group),
             title: new Text('Request'),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => GroupRequestScreen(),
-              ));
-            },
+            onTap: () {},
           ),
           // ListTile(
           //   leading: new Icon(Icons.group),
