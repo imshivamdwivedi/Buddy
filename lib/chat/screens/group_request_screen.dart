@@ -1,3 +1,4 @@
+import 'package:buddy/constants.dart';
 import 'package:flutter/material.dart';
 
 class GroupRequestScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class _GroupRequestScreenState extends State<GroupRequestScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kPrimaryColor,
         title: Text(
           "Requests",
           style: TextStyle(color: Colors.black),
@@ -21,6 +23,12 @@ class _GroupRequestScreenState extends State<GroupRequestScreen> {
       ),
       body: Container(
         height: size.height - kToolbarHeight,
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            return Text("Hello Baby");
+          },
+          itemCount: 10,
+        ),
       ),
     );
   }

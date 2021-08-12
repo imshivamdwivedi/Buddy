@@ -28,8 +28,6 @@ class TextArea extends StatelessWidget {
         controller: controller,
         obscureText: val,
         cursorColor: Colors.black,
-        minLines:
-            6, // any number you need (It works as the rows for the textarea)
         keyboardType: TextInputType.multiline,
         maxLines: null,
         decoration: InputDecoration(
