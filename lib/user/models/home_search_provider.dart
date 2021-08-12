@@ -58,14 +58,14 @@ class HomeSearchProvider with ChangeNotifier {
     return [...tags];
   }
 
-  HomeSearchProvider() {
-    _fetchCurrentCommunities();
-    _fetchCurrentFollowing();
-    _fetchUserList();
-    _fetchEventList();
-    _fetchCommunity();
-    _fetchCurrentFriendsList();
-  }
+  // HomeSearchProvider() {
+  //   _fetchCurrentCommunities();
+  //   _fetchCurrentFollowing();
+  //   _fetchUserList();
+  //   _fetchEventList();
+  //   _fetchCommunity();
+  //   _fetchCurrentFriendsList();
+  // }
 
   void refresh() {
     filteredCommunity.clear();
