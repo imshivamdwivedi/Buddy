@@ -220,7 +220,8 @@ class HomeSearchProvider with ChangeNotifier {
           final comModel = GroupChannel.fromMap(Map<String, dynamic>.from(e));
           return CommunitySearchHelper(
             groupChannel: comModel,
-            isPending: comModel.requests.contains(_auth.currentUser!.uid),
+            isPending: comModel.requests.contains(_auth.currentUser!.uid) ||
+                comModel.users.contains(_auth.currentUser!.uid),
           );
         }).toList();
         notifyListeners();

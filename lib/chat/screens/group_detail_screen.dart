@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:buddy/chat/models/group_channel_model.dart';
 import 'package:buddy/chat/screens/group_member_screen.dart';
+import 'package:buddy/chat/screens/group_request_screen.dart';
 import 'package:buddy/constants.dart';
 import 'package:buddy/user/models/user_model.dart';
 import 'package:buddy/utils/named_profile_avatar.dart';
@@ -28,6 +29,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   final _userDB = FirebaseDatabase.instance.reference().child('Users');
   late GroupChannel groupChannelModel;
   List<UserModel> _users = [];
+  String requestString = '';
 
   @override
   initState() {
@@ -53,6 +55,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       final model = GroupChannel.fromMap(map);
       setState(() {
         groupChannelModel = model;
+        requestString = model.requests;
       });
       final userList = model.users.split("+");
       userList.forEach((element) {
@@ -149,8 +152,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     ),
                     context: context,
                     builder: (context) {
-                      return new BottomSheet();
-                    });
+                      return new BottomSheet(
+                        reqString: requestString,
+                        chId: widget.chatRoomId,
+                      );
+                    }).then((value) {
+                  if (value == 'refresh') {
+                    fetchGroupDetail(widget.chatRoomId);
+                  }
+                });
               },
               icon: Icon(Icons.format_list_bulleted, color: Colors.grey),
             )
@@ -396,8 +406,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
 }
 
 class BottomSheet extends StatelessWidget {
+  final String chId;
+  final String reqString;
   const BottomSheet({
     Key? key,
+    required this.chId,
+    required this.reqString,
   }) : super(key: key);
 
   @override
@@ -423,7 +437,14 @@ class BottomSheet extends StatelessWidget {
           ListTile(
             leading: new Icon(Icons.group),
             title: new Text('Request'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                    builder: (context) => GroupRequestScreen(
+                        requestString: reqString, chId: chId),
+                  ))
+                  .then((value) => Navigator.of(context).pop('refresh'));
+            },
           ),
           // ListTile(
           //   leading: new Icon(Icons.group),
