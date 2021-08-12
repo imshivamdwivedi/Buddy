@@ -43,6 +43,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   final TextEditingController _bioController = TextEditingController();
   late GroupChannel groupChannelModel;
   List<UserModel> _users = [];
+  String requestString = '';
 
   final _firebaseDatabase = FirebaseDatabase.instance;
   final _auth = FirebaseAuth.instance;
@@ -71,7 +72,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               barrierDismissible: false,
               context: context,
               builder: (context) => new CustomLoader().buildLoader(context));
-          // uploadFile(File(croppedImage.path));
+          uploadFile(File(croppedImage.path));
         } else {
           CustomSnackbar().showFloatingFlushbar(
             context: context,
@@ -94,41 +95,42 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         lockAspectRatio: false,
       );
 
-  // Future uploadFile(File _file) async {
-  //   final groupImg = groupChannelModel.chImg;
+  Future uploadFile(File _file) async {
+    final groupImg = groupChannelModel.chImg;
 
-  //   if (groupImg != '') {
-  //     //---( Delete Previous Image )---//
-  //     final storageReference = FirebaseStorage.instance.refFromURL(groupImg);
-  //     await storageReference.delete();
-  //   }
+    if (groupImg != '') {
+      //---( Delete Previous Image )---//
+      final storageReference = FirebaseStorage.instance.refFromURL(groupImg);
+      await storageReference.delete();
+    }
 
-  //   final fileName = FileSupport().getFileNameWithoutExtension(_file);
-  //   final destination = 'UserImages/${_auth.currentUser!.uid}/$fileName';
+    final fileName = FileSupport().getFileNameWithoutExtension(_file);
+    final destination = 'GroupImages/${groupChannelModel.chName}/$fileName';
 
-  //   task = FirebaseApi.uploadFile(destination, _file);
+    task = FirebaseApi.uploadFile(destination, _file);
 
-  //   if (task == null) return;
+    if (task == null) return;
 
-  //   final snapshot = await task!.whenComplete(() {});
-  //   final urlDownload = await snapshot.ref.getDownloadURL();
+    final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
 
-  //   final _userImgDb = FirebaseDatabase.instance
-  //       .reference()
-  //       .child('Users')
-  //       .child(_auth.currentUser!.uid);
-  //   _userImgDb.child('userImg').set(urlDownload);
-  //   Navigator.of(context).pop();
-  // }
+    final _groupImgDb = FirebaseDatabase.instance
+        .reference()
+        .child('Chats')
+        .child(groupChannelModel.chid);
+    _groupImgDb.child('chImg').set(urlDownload);
+    fetchGroupDetail(groupChannelModel.chid);
+    Navigator.of(context).pop();
+  }
 
   void _addBio() {
-    final _firstName = _bioController.text;
+    final _bio = _bioController.text;
 
-    final _uid = _auth.currentUser!.uid;
-    final _refUser = _firebaseDatabase.reference().child('Users').child(_uid);
+    final _gid = groupChannelModel.chid;
+    final _refGroup = _firebaseDatabase.reference().child('Chats').child(_gid);
 
-    _refUser.child('userBio').set(_firstName);
-
+    _refGroup.child('chDesc').set(_bio);
+    fetchGroupDetail(groupChannelModel.chid);
     Navigator.of(context).pop('Bio added successfully');
   }
 
@@ -156,6 +158,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
       final model = GroupChannel.fromMap(map);
       setState(() {
         groupChannelModel = model;
+        requestString = model.requests;
       });
       final userList = model.users.split("+");
       userList.forEach((element) {
@@ -261,8 +264,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                     ),
                     context: context,
                     builder: (context) {
-                      return new BottomSheet();
-                    });
+                      return new BottomSheet(
+                        reqString: requestString,
+                        chId: widget.chatRoomId,
+                      );
+                    }).then((value) {
+                  if (value == 'refresh') {
+                    fetchGroupDetail(widget.chatRoomId);
+                  }
+                });
               },
               icon: Icon(Icons.format_list_bulleted, color: Colors.grey),
             )
@@ -326,7 +336,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 ),
                 Flexible(
                   child: Text(
-                    "bchjdsbchsdchbdsjhcbmdnsbchjs sdhbcshjdbchdsbcjhs nhbcsjhdbcnsdcbhsdcbm   jhdsbcjhdsbchjsdbcjhsbc bsdvcjhsdbcjhdbchdsbchsdbcbsdkhcbsdkjcbkdsjnc ncbhdsbckdsncjsdcknsdckjh",
+                    groupChannelModel.chDesc,
                     maxLines: null,
                   ),
                 )
@@ -578,8 +588,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
 }
 
 class BottomSheet extends StatelessWidget {
+  final String chId;
+  final String reqString;
   const BottomSheet({
     Key? key,
+    required this.chId,
+    required this.reqString,
   }) : super(key: key);
 
   @override
@@ -605,7 +619,14 @@ class BottomSheet extends StatelessWidget {
           ListTile(
             leading: new Icon(Icons.group),
             title: new Text('Request'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                    builder: (context) => GroupRequestScreen(
+                        requestString: reqString, chId: chId),
+                  ))
+                  .then((value) => Navigator.of(context).pop('refresh'));
+            },
           ),
           // ListTile(
           //   leading: new Icon(Icons.group),
